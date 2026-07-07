@@ -11,6 +11,17 @@ CorrupcionDB nace de la convicción de que la información sobre corrupción deb
 - **Verificable** — cada caso cita sus fuentes originales (judiciales, prensa, Contraloría)
 - **Colaborativa** — construida por una comunidad de periodistas, abogados, desarrolladores y ciudadanos
 
+## Cómo contribuir
+
+### Agregar un caso nuevo
+
+1. Crea un archivo `.md` en `src/content/cases/` con nombre en **kebab-case** (ej: `juan-perez.md`)
+2. Sigue el schema definido en `src/content.config.ts` — todos los campos requeridos deben estar presentes
+3. Incluye `fuente_url` con un enlace verificable a la fuente original (Poder Judicial, Contraloría, CIPER, etc.)
+4. Envía un Pull Request usando la plantilla de caso nuevo
+
+Al abrir el PR, un workflow de GitHub ejecuta `npm run check` para validar el schema automáticamente. Si pasa, se puede mergear. Al mergear a `main`, Vercel redeploya el sitio y el caso aparece en línea sin intervención manual.
+
 ## Stack técnico
 
 - [Astro](https://astro.build) — sitio estático (SSG)
