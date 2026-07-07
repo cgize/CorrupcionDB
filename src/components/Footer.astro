@@ -1,5 +1,5 @@
 ---
-import { DISCLAIMER } from "@/lib/constants";
+import { DISCLAIMER, SITE } from "@/lib/constants";
 ---
 
 <footer class="bg-surface-dark px-6 py-16">
@@ -16,17 +16,29 @@ import { DISCLAIMER } from "@/lib/constants";
       <h4 class="font-label text-text-dark-primary">Fuentes oficiales</h4>
       <ul class="mt-4 space-y-2">
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href="https://www.pjud.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Poder Judicial</a
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href="https://www.contraloria.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Contraloría General</a
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href="https://www.fiscaliadechile.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Ministerio Público</a
           >
         </li>
@@ -46,12 +58,16 @@ import { DISCLAIMER } from "@/lib/constants";
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a href="/api" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >API de datos</a
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href="https://www.apache.org/licenses/LICENSE-2.0"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Licencia Apache 2.0</a
           >
         </li>
@@ -62,17 +78,25 @@ import { DISCLAIMER } from "@/lib/constants";
       <h4 class="font-label text-text-dark-primary">Contribuir</h4>
       <ul class="mt-4 space-y-2">
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href={`${SITE.repo}/issues/new`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Reportar datos</a
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a href="/contribuir" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Guía de contribución</a
           >
         </li>
         <li>
-          <a href="#" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a
+            href={`${SITE.repo}/issues`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
             >Contacto</a
           >
         </li>
