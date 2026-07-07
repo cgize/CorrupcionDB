@@ -1,0 +1,83 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<header
+  class="sticky left-0 right-0 top-0 z-100 border-b border-border bg-surface/95 px-6 py-4 backdrop-blur-sm"
+>
+  <nav class="mx-auto flex max-w-[1280px] items-center justify-between">
+    <a
+      href="/"
+      class="font-display text-xl font-bold tracking-tight text-text-primary transition-colors hover:text-accent-primary"
+    >
+      CorrupcionDB
+    </a>
+
+    <div class="hidden items-center gap-8 md:flex">
+      <a href="/casos" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+        >Casos</a
+      >
+      <a href="/estadisticas" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+        >Estadísticas</a
+      >
+      <a href="/fuentes" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+        >Fuentes</a
+      >
+      <a href="/acerca" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+        >Acerca</a
+      >
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a
+        href="https://github.com/cgize/CorrupcionDB"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-label text-text-secondary transition-colors hover:text-accent-primary"
+      >
+        GitHub
+      </a>
+      <ThemeToggle />
+
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Abrir menú"
+        class="flex size-9 items-center justify-center md:hidden"
+      >
+        <svg
+          class="size-6 text-text-primary"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div
+    id="mobile-menu"
+    class="mt-4 hidden flex-col gap-4 border-t border-border pt-4 md:hidden"
+  >
+    <a href="/casos" class="font-label text-text-secondary">Casos</a>
+    <a href="/estadisticas" class="font-label text-text-secondary">Estadísticas</a>
+    <a href="/fuentes" class="font-label text-text-secondary">Fuentes</a>
+    <a href="/acerca" class="font-label text-text-secondary">Acerca</a>
+  </div>
+</header>
+
+<script>
+  document.getElementById("mobile-menu-btn")?.addEventListener("click", () => {
+    document.getElementById("mobile-menu")?.classList.toggle("hidden");
+  });
+</script>

@@ -1,0 +1,191 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/Button.astro";
+import { SITE } from "@/lib/constants";
+---
+
+<BaseLayout
+  title="Acerca"
+  description="CorrupcionDB es una plataforma ciudadana y base de datos de código abierto que centraliza, estructura y hace accesible la información sobre casos de corrupción en Chile."
+>
+  <!-- Hero -->
+  <section class="mx-auto max-w-[1280px] px-6 py-16">
+    <div class="mx-auto max-w-2xl text-center">
+      <h1 class="text-h1 text-balance">
+        Una herramienta ciudadana para la <span class="text-accent-primary">transparencia.</span>
+      </h1>
+      <p class="mt-6 text-body text-text-secondary">
+        CorrupcionDB no es un medio de comunicación. Es una base de datos abierta, verificable y
+        estructurada que centraliza la información pública sobre casos de corrupción investigados
+        por las instituciones del Estado de Chile.
+      </p>
+    </div>
+  </section>
+
+  <!-- Misión -->
+  <section class="bg-surface-alt px-6 py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <div class="grid items-center gap-12 lg:grid-cols-5">
+        <div class="lg:col-span-3">
+          <h2 class="text-h1 text-balance">
+            Nuestra <span class="text-accent-contrast">misión</span>
+          </h2>
+          <p class="mt-6 text-body text-text-secondary">
+            La información sobre casos de corrupción y faltas a la probidad en Chile existe. Está en
+            los sistemas del Poder Judicial, en los informes de la Contraloría, en los portales del
+            Ministerio Público. El problema es que está <strong>dispersa, desestructurada y es difícil
+            de consultar</strong> para un ciudadano común.
+          </p>
+          <p class="mt-4 text-body text-text-secondary">
+            CorrupcionDB resuelve ese problema: centralizamos, estructuramos y hacemos accesible esa
+            información. Cada registro incluye el enlace a la fuente oficial para que cualquier persona
+            pueda verificar los datos por sí misma.
+          </p>
+        </div>
+        <div class="lg:col-span-2">
+          <div class="relative flex items-center justify-center">
+            <div
+              class="size-48 rounded-full border-2 border-accent-contrast/20"
+              aria-hidden="true"
+            ></div>
+            <div
+              class="absolute size-32 rounded-full border-2 border-accent-highlight/30"
+              aria-hidden="true"
+            ></div>
+            <div class="absolute size-16 rounded-full bg-accent-primary/10" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principios -->
+  <section class="mx-auto max-w-[1280px] px-6 py-20">
+    <h2 class="text-center text-h1">
+      Principios que <span class="text-accent-highlight">nos guían</span>
+    </h2>
+    <div class="mt-12 grid gap-8 md:grid-cols-2">
+      <div class="flex gap-4">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-primary/10">
+          <span class="font-mono text-lg font-bold text-accent-primary">01</span>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-text-primary">Presunción de inocencia</h3>
+          <p class="mt-2 text-body-sm text-text-secondary">
+            Toda persona mencionada en nuestra base de datos se presume inocente mientras no exista
+            una sentencia condenatoria firme. Nuestro rol es informar sobre el estado procesal, no
+            emitir juicios.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-contrast/10">
+          <span class="font-mono text-lg font-bold text-accent-contrast">02</span>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-text-primary">Fuentes verificables</h3>
+          <p class="mt-2 text-body-sm text-text-secondary">
+            Solo publicamos información proveniente del Poder Judicial, la Contraloría, el Ministerio
+            Público o investigaciones periodísticas verificables. Cada registro incluye el enlace a su fuente.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-highlight/10">
+          <span class="font-mono text-lg font-bold text-accent-highlight">03</span>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-text-primary">Transparencia radical</h3>
+          <p class="mt-2 text-body-sm text-text-secondary">
+            Todo nuestro código es público y está bajo licencia Apache 2.0. Nuestra metodología de
+            recolección y verificación de datos está documentada y puede ser auditada.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-info/10">
+          <span class="font-mono text-lg font-bold text-accent-info">04</span>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-text-primary">Sin fines de lucro</h3>
+          <p class="mt-2 text-body-sm text-text-secondary">
+            CorrupcionDB es un proyecto ciudadano independiente. No recibimos financiamiento de partidos
+            políticos, gobiernos ni corporaciones.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes -->
+  <section class="bg-surface-alt px-6 py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <h2 class="text-center text-h1">Preguntas <span class="text-accent-primary">frecuentes</span></h2>
+      <div class="mx-auto mt-12 max-w-2xl space-y-6">
+        <details class="group rounded-xl border border-border bg-surface-card p-6">
+          <summary class="flex cursor-pointer items-center justify-between font-display font-semibold text-text-primary">
+            ¿De dónde obtienen los datos?
+            <span class="ml-2 text-accent-primary transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-body-sm text-text-secondary">
+            Todos los datos provienen exclusivamente de fuentes oficiales: el Poder Judicial de Chile,
+            la Contraloría General de la República y el Ministerio Público. Cada registro incluye un
+            enlace directo a la fuente.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-border bg-surface-card p-6">
+          <summary class="flex cursor-pointer items-center justify-between font-display font-semibold text-text-primary">
+            ¿Cómo se actualiza la información?
+            <span class="ml-2 text-accent-primary transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-body-sm text-text-secondary">
+            Revisamos periódicamente las fuentes oficiales para actualizar el estado procesal de cada
+            caso. La fecha de última actualización se muestra en cada registro.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-border bg-surface-card p-6">
+          <summary class="flex cursor-pointer items-center justify-between font-display font-semibold text-text-primary">
+            ¿Quiénes están detrás del proyecto?
+            <span class="ml-2 text-accent-primary transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-body-sm text-text-secondary">
+            CorrupcionDB es un proyecto ciudadano independiente, sin afiliación política. El código
+            es abierto y cualquiera puede contribuir. Conoce más en nuestro repositorio de GitHub.
+          </p>
+        </details>
+        <details class="group rounded-xl border border-border bg-surface-card p-6">
+          <summary class="flex cursor-pointer items-center justify-between font-display font-semibold text-text-primary">
+            ¿Cómo puedo contribuir?
+            <span class="ml-2 text-accent-primary transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-body-sm text-text-secondary">
+            Puedes contribuir de varias formas: reportando información verificable con su fuente oficial,
+            ayudando con el desarrollo del código en GitHub, o compartiendo el proyecto para que más
+            personas lo conozcan.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="mx-auto max-w-[1280px] px-6 py-20 text-center">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="text-h1 text-balance">
+        ¿Quieres <span class="text-accent-contrast">contribuir?</span>
+      </h2>
+      <p class="mt-6 text-body text-text-secondary">
+        CorrupcionDB es un proyecto abierto. Si tienes habilidades técnicas, datos verificables o
+        simplemente quieres apoyar la transparencia, puedes sumarte.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <Button variant="cta" size="lg" href={SITE.repo} isExternal={true}>
+          Ver en GitHub
+        </Button>
+        <Button variant="outline" size="lg" href="/casos">
+          Explorar la base de datos
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

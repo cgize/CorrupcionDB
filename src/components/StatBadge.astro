@@ -1,0 +1,62 @@
+---
+export interface Props {
+  label: string;
+  value?: string;
+  href?: string;
+  variant?: "default" | "highlight" | "info" | "contrast";
+  size?: "sm" | "md" | "lg";
+}
+
+const { label, value, href, variant = "default", size = "md" } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  default: "border-border bg-surface-card text-text-primary",
+  highlight: "border-accent-highlight/30 bg-accent-highlight/5",
+  info: "border-accent-info/30 bg-accent-info/5",
+  contrast: "border-accent-contrast/30 bg-accent-contrast/5",
+};
+
+const sizeClasses: Record<string, string> = {
+  sm: "px-3 py-2",
+  md: "px-4 py-3",
+  lg: "px-5 py-4",
+};
+
+const valueColor: Record<string, string> = {
+  default: "text-text-primary",
+  highlight: "text-accent-highlight",
+  info: "text-accent-info",
+  contrast: "text-accent-contrast",
+};
+---
+
+<div
+  class:list={[
+    "rounded-xl border",
+    variantClasses[variant],
+    sizeClasses[size],
+  ]}
+>
+  <p class="font-caption text-xs uppercase tracking-wider text-text-tertiary">{label}</p>
+  {
+    value && (
+      <p
+        class:list={[
+          "mt-1 font-mono font-bold tabular-nums",
+          size === "lg" ? "text-2xl" : size === "sm" ? "text-base" : "text-lg",
+          valueColor[variant],
+        ]}
+      >
+        {value}
+      </p>
+    )
+  }
+  {
+    !value && href && (
+      <a href={href} class="mt-1 inline-block font-label text-sm text-accent-primary hover:underline">
+        Ver fuente →
+      </a>
+    )
+  }
+  <slot />
+</div>

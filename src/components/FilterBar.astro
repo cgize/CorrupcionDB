@@ -1,0 +1,327 @@
+---
+import {
+  STATUS_LABELS,
+  REGIONES,
+  DELITO_LABELS,
+  PUESTO_POLITICO_LABELS,
+  CARGO_ESTADO_LABELS,
+  SECTOR_POLITICO_LABELS,
+} from "@/lib/constants";
+import FilterBadge from "./FilterBadge.astro";
+
+export interface Props {
+  currentEstado?: string;
+  currentRegion?: string;
+  currentDelito?: string;
+  currentFuente?: string;
+  currentPuesto?: string;
+  currentCargoEstado?: string;
+  currentSector?: string;
+  currentPartido?: string;
+  currentCasos?: string;
+  cases?: Array<{
+    data: {
+      caso?: { id: string; nombre: string };
+      puesto_politico?: string;
+      cargo_estado?: string;
+      sector_politico?: string;
+      partido?: string;
+      fuente_tipo?: string;
+    };
+  }>;
+}
+
+const {
+  currentEstado = "",
+  currentRegion = "",
+  currentDelito = "",
+  currentFuente = "",
+  currentPuesto = "",
+  currentCargoEstado = "",
+  currentSector = "",
+  currentPartido = "",
+  currentCasos = "",
+  cases = [],
+} = Astro.props;
+
+// Opciones fijas (estados y delitos)
+const estadoOptions = Object.entries(STATUS_LABELS).map(([value, label]) => ({
+  value,
+  label,
+  dot:
+    {
+      active: "bg-status-active",
+      investigation: "bg-status-investigation",
+      pending: "bg-status-pending",
+      resolved: "bg-status-resolved",
+      archived: "bg-status-archived",
+    }[value] || "",
+}));
+
+const delitoOptions = Object.entries(DELITO_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
+
+// Opciones categóricas nuevas
+const puestoOptions = Object.entries(PUESTO_POLITICO_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
+
+const cargoEstadoOptions = Object.entries(CARGO_ESTADO_LABELS).map(([value, label]) => ({
+  value,
+  label,
+  dot:
+    value === "con_funciones"
+      ? "bg-status-resolved"
+      : "bg-status-archived",
+}));
+
+const sectorOptions = Object.entries(SECTOR_POLITICO_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
+
+// Opciones derivadas dinámicamente de los casos (partidos, fuentes y casos)
+const conteoPartidos = new Map<string, number>();
+const conteoFuentes = new Map<string, number>();
+const conteoRegiones = new Map<string, number>();
+const conteoCasos = new Map<string, { nombre: string; count: number }>();
+
+for (const c of cases) {
+  const d = c.data;
+  if (d.partido && d.partido.trim()) {
+    conteoPartidos.set(d.partido, (conteoPartidos.get(d.partido) || 0) + 1);
+  }
+  if (d.fuente_tipo) {
+    conteoFuentes.set(d.fuente_tipo, (conteoFuentes.get(d.fuente_tipo) || 0) + 1);
+  }
+  if (d.caso && d.caso.id) {
+    const existing = conteoCasos.get(d.caso.id);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      conteoCasos.set(d.caso.id, { nombre: d.caso.nombre, count: 1 });
+    }
+  }
+}
+
+const fuenteLabels: Record<string, string> = {
+  oficial: "Fuente oficial",
+  prensa: "Prensa",
+  investigacion: "Periodismo de investigación",
+};
+
+const fuenteOptions = Array.from(conteoFuentes.entries()).map(([value, count]) => ({
+  value,
+  label: fuenteLabels[value] || value,
+  count,
+  dot:
+    {
+      oficial: "bg-accent-info",
+      prensa: "bg-accent-highlight",
+      investigacion: "bg-accent-contrast",
+    }[value] || "",
+}));
+
+const partidoOptions = Array.from(conteoPartidos.entries())
+  .sort((a, b) => b[1] - a[1])
+  .map(([value, count]) => ({ value, label: value, count }));
+
+// Opciones de "caso" (agrupaciones de personas en un mismo escándalo).
+// Solo mostramos en el filtro si tiene 2+ personas relacionadas.
+const casoOptions = Array.from(conteoCasos.entries())
+  .filter(([, info]) => info.count >= 2)
+  .map(([id, info]) => ({
+    value: id,
+    label: info.nombre,
+    count: info.count,
+  }))
+  .sort((a, b) => (b.count || 0) - (a.count || 0));
+
+// Regiones con conteo
+for (const c of cases) {
+  const r = (c.data as { region?: string }).region;
+  if (r) conteoRegiones.set(r, (conteoRegiones.get(r) || 0) + 1);
+}
+const regionOptions = REGIONES.map((r) => ({
+  value: r,
+  label: r,
+  count: conteoRegiones.get(r),
+})).filter((r) => r.count);
+
+function buildHref(overrides: Record<string, string>): string {
+  const params = new URLSearchParams();
+  const base: Record<string, string> = {
+    estado: currentEstado,
+    region: currentRegion,
+    delito: currentDelito,
+    fuente: currentFuente,
+    puesto: currentPuesto,
+    cargo_estado: currentCargoEstado,
+    sector: currentSector,
+    partido: currentPartido,
+    caso: currentCasos,
+  };
+  const merged = { ...base, ...overrides };
+  for (const [k, v] of Object.entries(merged)) {
+    if (v) params.set(k, v);
+  }
+  const qs = params.toString();
+  return qs ? `/casos?${qs}` : "/casos";
+}
+
+const hasAnyFilter =
+  currentEstado ||
+  currentRegion ||
+  currentDelito ||
+  currentFuente ||
+  currentPuesto ||
+  currentCargoEstado ||
+  currentSector ||
+  currentPartido ||
+  currentCasos;
+---
+
+<div
+  id="filter-bar"
+  class="sticky top-16 z-40 -mx-6 border-b border-border bg-surface/85 px-6 py-3 backdrop-blur-md lg:top-20"
+  data-filter-bar
+>
+  <div class="mx-auto max-w-[1280px]">
+    <div class="scrollbar-thin flex items-center gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
+      <span class="mr-1 hidden shrink-0 font-label text-xs uppercase tracking-wider text-text-tertiary sm:inline">
+        Filtros:
+      </span>
+
+      <!-- Todos (reset global) -->
+      <a
+        data-all-filters-link
+        data-reset-filters
+        href={buildHref({ estado: "", region: "", delito: "", fuente: "", puesto: "", cargo_estado: "", sector: "", partido: "", caso: "" })}
+        class:list={[
+          "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-label text-xs transition-all duration-200",
+          !hasAnyFilter
+            ? "border-accent-primary bg-accent-primary text-white shadow-sm"
+            : "border-border bg-surface-card text-text-secondary hover:border-accent-primary hover:text-accent-primary",
+        ]}
+      >
+        Todos
+      </a>
+
+      <!-- Estado (semántico, destacado) -->
+      <FilterBadge
+        label="Estado"
+        paramKey="estado"
+        options={estadoOptions}
+        currentValue={currentEstado}
+        buildHref={buildHref}
+        accent="primary"
+      />
+
+      <!-- Puesto político -->
+      <FilterBadge
+        label="Puesto"
+        paramKey="puesto"
+        options={puestoOptions}
+        currentValue={currentPuesto}
+        buildHref={buildHref}
+        accent="info"
+      />
+
+      <!-- Cargo activo / sin funciones -->
+      <FilterBadge
+        label="Funciones"
+        paramKey="cargo_estado"
+        options={cargoEstadoOptions}
+        currentValue={currentCargoEstado}
+        buildHref={buildHref}
+        accent="highlight"
+      />
+
+      <!-- Región -->
+      <FilterBadge
+        label="Región"
+        paramKey="region"
+        options={regionOptions}
+        currentValue={currentRegion}
+        buildHref={buildHref}
+        accent="info"
+      />
+
+      <!-- Partido -->
+      {partidoOptions.length > 0 && (
+        <FilterBadge
+          label="Partido"
+          paramKey="partido"
+          options={partidoOptions}
+          currentValue={currentPartido}
+          buildHref={buildHref}
+          accent="info"
+        />
+      )}
+
+      <!-- Caso (agrupación de personas en un mismo escándalo) -->
+      {casoOptions.length > 0 && (
+        <FilterBadge
+          label="Caso"
+          paramKey="caso"
+          options={casoOptions}
+          currentValue={currentCasos}
+          buildHref={buildHref}
+          accent="contrast"
+        />
+      )}
+
+      <!-- Sector político -->
+      <FilterBadge
+        label="Sector"
+        paramKey="sector"
+        options={sectorOptions}
+        currentValue={currentSector}
+        buildHref={buildHref}
+        accent="contrast"
+      />
+
+      <!-- Delito -->
+      <FilterBadge
+        label="Delito"
+        paramKey="delito"
+        options={delitoOptions}
+        currentValue={currentDelito}
+        buildHref={buildHref}
+        accent="contrast"
+      />
+
+      <!-- Fuente -->
+      {fuenteOptions.length > 0 && (
+        <FilterBadge
+          label="Fuente"
+          paramKey="fuente"
+          options={fuenteOptions}
+          currentValue={currentFuente}
+          buildHref={buildHref}
+          accent="info"
+        />
+      )}
+
+      <!-- Limpiar todos -->
+      <a
+        data-clear-all-filters
+        data-reset-filters
+        href={buildHref({ estado: "", region: "", delito: "", fuente: "", puesto: "", cargo_estado: "", sector: "", partido: "", caso: "" })}
+        class:list={[
+          "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-label text-xs text-accent-contrast transition-colors hover:bg-accent-contrast/10",
+          !hasAnyFilter && "hidden",
+        ]}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Limpiar todo
+      </a>
+    </div>
+  </div>
+</div>

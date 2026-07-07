@@ -1,0 +1,423 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Badge from "@/components/Badge.astro";
+import Timeline from "@/components/Timeline.astro";
+import StatBadge from "@/components/StatBadge.astro";
+import RelatedCases from "@/components/RelatedCases.astro";
+import {
+  STATUS_LABELS,
+  DELITO_LABELS,
+  TIPO_PROCESO_LABELS,
+  FUENTE_TIPO_LABELS,
+  DISCLAIMER,
+} from "@/lib/constants";
+
+export async function getStaticPaths() {
+  const cases = await getCollection("cases");
+  return cases.map((c) => ({
+    params: { slug: c.id },
+    props: { caso: c },
+  }));
+}
+
+const { caso } = Astro.props;
+const { Content } = await render(caso);
+const d = caso.data;
+
+const allCases = await getCollection("cases");
+
+const sortByFecha = (a: typeof caso, b: typeof caso) =>
+  new Date(b.data.fecha_actualizacion).getTime() -
+  new Date(a.data.fecha_actualizacion).getTime();
+
+const sorted = [...allCases].sort(sortByFecha);
+const idx = sorted.findIndex((c) => c.id === caso.id);
+const prev = idx > 0 ? sorted[idx - 1] : sorted[sorted.length - 1];
+const next = idx < sorted.length - 1 ? sorted[idx + 1] : sorted[0];
+
+// Related: primero otros imputados del mismo `caso` (si existe), luego
+// similitud por delito/región/partido/fuente. Devuelve {casos, title} para
+// que el bloque pueda titularse "Otros imputados del mismo caso".
+const mismoCaso = d.caso
+  ? allCases.filter(
+      (c) => c.id !== caso.id && c.data.caso?.id === d.caso!.id
+    )
+  : [];
+
+const otrosRelated = allCases
+  .filter((c) => c.id !== caso.id && (!d.caso || c.data.caso?.id !== d.caso!.id))
+  .map((c) => ({
+    c,
+    score:
+      (c.data.delito === d.delito ? 3 : 0) +
+      (c.data.region && d.region && c.data.region === d.region ? 2 : 0) +
+      (c.data.partido && d.partido && c.data.partido === d.partido ? 1 : 0) +
+      (c.data.fuente_tipo === d.fuente_tipo ? 1 : 0),
+  }))
+  .filter((x) => x.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, mismoCaso.length > 0 ? 2 : 4)
+  .map((x) => x.c);
+
+const related = [...mismoCaso, ...otrosRelated];
+const relatedTitle =
+  mismoCaso.length > 0
+    ? `Otros imputados en ${d.caso!.nombre}`
+    : "Casos relacionados";
+
+const fuenteColorMap: Record<string, string> = {
+  oficial: "bg-accent-info",
+  prensa: "bg-accent-highlight",
+  investigacion: "bg-accent-contrast",
+};
+const fuenteColor = fuenteColorMap[d.fuente_tipo] || "bg-accent-info";
+
+const formatDate = (dt: Date) =>
+  new Date(dt).toLocaleDateString("es-CL", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+const description = d.resumen_corto || d.extracto || `${d.implicado} - ${d.cargo}`;
+---
+
+<BaseLayout title={d.implicado} description={description}>
+  <article class="mx-auto max-w-[1280px] px-4 sm:px-6">
+    <!-- Breadcrumb -->
+    <nav class="pt-8 font-caption text-xs text-text-tertiary" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2">
+        <li><a href="/" class="hover:text-accent-primary">Inicio</a></li>
+        <li>/</li>
+        <li><a href="/casos" class="hover:text-accent-primary">Casos</a></li>
+        <li>/</li>
+        <li class="truncate text-text-secondary">{d.implicado}</li>
+      </ol>
+    </nav>
+
+    <!-- HERO del caso -->
+    <header class="mt-6 grid gap-8 border-b border-border pb-10 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <Badge status={d.estado} />
+          {
+            d.tipo_proceso && (
+              <span class="rounded-full border border-border bg-surface-card px-3 py-1 font-caption text-xs uppercase tracking-wide text-text-secondary">
+                {TIPO_PROCESO_LABELS[d.tipo_proceso]}
+              </span>
+            )
+          }
+          {
+            d.caso && (
+              <a
+                href={`/casos?caso=${encodeURIComponent(d.caso.id)}`}
+                class="inline-flex items-center gap-1.5 rounded-full border border-accent-contrast/30 bg-accent-contrast/10 px-3 py-1 font-caption text-xs uppercase tracking-wide text-accent-contrast transition-colors hover:bg-accent-contrast/20"
+                title={`Ver otros imputados en ${d.caso.nombre}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1 6.5-2 2 1 4.5 2 6.5 2a1 1 0 0 1 1 1z"></path>
+                </svg>
+                {d.caso.nombre}
+              </a>
+            )
+          }
+        </div>
+        <h1 class="mt-4 font-display text-3xl font-bold leading-tight text-text-primary sm:text-4xl lg:text-5xl">
+          {d.implicado}
+        </h1>
+        <p class="mt-3 font-label text-lg text-text-secondary sm:text-xl">
+          {d.cargo}
+        </p>
+        {
+          d.partido && (
+            <p class="mt-1 font-caption text-sm uppercase tracking-wide text-text-tertiary">
+              {d.partido}
+            </p>
+          )
+        }
+
+        <!-- Extracto destacado -->
+        {
+          (d.resumen_corto || d.extracto) && (
+            <p class="mt-6 max-w-2xl font-body text-lg leading-relaxed text-text-primary sm:text-xl">
+              {d.resumen_corto || d.extracto}
+            </p>
+          )
+        }
+      </div>
+
+      <!-- Stat cards lateral (desktop) / debajo (mobile) -->
+      <aside class="grid grid-cols-2 gap-3 self-start lg:grid-cols-1">
+        {
+          d.monto && (
+            <StatBadge
+              label="Monto del fraude"
+              value={d.monto}
+              variant="highlight"
+              size="lg"
+            />
+          )
+        }
+        <StatBadge
+          label="Tipo de delito"
+          value={DELITO_LABELS[d.delito]}
+          variant="info"
+        />
+        {
+          d.region && (
+            <StatBadge label="Región" value={d.region} />
+          )
+        }
+      </aside>
+    </header>
+
+    <!-- Cuerpo: 2 columnas -->
+    <div class="grid gap-10 py-10 lg:grid-cols-3 lg:gap-12">
+      <!-- Columna principal -->
+      <div class="lg:col-span-2 space-y-10">
+        <!-- Extracto largo -->
+        {
+          d.extracto && d.resumen_corto && d.extracto !== d.resumen_corto && (
+            <section>
+              <h2 class="font-display text-2xl font-semibold text-text-primary">Contexto del caso</h2>
+              <p class="mt-4 font-body text-base leading-relaxed text-text-secondary sm:text-lg">
+                {d.extracto}
+              </p>
+            </section>
+          )
+        }
+
+        <!-- Contenido markdown -->
+        {
+          caso.body && caso.body.trim() && (
+            <section class="prose-content">
+              <h2 class="font-display text-2xl font-semibold text-text-primary">Detalles</h2>
+              <div class="mt-4 space-y-4 font-body text-base leading-relaxed text-text-secondary">
+                <Content />
+              </div>
+            </section>
+          )
+        }
+
+        <!-- Timeline de hitos -->
+        {
+          d.hitos && d.hitos.length > 0 && (
+            <section>
+              <h2 class="font-display text-2xl font-semibold text-text-primary">Cronología procesal</h2>
+              <p class="mt-2 font-body text-sm text-text-tertiary">
+                {d.hitos.length} hitos documentados
+              </p>
+              <div class="mt-6">
+                <Timeline hitos={d.hitos} />
+              </div>
+            </section>
+          )
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="space-y-6 lg:sticky lg:top-32 lg:self-start">
+        <!-- Metadatos procesales -->
+        <section class="rounded-2xl border border-border bg-surface-alt p-6">
+          <h3 class="font-display text-base font-semibold text-text-primary">Información procesal</h3>
+          <dl class="mt-4 space-y-4 text-sm">
+            <div>
+              <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Estado</dt>
+              <dd class="mt-1 text-text-primary">{STATUS_LABELS[d.estado]}</dd>
+            </div>
+            {
+              d.tipo_proceso && (
+                <div>
+                  <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Etapa procesal</dt>
+                  <dd class="mt-1 text-text-primary">{TIPO_PROCESO_LABELS[d.tipo_proceso]}</dd>
+                </div>
+              )
+            }
+            <div>
+              <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Inicio de la causa</dt>
+              <dd class="mt-1 font-mono text-text-primary">{formatDate(d.fecha_inicio)}</dd>
+            </div>
+            <div>
+              <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Última actualización</dt>
+              <dd class="mt-1 font-mono text-text-primary">{formatDate(d.fecha_actualizacion)}</dd>
+            </div>
+            {
+              d.fiscalia && (
+                <div>
+                  <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Fiscalía</dt>
+                  <dd class="mt-1 text-text-primary">{d.fiscalia}</dd>
+                </div>
+              )
+            }
+            {
+              d.abogado && (
+                <div>
+                  <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Defensa</dt>
+                  <dd class="mt-1 text-text-primary">{d.abogado}</dd>
+                </div>
+              )
+            }
+            {
+              d.querellante && (
+                <div>
+                  <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Querellante</dt>
+                  <dd class="mt-1 text-text-primary">{d.querellante}</dd>
+                </div>
+              )
+            }
+            {
+              (d.ruc || d.rit) && (
+                <div>
+                  <dt class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Identificadores</dt>
+                  <dd class="mt-1 space-y-1 font-mono text-xs text-text-primary">
+                    {d.ruc && <div>RUC: {d.ruc}</div>}
+                    {d.rit && <div>RIT: {d.rit}</div>}
+                  </dd>
+                </div>
+              )
+            }
+          </dl>
+        </section>
+
+        <!-- Fuentes -->
+        <section class="rounded-2xl border border-border bg-surface-alt p-6">
+          <h3 class="font-display text-base font-semibold text-text-primary">Fuentes</h3>
+          <ul class="mt-4 space-y-3">
+            <li>
+              <a
+                href={d.fuente_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-start gap-3 rounded-lg p-2 -m-2 transition-colors hover:bg-surface-card"
+              >
+                <span
+                  class:list={["mt-1 inline-flex shrink-0 rounded-full px-2.5 py-1 font-caption text-xs font-semibold text-white", fuenteColor]}
+                >
+                  {FUENTE_TIPO_LABELS[d.fuente_tipo]}
+                </span>
+                <div class="min-w-0 flex-1">
+                  <p class="font-label text-sm text-text-primary group-hover:text-accent-primary">
+                    {d.fuente}
+                  </p>
+                  {
+                    d.periodistas && d.periodistas.length > 0 && (
+                      <p class="mt-0.5 font-caption text-xs text-text-tertiary">
+                        Por {d.periodistas.join(", ")}
+                      </p>
+                    )
+                  }
+                </div>
+                <svg class="size-4 shrink-0 text-text-tertiary group-hover:text-accent-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 7h10v10"></path>
+                  <path d="M7 17 17 7"></path>
+                </svg>
+              </a>
+            </li>
+            {
+              d.fuentes_adicionales?.map((f) => (
+                <li>
+                  <a
+                    href={f.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex items-start gap-3 rounded-lg p-2 -m-2 transition-colors hover:bg-surface-card"
+                  >
+                    <span
+                      class:list={[
+                        "mt-1 inline-flex shrink-0 rounded-full px-2.5 py-1 font-caption text-xs font-semibold text-white",
+                        fuenteColorMap[f.tipo || "prensa"] || "bg-accent-info",
+                      ]}
+                    >
+                      {FUENTE_TIPO_LABELS[f.tipo || "prensa"]}
+                    </span>
+                    <div class="min-w-0 flex-1">
+                      <p class="font-label text-sm text-text-primary group-hover:text-accent-primary">
+                        {f.nombre}
+                      </p>
+                    </div>
+                    <svg class="size-4 shrink-0 text-text-tertiary group-hover:text-accent-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 7h10v10"></path>
+                      <path d="M7 17 17 7"></path>
+                    </svg>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        {
+          d.tags && d.tags.length > 0 && (
+            <section>
+              <h3 class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Etiquetas</h3>
+              <div class="mt-3 flex flex-wrap gap-2">
+                {d.tags.map((tag) => (
+                  <span class="rounded-full border border-border bg-surface-card px-2.5 py-1 font-caption text-xs text-text-secondary">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          related.length > 0 && <RelatedCases casos={related} title={relatedTitle} />
+        }
+      </aside>
+    </div>
+
+    <!-- Navegación prev/next -->
+    <nav class="mt-8 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Navegación entre casos">
+      <a
+        href={`/casos/${prev.id}`}
+        class="group flex items-center gap-3 rounded-xl border border-border bg-surface-card p-4 transition-all hover:border-accent-primary/40"
+      >
+        <svg class="size-5 text-text-tertiary group-hover:text-accent-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"></path>
+        </svg>
+        <div class="min-w-0 flex-1">
+          <p class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Anterior</p>
+          <p class="truncate font-display text-sm font-semibold text-text-primary group-hover:text-accent-primary">
+            {prev.data.implicado}
+          </p>
+        </div>
+      </a>
+      <a
+        href={`/casos/${next.id}`}
+        class="group flex items-center gap-3 rounded-xl border border-border bg-surface-card p-4 transition-all hover:border-accent-primary/40 sm:flex-row-reverse sm:text-right"
+      >
+        <svg class="size-5 text-text-tertiary group-hover:text-accent-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+        <div class="min-w-0 flex-1">
+          <p class="font-caption text-xs uppercase tracking-wide text-text-tertiary">Siguiente</p>
+          <p class="truncate font-display text-sm font-semibold text-text-primary group-hover:text-accent-primary">
+            {next.data.implicado}
+          </p>
+        </div>
+      </a>
+    </nav>
+
+    <!-- Disclaimer -->
+    <div class="mt-10 rounded-2xl border border-accent-info/20 bg-accent-info/5 p-6 text-center">
+      <p class="font-caption text-sm leading-relaxed text-text-secondary">
+        {DISCLAIMER}
+      </p>
+    </div>
+
+    <div class="py-12 text-center">
+      <a
+        href="/casos"
+        class="inline-flex items-center gap-2 rounded-full border border-border bg-surface-card px-6 py-3 font-label text-sm text-text-primary transition-all hover:border-accent-primary hover:text-accent-primary"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 19-7-7 7-7"></path>
+          <path d="M19 12H5"></path>
+        </svg>
+        Ver todos los casos
+      </a>
+    </div>
+  </article>
+</BaseLayout>

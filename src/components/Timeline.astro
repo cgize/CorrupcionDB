@@ -1,0 +1,71 @@
+---
+import { HITO_TIPO_COLORS } from "@/lib/constants";
+
+export interface Hito {
+  fecha: Date;
+  titulo: string;
+  descripcion?: string;
+  tipo: keyof typeof HITO_TIPO_COLORS;
+}
+
+export interface Props {
+  hitos: Hito[];
+}
+
+const { hitos } = Astro.props;
+
+const hitosSorted = [...hitos].sort(
+  (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+);
+
+function formatDate(d: Date): string {
+  return new Date(d).toLocaleDateString("es-CL", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const tipoLabels: Record<string, string> = {
+  formalizacion: "Formalización",
+  acusacion: "Acusación",
+  sentencia: "Sentencia",
+  resolucion: "Resolución",
+  allanamiento: "Allanamiento",
+  audiencia: "Audiencia",
+  investigacion: "Investigación",
+  otro: "Hito",
+};
+---
+
+<ol class="relative space-y-6 border-l-2 border-border pl-6 sm:pl-8">
+  {
+    hitosSorted.map((hito, i) => (
+      <li class="relative">
+        <span
+          class:list={[
+            "absolute -left-[33px] flex size-4 items-center justify-center rounded-full ring-4 ring-surface-card sm:-left-[41px] sm:size-5",
+            HITO_TIPO_COLORS[hito.tipo] || "bg-text-tertiary",
+          ]}
+          aria-hidden="true"
+        ></span>
+        <div class="flex flex-col gap-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-mono text-xs font-semibold text-text-primary tabular-nums">
+              {formatDate(hito.fecha)}
+            </span>
+            <span class="rounded-full bg-surface-alt px-2 py-0.5 font-caption text-xs uppercase tracking-wide text-text-tertiary">
+              {tipoLabels[hito.tipo] || hito.tipo}
+            </span>
+          </div>
+          <h4 class="font-display text-base font-semibold leading-tight text-text-primary">
+            {hito.titulo}
+          </h4>
+          {hito.descripcion && (
+            <p class="text-body-sm text-text-secondary">{hito.descripcion}</p>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ol>

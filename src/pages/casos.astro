@@ -1,0 +1,672 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CaseListItem from "@/components/CaseListItem.astro";
+import CaseCard from "@/components/CaseCard.astro";
+import FilterBar from "@/components/FilterBar.astro";
+import SortControl from "@/components/SortControl.astro";
+import EmptyState from "@/components/EmptyState.astro";
+
+const allCases = await getCollection("cases");
+
+const searchQuery = Astro.url.searchParams.get("q")?.toLowerCase() || "";
+const statusFilter = Astro.url.searchParams.get("estado") || "";
+const regionFilter = Astro.url.searchParams.get("region") || "";
+const delitoFilter = Astro.url.searchParams.get("delito") || "";
+const fuenteFilter = Astro.url.searchParams.get("fuente") || "";
+const puestoFilter = Astro.url.searchParams.get("puesto") || "";
+const cargoEstadoFilter = Astro.url.searchParams.get("cargo_estado") || "";
+const sectorFilter = Astro.url.searchParams.get("sector") || "";
+const partidoFilter = Astro.url.searchParams.get("partido") || "";
+const casoFilter = Astro.url.searchParams.get("caso") || "";
+const sort = Astro.url.searchParams.get("sort") || "recientes";
+
+const latestCases = [...allCases]
+  .sort(
+    (a, b) =>
+      new Date(b.data.fecha_actualizacion).getTime() -
+      new Date(a.data.fecha_actualizacion).getTime()
+  )
+  .slice(0, 3);
+
+const filteredCases = allCases
+  .filter((c) => {
+    if (statusFilter && c.data.estado !== statusFilter) return false;
+    if (regionFilter && c.data.region !== regionFilter) return false;
+    if (delitoFilter && c.data.delito !== delitoFilter) return false;
+    if (fuenteFilter && c.data.fuente_tipo !== fuenteFilter) return false;
+    if (puestoFilter && c.data.puesto_politico !== puestoFilter) return false;
+    if (cargoEstadoFilter && c.data.cargo_estado !== cargoEstadoFilter) return false;
+    if (sectorFilter && c.data.sector_politico !== sectorFilter) return false;
+    if (partidoFilter && c.data.partido !== partidoFilter) return false;
+    if (casoFilter && c.data.caso?.id !== casoFilter) return false;
+    if (searchQuery) {
+      const q = searchQuery;
+      return (
+        c.data.implicado.toLowerCase().includes(q) ||
+        c.data.cargo.toLowerCase().includes(q) ||
+        c.data.delito.toLowerCase().includes(q) ||
+        (c.data.ruc || "").toLowerCase().includes(q) ||
+        (c.data.rit || "").toLowerCase().includes(q) ||
+        (c.data.partido || "").toLowerCase().includes(q) ||
+        (c.data.tags || []).some((t) => t.toLowerCase().includes(q))
+      );
+    }
+    return true;
+  })
+  .sort((a, b) => {
+    switch (sort) {
+      case "antiguos":
+        return (
+          new Date(a.data.fecha_actualizacion).getTime() -
+          new Date(b.data.fecha_actualizacion).getTime()
+        );
+      case "az":
+        return a.data.implicado.localeCompare(b.data.implicado, "es");
+      case "monto_desc":
+        return (b.data.monto_clp || 0) - (a.data.monto_clp || 0);
+      case "recientes":
+      default:
+        return (
+          new Date(b.data.fecha_actualizacion).getTime() -
+          new Date(a.data.fecha_actualizacion).getTime()
+        );
+    }
+  });
+
+const hasFilters =
+  !!(
+    statusFilter ||
+    regionFilter ||
+    delitoFilter ||
+    fuenteFilter ||
+    puestoFilter ||
+    cargoEstadoFilter ||
+    sectorFilter ||
+    partidoFilter ||
+    casoFilter ||
+    searchQuery
+  );
+
+const filterableText = (c: (typeof allCases)[number]) =>
+  [
+    c.data.implicado,
+    c.data.cargo,
+    c.data.delito,
+    c.data.ruc,
+    c.data.rit,
+    c.data.partido,
+    ...(c.data.tags || []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+const buildSearchHref = (q: string) => {
+  const params = new URLSearchParams();
+  if (statusFilter) params.set("estado", statusFilter);
+  if (regionFilter) params.set("region", regionFilter);
+  if (delitoFilter) params.set("delito", delitoFilter);
+  if (fuenteFilter) params.set("fuente", fuenteFilter);
+  if (puestoFilter) params.set("puesto", puestoFilter);
+  if (cargoEstadoFilter) params.set("cargo_estado", cargoEstadoFilter);
+  if (sectorFilter) params.set("sector", sectorFilter);
+  if (partidoFilter) params.set("partido", partidoFilter);
+  if (casoFilter) params.set("caso", casoFilter);
+  if (sort && sort !== "recientes") params.set("sort", sort);
+  if (q) params.set("q", q);
+  const qs = params.toString();
+  return qs ? `/casos?${qs}` : "/casos";
+};
+---
+
+<BaseLayout
+  title="Casos"
+  description="Base de datos de casos de corrupción, faltas a la probidad y delitos contra el patrimonio público en Chile. Filtros por puesto político, estado procesal, región, partido y sector."
+>
+  <!-- Hero compacto -->
+  <section
+    class="relative overflow-hidden border-b border-border bg-gradient-to-b from-surface-alt to-surface px-4 py-12 sm:px-6 sm:py-16"
+  >
+    <div
+      class="pointer-events-none absolute -right-20 -top-20 size-[300px] rounded-full border-2 border-accent-highlight/15"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="pointer-events-none absolute -left-10 bottom-0 size-[180px] rounded-full border-2 border-accent-primary/10"
+      aria-hidden="true"
+    ></div>
+    <div class="relative mx-auto max-w-[1280px]">
+      <p class="font-caption text-xs uppercase tracking-wider text-accent-primary">
+        Base de datos pública
+      </p>
+      <h1
+        class="mt-3 font-display text-4xl font-bold leading-tight text-text-balance text-text-primary sm:text-5xl lg:text-6xl"
+      >
+        Casos <span class="text-accent-primary">registrados</span>
+      </h1>
+      <p class="mt-4 max-w-2xl font-body text-base text-text-secondary sm:text-lg">
+        Cada registro está vinculado a una fuente oficial verificable. Se presume la inocencia de todas
+        las personas mencionadas mientras no exista sentencia firme.
+      </p>
+
+      <!-- Stats inline -->
+      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-text-secondary">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-2xl font-bold text-text-primary tabular-nums">{allCases.length}</span>
+          <span class="text-text-tertiary">casos totales</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-2xl font-bold text-accent-contrast tabular-nums">
+            {allCases.filter((c) => c.data.estado === "active" || c.data.estado === "investigation").length}
+          </span>
+          <span class="text-text-tertiary">en curso</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-2xl font-bold text-status-resolved tabular-nums">
+            {allCases.filter((c) => c.data.estado === "resolved").length}
+          </span>
+          <span class="text-text-tertiary">resueltos</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-2xl font-bold text-accent-info tabular-nums">
+            {allCases.filter((c) => c.data.cargo_estado === "con_funciones").length}
+          </span>
+          <span class="text-text-tertiary">con funciones públicas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Últimos casos agregados -->
+  <section class="mx-auto max-w-[1280px] px-4 pt-10 sm:px-6 sm:pt-14">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-caption text-xs uppercase tracking-wider text-accent-contrast">
+          Novedades
+        </p>
+        <h2 class="mt-2 font-display text-2xl font-bold text-text-primary sm:text-3xl">
+          Últimos <span class="text-accent-contrast">agregados</span>
+        </h2>
+      </div>
+    </div>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {latestCases.map((c) => (
+        <div class="stagger-item">
+          <CaseCard caso={c} showDescription={false} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Filter bar sticky con badges colapsables -->
+  <div class="mt-10 sm:mt-14">
+  <FilterBar
+    currentEstado={statusFilter}
+    currentRegion={regionFilter}
+    currentDelito={delitoFilter}
+    currentFuente={fuenteFilter}
+    currentPuesto={puestoFilter}
+    currentCargoEstado={cargoEstadoFilter}
+    currentSector={sectorFilter}
+    currentPartido={partidoFilter}
+    currentCasos={casoFilter}
+    cases={allCases}
+  />
+  </div>
+
+  <!-- Contador + sort -->
+  <section class="mx-auto max-w-[1280px] px-4 pt-4 sm:px-6 sm:pt-6">
+    <div id="counter-row" class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-baseline gap-2">
+        <span id="case-count" class="font-display text-2xl font-bold text-text-primary tabular-nums">
+          {filteredCases.length}
+        </span>
+        <span id="case-count-label" class="font-label text-sm text-text-secondary">
+          {filteredCases.length === 1 ? "caso" : "casos"}
+          {hasFilters && <span class="text-text-tertiary"> de {allCases.length}</span>}
+        </span>
+      </div>
+      <SortControl
+        currentSort={sort}
+        currentEstado={statusFilter}
+        currentRegion={regionFilter}
+        currentDelito={delitoFilter}
+        currentFuente={fuenteFilter}
+        currentPuesto={puestoFilter}
+        currentCargoEstado={cargoEstadoFilter}
+        currentSector={sectorFilter}
+        currentPartido={partidoFilter}
+        currentCasos={casoFilter}
+        currentQ={searchQuery}
+      />
+    </div>
+
+    <!-- Buscador (debajo del contador de resultados) -->
+    <form id="search-form" action="/casos" method="GET" class="mt-6 max-w-2xl">
+      <div class="relative">
+        <svg
+          class="pointer-events-none absolute left-5 top-1/2 size-5 -translate-y-1/2 text-text-tertiary"
+          xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          name="q"
+          placeholder="Buscar por nombre, cargo, delito, RUC, RIT o etiqueta..."
+          value={searchQuery}
+          class="w-full rounded-full border border-border bg-surface-card py-3 pl-12 pr-4 font-body text-sm text-text-primary transition-colors outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/30"
+        />
+        {
+          hasFilters && (
+            <>
+<input type="hidden" name="estado" value={statusFilter} />
+               <input type="hidden" name="region" value={regionFilter} />
+               <input type="hidden" name="delito" value={delitoFilter} />
+               <input type="hidden" name="fuente" value={fuenteFilter} />
+               <input type="hidden" name="puesto" value={puestoFilter} />
+               <input type="hidden" name="cargo_estado" value={cargoEstadoFilter} />
+               <input type="hidden" name="sector" value={sectorFilter} />
+               <input type="hidden" name="partido" value={partidoFilter} />
+               <input type="hidden" name="caso" value={casoFilter} />
+            </>
+          )
+        }
+      </div>
+      <div id="clear-search-wrapper" class:list={[!searchQuery && "hidden"]}>
+        <a
+          id="clear-search-link"
+          href={buildSearchHref("")}
+          class="mt-2 inline-flex items-center gap-1.5 font-caption text-xs text-accent-contrast hover:underline"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span id="clear-search-label">Quitar búsqueda «{searchQuery}»</span>
+        </a>
+      </div>
+    </form>
+  </section>
+
+  <!-- Listado de casos (formato lista) -->
+  <section id="results-section" class="mx-auto max-w-[1280px] px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-8">
+    <div id="empty-state" class="hidden">
+      <EmptyState
+        title="Sin resultados"
+        message="No encontramos casos con esos criterios. Intenta con otros filtros o limpia la búsqueda."
+      />
+    </div>
+    <div id="results-list" class="space-y-3">
+      {
+        allCases.map((c) => (
+          <div
+            class="stagger-item"
+            data-case-item
+            data-estado={c.data.estado}
+            data-region={c.data.region || ""}
+            data-delito={c.data.delito}
+            data-fuente={c.data.fuente_tipo}
+            data-puesto={c.data.puesto_politico || ""}
+            data-cargo-estado={c.data.cargo_estado || ""}
+            data-sector={c.data.sector_politico || ""}
+            data-partido={c.data.partido || ""}
+            data-caso={c.data.caso?.id || ""}
+            data-search={filterableText(c)}
+            data-fecha={c.data.fecha_actualizacion.toISOString()}
+            data-implicado={c.data.implicado}
+            data-monto={c.data.monto_clp || 0}
+          >
+            <CaseListItem caso={c} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  function debounce(fn: (...args: any[]) => void, delay: number) {
+    let timer: ReturnType<typeof setTimeout>;
+    return function (this: any, ...args: any[]) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  (function () {
+    const FILTER_KEYS = [
+      "estado",
+      "region",
+      "delito",
+      "fuente",
+      "puesto",
+      "cargo_estado",
+      "sector",
+      "partido",
+      "caso",
+    ];
+
+    const DATA_KEY: Record<string, string> = {
+      estado: "estado",
+      region: "region",
+      delito: "delito",
+      fuente: "fuente",
+      puesto: "puesto",
+      cargo_estado: "cargoEstado",
+      sector: "sector",
+      partido: "partido",
+      caso: "caso",
+    };
+
+    const SUMMARY_INACTIVE =
+      "border-border bg-surface-card text-text-secondary hover:border-accent-primary/40 hover:text-text-primary";
+    const SUMMARY_ACTIVE: Record<string, string> = {
+      primary: "text-accent-primary border-accent-primary/40 bg-accent-primary/5",
+      info: "text-accent-info border-accent-info/40 bg-accent-info/5",
+      highlight: "text-accent-highlight border-accent-highlight/40 bg-accent-highlight/5",
+      contrast: "text-accent-contrast border-accent-contrast/40 bg-accent-contrast/5",
+    };
+    const OPTION_INACTIVE = "text-text-secondary hover:bg-surface-alt hover:text-text-primary";
+    const OPTION_ACTIVE = "bg-accent-primary/10 font-semibold text-accent-primary";
+    const ALL_INACTIVE =
+      "border-border bg-surface-card text-text-secondary hover:border-accent-primary hover:text-accent-primary";
+    const ALL_ACTIVE = "border-accent-primary bg-accent-primary text-white shadow-sm";
+
+    const items = Array.from(document.querySelectorAll<HTMLElement>("[data-case-item]"));
+    const total = items.length;
+
+    function splitClasses(value: string) {
+      return value.split(" ").filter(Boolean);
+    }
+
+    function swapClasses(el: Element | null, remove: string, add: string) {
+      if (!el) return;
+      el.classList.remove(...splitClasses(remove));
+      el.classList.add(...splitClasses(add));
+    }
+
+    function hasFilterParams(params: URLSearchParams) {
+      return FILTER_KEYS.some((key) => !!params.get(key));
+    }
+
+    function pathFromUrl(url: URL) {
+      return `${url.pathname}${url.search}`;
+    }
+
+    function urlWith(overrides: Record<string, string>, baseUrl = new URL(window.location.href)) {
+      const url = new URL(baseUrl.href);
+      for (const [key, value] of Object.entries(overrides)) {
+        if (value) url.searchParams.set(key, value);
+        else url.searchParams.delete(key);
+      }
+      return pathFromUrl(url);
+    }
+
+    function resetFilterParams(url: URL) {
+      FILTER_KEYS.forEach((key) => url.searchParams.delete(key));
+    }
+
+    function updateFilterLinks(currentUrl: URL) {
+      const resetUrl = new URL(currentUrl.href);
+      resetFilterParams(resetUrl);
+      document.querySelectorAll<HTMLAnchorElement>("[data-reset-filters]").forEach((link) => {
+        link.href = pathFromUrl(resetUrl);
+      });
+
+      document.querySelectorAll<HTMLElement>("[data-filter-badge]").forEach((badge) => {
+        const key = badge.dataset.paramKey;
+        if (!key) return;
+
+        const clearHref = urlWith({ [key]: "" }, currentUrl);
+        badge.querySelectorAll<HTMLAnchorElement>("[data-filter-clear], [data-panel-clear]").forEach((link) => {
+          link.href = clearHref;
+        });
+
+        badge.querySelectorAll<HTMLAnchorElement>("[data-filter-option]").forEach((link) => {
+          const value = link.dataset.value || "";
+          const optionUrl = new URL(currentUrl.href);
+          optionUrl.searchParams.set(key, value);
+          link.href = pathFromUrl(optionUrl);
+        });
+      });
+
+      const clearSearchLink = document.getElementById("clear-search-link") as HTMLAnchorElement | null;
+      if (clearSearchLink) clearSearchLink.href = urlWith({ q: "" }, currentUrl);
+    }
+
+    function updateBadges(params: URLSearchParams) {
+      const filtersActive = hasFilterParams(params);
+      swapClasses(
+        document.querySelector("[data-all-filters-link]"),
+        filtersActive ? ALL_ACTIVE : ALL_INACTIVE,
+        filtersActive ? ALL_INACTIVE : ALL_ACTIVE
+      );
+      document.querySelector("[data-clear-all-filters]")?.classList.toggle("hidden", !filtersActive);
+
+      document.querySelectorAll<HTMLElement>("[data-filter-badge]").forEach((badge) => {
+        const key = badge.dataset.paramKey || "";
+        const value = params.get(key) || "";
+        const accent = badge.dataset.accent || "info";
+        const summary = badge.querySelector("[data-filter-summary]");
+        const activeClass = SUMMARY_ACTIVE[accent] || SUMMARY_ACTIVE.info;
+        const allActiveClasses = Object.values(SUMMARY_ACTIVE).join(" ");
+
+        swapClasses(summary, `${SUMMARY_INACTIVE} ${allActiveClasses}`, value ? activeClass : SUMMARY_INACTIVE);
+
+        const options = Array.from(badge.querySelectorAll<HTMLAnchorElement>("[data-filter-option]"));
+        const activeOption = options.find((option) => option.dataset.value === value);
+        const activeLabel = activeOption?.dataset.label || value;
+        const activeDot = activeOption?.dataset.dot || "";
+
+        badge.querySelector("[data-active-chip]")?.classList.toggle("hidden", !value);
+        const label = badge.querySelector<HTMLElement>("[data-active-label]");
+        if (label) label.textContent = activeLabel;
+
+        const dot = badge.querySelector<HTMLElement>("[data-active-dot]");
+        if (dot) {
+          dot.className = activeDot ? `size-1.5 rounded-full ${activeDot}` : "hidden size-1.5 rounded-full";
+        }
+
+        badge.querySelector("[data-panel-clear]")?.classList.toggle("hidden", !value);
+
+        options.forEach((option) => {
+          const selected = option.dataset.value === value;
+          swapClasses(option, selected ? OPTION_INACTIVE : OPTION_ACTIVE, selected ? OPTION_ACTIVE : OPTION_INACTIVE);
+          option.querySelector("[data-selected-icon]")?.classList.toggle("hidden", !selected);
+        });
+      });
+    }
+
+    function itemMatches(item: HTMLElement, params: URLSearchParams, q: string) {
+      for (const key of FILTER_KEYS) {
+        const value = params.get(key);
+        const dataKey = DATA_KEY[key];
+        if (value && item.dataset[dataKey] !== value) return false;
+      }
+      return !q || (item.dataset.search || "").includes(q);
+    }
+
+    function sortItems(sort: string) {
+      return [...items].sort((a, b) => {
+        switch (sort) {
+          case "antiguos":
+            return new Date(a.dataset.fecha || "").getTime() - new Date(b.dataset.fecha || "").getTime();
+          case "az":
+            return (a.dataset.implicado || "").localeCompare(b.dataset.implicado || "", "es");
+          case "monto_desc":
+            return Number(b.dataset.monto || 0) - Number(a.dataset.monto || 0);
+          case "recientes":
+          default:
+            return new Date(b.dataset.fecha || "").getTime() - new Date(a.dataset.fecha || "").getTime();
+        }
+      });
+    }
+
+    function applyUrl(url: URL, historyMode: "push" | "replace" | "none" = "push") {
+      const params = url.searchParams;
+      const q = (params.get("q") || "").toLowerCase();
+      const sort = params.get("sort") || "recientes";
+      const list = document.getElementById("results-list");
+      let visibleCount = 0;
+
+      sortItems(sort).forEach((item) => {
+        const matches = itemMatches(item, params, q);
+        item.hidden = !matches;
+        if (matches) visibleCount += 1;
+        list?.appendChild(item);
+      });
+
+      const count = document.getElementById("case-count");
+      if (count) count.textContent = String(visibleCount);
+
+      const label = document.getElementById("case-count-label");
+      if (label) {
+        label.innerHTML = `${visibleCount === 1 ? "caso" : "casos"}${
+          hasFilterParams(params) || q ? ` <span class="text-text-tertiary">de ${total}</span>` : ""
+        }`;
+      }
+
+      document.getElementById("empty-state")?.classList.toggle("hidden", visibleCount > 0);
+
+      const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
+      if (searchInput && searchInput.value !== (params.get("q") || "")) {
+        searchInput.value = params.get("q") || "";
+      }
+
+      const clearSearchWrapper = document.getElementById("clear-search-wrapper");
+      clearSearchWrapper?.classList.toggle("hidden", !q);
+      const clearSearchLabel = document.getElementById("clear-search-label");
+      if (clearSearchLabel) clearSearchLabel.textContent = `Quitar búsqueda «${params.get("q") || ""}»`;
+
+      const sortSelect = document.getElementById("sort-select") as HTMLSelectElement | null;
+      if (sortSelect) sortSelect.value = sort;
+
+      updateBadges(params);
+      updateFilterLinks(url);
+
+      if (historyMode === "push") history.pushState({}, "", pathFromUrl(url));
+      if (historyMode === "replace") history.replaceState({}, "", pathFromUrl(url));
+    }
+
+    // Accordion para filter badges (event delegation)
+    document.addEventListener("click", function accordionHandler(e) {
+      const target = e.target as HTMLElement;
+      const summary = target.closest("details.filter-badge > summary");
+      if (summary) {
+        if (target.closest("a")) return;
+        const details = summary.parentElement as HTMLDetailsElement;
+        if (!details) return;
+        e.preventDefault(); // Prevenir toggle nativo del navegador
+        const isOpen = details.hasAttribute("open");
+        if (isOpen) {
+          details.removeAttribute("open");
+        } else {
+          document.querySelectorAll("details.filter-badge[open]").forEach((b) => {
+            b.removeAttribute("open");
+          });
+          details.setAttribute("open", "");
+        }
+      } else {
+        const insideOpen = target.closest("details.filter-badge[open]");
+        if (!insideOpen) {
+          document.querySelectorAll("details.filter-badge[open]").forEach((b) => b.removeAttribute("open"));
+        }
+      }
+    });
+
+    document.addEventListener("keydown", function accordionEscape(e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll("details.filter-badge[open]").forEach((b) => b.removeAttribute("open"));
+      }
+    });
+
+    const debouncedSearch = debounce(function (value: string) {
+      const url = new URL(window.location.href);
+      if (value) url.searchParams.set("q", value);
+      else url.searchParams.delete("q");
+      applyUrl(url, "replace");
+    }, 300);
+
+    // Event delegation: clicks en la filter bar
+    document.addEventListener("click", function (e) {
+      const target = e.target as HTMLElement;
+
+      const filterLink = target.closest<HTMLAnchorElement>("#filter-bar a");
+      if (filterLink) {
+        e.preventDefault();
+        const url = new URL(window.location.href);
+        const badge = filterLink.closest<HTMLElement>("[data-filter-badge]");
+        const key = badge?.dataset.paramKey;
+
+        if (filterLink.matches("[data-reset-filters]")) {
+          resetFilterParams(url);
+        } else if (key && filterLink.matches("[data-filter-option]")) {
+          url.searchParams.set(key, filterLink.dataset.value || "");
+        } else if (key && filterLink.matches("[data-filter-clear], [data-panel-clear]")) {
+          url.searchParams.delete(key);
+        }
+
+        filterLink.closest("details.filter-badge")?.removeAttribute("open");
+        applyUrl(url);
+        return;
+      }
+
+      // Link "Quitar búsqueda"
+      const clearLink = target.closest("#clear-search-link");
+      if (clearLink) {
+        e.preventDefault();
+        const url = new URL(window.location.href);
+        url.searchParams.delete("q");
+        applyUrl(url);
+        return;
+      }
+    });
+
+    // Sort select: cambio de orden
+    document.addEventListener("change", function (e) {
+      const target = e.target as HTMLElement;
+      if (target.id === "sort-select" && target instanceof HTMLSelectElement) {
+        const url = new URL(window.location.href);
+        if (target.value && target.value !== "recientes") url.searchParams.set("sort", target.value);
+        else url.searchParams.delete("sort");
+        applyUrl(url);
+      }
+    });
+
+    // Search input: búsqueda en vivo con debounce
+    document.addEventListener("input", function (e) {
+      const target = e.target as HTMLElement;
+      if (target.id === "search-input" && target instanceof HTMLInputElement) {
+        debouncedSearch(target.value);
+      }
+    });
+
+    // Search form: prevenir submit tradicional
+    document.addEventListener("submit", function (e) {
+      const form = e.target as HTMLElement;
+      if (form.id === "search-form" || form.closest("#search-form")) {
+        e.preventDefault();
+        const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
+        if (searchInput) {
+          const url = new URL(window.location.href);
+          if (searchInput.value) url.searchParams.set("q", searchInput.value);
+          else url.searchParams.delete("q");
+          applyUrl(url);
+        }
+      }
+    });
+
+    // Navegación back/forward del navegador
+    window.addEventListener("popstate", function () {
+      applyUrl(new URL(window.location.href), "none");
+    });
+
+    // Inicialización
+    applyUrl(new URL(window.location.href), "replace");
+  })();
+</script>
