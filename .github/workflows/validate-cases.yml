@@ -1,9 +1,13 @@
-name: Validate cases
+name: Validate and approve cases
 
 on:
   pull_request:
     paths:
       - "src/content/cases/*.md"
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   validate:
@@ -16,3 +20,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+
+      - name: Auto-approve PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: "APPROVE",
+              body: "✅ Validación superada. Los cambios cumplen con el schema y pasan `npm run check`. Un mantenedor hará el merge cuando corresponda."
+            });
