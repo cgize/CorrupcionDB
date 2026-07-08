@@ -17,15 +17,15 @@ if (status && STATUS_LABELS[status]) {
   colorClass = STATUS_COLORS[status];
   labelText = STATUS_LABELS[status];
 } else if (source) {
-  colorClass = "bg-accent-info";
+  colorClass = "bg-status-investigation";
 } else if (counter) {
-  colorClass = "bg-accent-contrast";
+  colorClass = "bg-status-active";
 } else if (neutral) {
-  colorClass = "bg-accent-info";
+  colorClass = "bg-status-archived";
 }
 
 const classes = [
-  "inline-flex items-center rounded-full px-3 py-1 text-caption uppercase text-white",
+  "inline-flex items-center rounded-full px-3 py-1 font-mono text-[0.6875rem] font-medium uppercase tracking-wider text-white",
   colorClass,
 ].join(" ");
 ---

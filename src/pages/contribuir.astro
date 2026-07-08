@@ -12,50 +12,42 @@ import { SITE } from "@/lib/constants";
   <!-- Hero -->
   <section class="mx-auto max-w-[1280px] px-6 py-16">
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="text-h1 text-balance">
-        Contribuye a la <span class="text-accent-primary">transparencia.</span>
+      <h1 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+        <span class="text-accent">C</span>ontribuye a la transparencia.
       </h1>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         CorrupcionDB es un proyecto ciudadano de código abierto. Cualquier persona puede contribuir
         reportando datos verificables, mejorando el código o compartiendo la plataforma.
       </p>
     </div>
   </section>
 
-  <!-- Línea decorativa -->
-  <div class="mx-auto mb-16 h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
+  <div class="mx-auto h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
 
   <!-- Formas de contribuir -->
   <section class="mx-auto max-w-[1280px] px-6 pb-20">
-    <h2 class="text-center text-h1">Formas de <span class="text-accent-highlight">contribuir</span></h2>
-    <div class="mt-12 grid gap-8 md:grid-cols-2">
+    <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary">Formas de contribuir</h2>
+    <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
       <Card type="standard">
-        <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-primary/10">
-          <svg class="size-6 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-        </div>
-        <h3 class="font-display text-lg font-semibold text-text-primary">Reportar un caso</h3>
-        <p class="mt-3 text-body-sm text-text-secondary">
+        <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">01</span>
+        <h3 class="mt-3 font-display text-xl text-primary">Reportar un caso</h3>
+        <p class="mt-3 text-body-sm text-secondary">
           Si tienes información verificable sobre un caso de corrupción o falta a la probidad que
           no está en nuestra base de datos, puedes reportarlo.
         </p>
-        <ol class="mt-4 space-y-2 text-body-sm text-text-secondary">
+        <ol class="mt-4 space-y-2 text-body-sm text-secondary">
           <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-primary">1.</span>
+            <span class="font-mono font-medium text-primary">1.</span>
             Reúne la información: nombre del implicado, cargo, delito, estado procesal y
             fuentes oficiales verificables.
           </li>
           <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-primary">2.</span>
+            <span class="font-mono font-medium text-primary">2.</span>
             Incluye el enlace a la fuente oficial (Poder Judicial, Contraloría, Ministerio
             Público o periodismo de investigación).
           </li>
           <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-primary">3.</span>
+            <span class="font-mono font-medium text-primary">3.</span>
             Abre un issue en GitHub con la información o envía un Pull Request siguiendo el
             esquema de datos.
           </li>
@@ -64,51 +56,51 @@ import { SITE } from "@/lib/constants";
           href={`${SITE.repo}/issues/new`}
           target="_blank"
           rel="noopener noreferrer"
-          class="mt-4 inline-flex font-label text-sm text-accent-primary hover:underline"
+          class="mt-4 inline-flex font-body text-sm font-medium text-primary hover:text-accent no-underline"
         >
           Abrir un issue en GitHub →
         </a>
       </Card>
 
       <Card type="standard">
-        <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-contrast/10">
-          <svg class="size-6 text-accent-contrast" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-          </svg>
-        </div>
-        <h3 class="font-display text-lg font-semibold text-text-primary">Contribuir con código</h3>
-        <p class="mt-3 text-body-sm text-text-secondary">
+        <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">02</span>
+        <h3 class="mt-3 font-display text-xl text-primary">Contribuir con código</h3>
+        <p class="mt-3 text-body-sm text-secondary">
           El proyecto está construido con Astro, TypeScript y Tailwind CSS. Si tienes
           experiencia técnica puedes ayudar a mejorar la plataforma.
         </p>
-        <ol class="mt-4 space-y-2 text-body-sm text-text-secondary">
-          <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-contrast">1.</span>
-            Haz fork del repositorio y clónalo localmente.
+        <ol class="mt-4 space-y-2 text-body-sm text-secondary">
+          <li class="flex items-start gap-2">
+            <span class="shrink-0 font-mono font-medium text-primary">1.</span>
+            <span class="min-w-0">Haz fork del repositorio y clónalo localmente.</span>
           </li>
-          <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-contrast">2.</span>
-            Crea una rama con el prefijo <code class="rounded bg-surface-card px-1 font-mono text-xs">feat/</code>,
-            <code class="rounded bg-surface-card px-1 font-mono text-xs">fix/</code> o
-            <code class="rounded bg-surface-card px-1 font-mono text-xs">docs/</code>.
+          <li class="flex items-start gap-2">
+            <span class="shrink-0 font-mono font-medium text-primary">2.</span>
+            <span class="min-w-0">
+              Crea una rama con el prefijo <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">feat/</code>,
+              <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">fix/</code> o
+              <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">docs/</code>.
+            </span>
           </li>
-          <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-contrast">3.</span>
-            Instala las dependencias con <code class="rounded bg-surface-card px-1 font-mono text-xs">npm install</code> y
-            ejecuta <code class="rounded bg-surface-card px-1 font-mono text-xs">npm run dev</code>.
+          <li class="flex items-start gap-2">
+            <span class="shrink-0 font-mono font-medium text-primary">3.</span>
+            <span class="min-w-0">
+              Instala las dependencias con <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">npm install</code> y
+              ejecuta <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">npm run dev</code>.
+            </span>
           </li>
-          <li class="flex gap-2">
-            <span class="font-mono font-bold text-accent-contrast">4.</span>
-            Asegúrate de que <code class="rounded bg-surface-card px-1 font-mono text-xs">npm run check</code> pase sin
-            errores antes de enviar tu Pull Request.
+          <li class="flex items-start gap-2">
+            <span class="shrink-0 font-mono font-medium text-primary">4.</span>
+            <span class="min-w-0">
+              Asegúrate de que <code class="whitespace-nowrap border border-border bg-surface-card px-1 font-mono text-xs">npm run check</code> pase sin errores antes de enviar tu Pull Request.
+            </span>
           </li>
         </ol>
         <a
           href={SITE.repo}
           target="_blank"
           rel="noopener noreferrer"
-          class="mt-4 inline-flex font-label text-sm text-accent-primary hover:underline"
+          class="mt-4 inline-flex font-body text-sm font-medium text-primary hover:text-accent no-underline"
         >
           Ver repositorio en GitHub →
         </a>
@@ -116,97 +108,57 @@ import { SITE } from "@/lib/constants";
     </div>
   </section>
 
-  <!-- Convenciones -->
+  <!-- Convenciones + Código de conducta -->
   <section class="bg-surface-alt px-6 py-20">
-    <div class="mx-auto max-w-[1280px]">
-      <div class="mx-auto max-w-2xl">
-        <h2 class="text-center text-h1">
-          Convenciones del <span class="text-accent-primary">proyecto</span>
+    <div class="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-2">
+      <!-- Convenciones -->
+      <div class="flex flex-col">
+        <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary md:text-left">
+          Convenciones del proyecto
         </h2>
-
-        <div class="mt-12 space-y-8">
-          <div class="flex gap-4">
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-primary/10">
-              <span class="font-mono text-lg font-bold text-accent-primary">01</span>
+        <div class="mt-6 grid grid-cols-1 gap-6">
+          {[
+            { n: "01", t: "Commits", d: "Usamos Conventional Commits. Los prefijos son feat:, fix:, docs:, refactor:, entre otros." },
+            { n: "02", t: "Ramas", d: "Nombra las ramas con el formato tipo/descripcion en kebab-case. Ejemplos: feat/filtro-region, fix/validacion-fechas." },
+            { n: "03", t: "Código", d: "Mantén el estilo existente del proyecto: TypeScript, Astro, Tailwind CSS. No introduzcas nuevas dependencias sin discutirlo primero en un issue." },
+          ].map((item) => (
+            <div class="flex gap-3">
+              <div class="flex size-8 shrink-0 items-center justify-center border border-border bg-surface-card">
+                <span class="font-mono text-xs font-medium text-primary">{item.n}</span>
+              </div>
+              <div>
+                <h3 class="font-display text-base text-primary">{item.t}</h3>
+                <p class="mt-1 text-body-sm text-secondary">{item.d}</p>
+              </div>
             </div>
-            <div>
-              <h3 class="font-display text-lg font-semibold text-text-primary">Commits</h3>
-              <p class="mt-2 text-body-sm text-text-secondary">
-                Usamos Conventional Commits. Los prefijos son
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">feat:</code>,
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">fix:</code>,
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">docs:</code>,
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">refactor:</code>,
-                entre otros.
-              </p>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-highlight/10">
-              <span class="font-mono text-lg font-bold text-accent-highlight">02</span>
-            </div>
-            <div>
-              <h3 class="font-display text-lg font-semibold text-text-primary">Ramas</h3>
-              <p class="mt-2 text-body-sm text-text-secondary">
-                Nombra las ramas con el formato
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">tipo/descripcion</code> en
-                kebab-case. Ejemplos:
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">feat/filtro-region</code>,
-                <code class="rounded bg-surface-card px-1 font-mono text-xs">fix/validacion-fechas</code>.
-              </p>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-info/10">
-              <span class="font-mono text-lg font-bold text-accent-info">03</span>
-            </div>
-            <div>
-              <h3 class="font-display text-lg font-semibold text-text-primary">Código</h3>
-              <p class="mt-2 text-body-sm text-text-secondary">
-                Mantén el estilo existente del proyecto: TypeScript, Astro, Tailwind CSS.
-                No introduzcas nuevas dependencias sin discutirlo primero en un issue.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Código de conducta -->
-  <section class="mx-auto max-w-[1280px] px-6 py-20">
-    <div class="mx-auto max-w-2xl">
-      <h2 class="text-center text-h1">
-        Código de <span class="text-accent-contrast">conducta</span>
-      </h2>
-      <div class="mt-8 rounded-xl border border-border bg-surface-card p-8">
-        <p class="text-body text-text-secondary">
-          Este proyecto sigue un código de conducta basado en el respeto y la colaboración abierta.
-        </p>
-        <ul class="mt-4 space-y-3 text-body-sm text-text-secondary">
-          <li class="flex items-start gap-2">
-            <svg class="mt-0.5 size-4 shrink-0 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            No se tolera discriminación, acoso ni malas prácticas de atribución de fuentes.
-          </li>
-          <li class="flex items-start gap-2">
-            <svg class="mt-0.5 size-4 shrink-0 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Toda información reportada debe incluir fuentes verificables. No se aceptan denuncias
-            anónimas sin respaldo documental.
-          </li>
-          <li class="flex items-start gap-2">
-            <svg class="mt-0.5 size-4 shrink-0 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Respeta el principio de presunción de inocencia. Este proyecto no emite juicios, solo
-            estructura información pública.
-          </li>
-        </ul>
+      <!-- Código de conducta -->
+      <div class="flex flex-col">
+        <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary md:text-left">
+          Código de conducta
+        </h2>
+        <div class="mt-8 flex flex-1 flex-col justify-center border border-border bg-surface-card p-8">
+          <p class="text-body text-secondary">
+            Este proyecto sigue un código de conducta basado en el respeto y la colaboración abierta.
+          </p>
+          <ul class="mt-4 space-y-3 text-body-sm text-secondary">
+            {[
+              "No se tolera discriminación, acoso ni malas prácticas de atribución de fuentes.",
+              "Toda información reportada debe incluir fuentes verificables. No se aceptan denuncias anónimas sin respaldo documental.",
+              "Respeta el principio de presunción de inocencia. Este proyecto no emite juicios, solo estructura información pública.",
+            ].map((item) => (
+              <li class="flex items-start gap-2">
+                <svg class="mt-0.5 size-4 shrink-0 text-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -214,20 +166,18 @@ import { SITE } from "@/lib/constants";
   <!-- CTA -->
   <section class="bg-surface-alt px-6 py-20 text-center">
     <div class="mx-auto max-w-2xl">
-      <h2 class="text-h1 text-balance">
-        ¿Listo para <span class="text-accent-highlight">empezar?</span>
+      <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+        ¿Listo para empezar?
       </h2>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         La transparencia se construye entre todos. Cada contribución, por pequeña que sea, ayuda a
         que la información sobre corrupción en Chile sea más accesible.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <Button variant="cta" size="lg" href={SITE.repo} isExternal={true}>
-          Ir al repositorio
+        <Button variant="primary" href={SITE.repo} isExternal={true}>
+          Ir al repositorio<span class="text-accent">.</span>
         </Button>
-        <Button variant="outline" size="lg" href={`${SITE.repo}/issues/new`} isExternal={true}>
-          Reportar un caso
-        </Button>
+        <Button variant="outline" href={`${SITE.repo}/issues/new`} isExternal={true}>Reportar un caso</Button>
       </div>
     </div>
   </section>

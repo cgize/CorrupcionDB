@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Card from "@/components/Card.astro";
 
 const sourceDetails = [
   {
@@ -31,10 +30,10 @@ const sourceDetails = [
   <!-- Hero -->
   <section class="mx-auto max-w-[1280px] px-6 py-16">
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="text-h1 text-balance">
-        Fuentes <span class="text-accent-primary">oficiales,</span><br />datos verificables.
+      <h1 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+        <span class="text-accent">F</span>uentes oficiales,<br />datos verificables.
       </h1>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         En CorrupcionDB no publicamos rumores ni denuncias anónimas. Cada dato incluido en nuestra
         base de datos está vinculado directamente a una de estas tres fuentes oficiales del Estado
         de Chile.
@@ -42,35 +41,29 @@ const sourceDetails = [
     </div>
   </section>
 
-  <!-- Línea decorativa -->
-  <div class="mx-auto mb-16 h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
+  <div class="mx-auto h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
 
   <!-- Principio de trazabilidad -->
   <section class="mx-auto max-w-[1280px] px-6 pb-16">
-    <div class="grid items-center gap-12 lg:grid-cols-5">
-      <div class="lg:col-span-3">
-        <h2 class="text-h1 text-balance">
-          Si no hay fuente, <span class="text-accent-contrast">no hay dato.</span>
+    <div class="grid items-center gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-8">
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+          Si no hay fuente, no hay dato.
         </h2>
-        <p class="mt-6 text-body text-text-secondary">
+        <p class="mt-6 text-body text-secondary">
           Nuestro principio editorial más importante es la <strong>trazabilidad total</strong>. Cada
           caso, cada estado procesal y cada actualización en la base de datos debe poder ser
           verificado por cualquier ciudadano accediendo directamente a la fuente oficial.
         </p>
-        <p class="mt-4 text-body text-text-secondary">
+        <p class="mt-4 text-body text-secondary">
           Esto significa que no publicamos información basada en notas de prensa, opiniones o filtraciones
           anónimas. Si un dato no puede ser corroborado con un documento o registro oficial, simplemente
           no aparece en CorrupcionDB.
         </p>
       </div>
-      <div class="lg:col-span-2">
-        <div class="relative flex items-center justify-center">
-          <div
-            class="size-48 rounded-full border-2 border-accent-primary/20"
-            aria-hidden="true"
-          ></div>
-          <div class="absolute size-32 rounded-full border-2 border-accent-info/30" aria-hidden="true"></div>
-          <span class="absolute font-mono text-4xl font-bold text-accent-primary tabular-nums">03</span>
+      <div class="lg:col-span-4">
+        <div class="flex items-center justify-center border border-border p-10">
+          <span class="font-mono text-6xl font-medium text-primary">03</span>
         </div>
       </div>
     </div>
@@ -79,32 +72,22 @@ const sourceDetails = [
   <!-- Cards de fuentes -->
   <section class="bg-surface-alt px-6 py-20">
     <div class="mx-auto max-w-[1280px]">
-      <h2 class="text-center text-h1">Instituciones <span class="text-accent-highlight">fiscalizadoras</span></h2>
-      <div class="mt-12 grid gap-8 md:grid-cols-3">
-        {sourceDetails.map((s) => (
-          <Card type="standard">
-            <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-info/10">
-              <svg
-                class="size-6 text-accent-info"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              >
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            </div>
-            <h3 class="font-display text-lg font-semibold text-text-primary">{s.name}</h3>
-            <p class="mt-3 text-body-sm text-text-secondary">{s.description}</p>
+      <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary">Instituciones fiscalizadoras</h2>
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {sourceDetails.map((s, i) => (
+          <div class="border border-border bg-surface-card p-7">
+            <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">0{i + 1}</span>
+            <h3 class="mt-3 font-display text-xl text-primary">{s.name}</h3>
+            <p class="mt-3 text-body-sm text-secondary">{s.description}</p>
             <a
               href={s.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-4 inline-flex font-label text-sm text-accent-primary hover:underline"
+              class="mt-4 inline-flex font-body text-sm font-medium text-primary hover:text-accent no-underline"
             >
               {s.urlLabel} →
             </a>
-          </Card>
+          </div>
         ))}
       </div>
     </div>
@@ -112,38 +95,21 @@ const sourceDetails = [
 
   <!-- Cómo verificamos -->
   <section class="mx-auto max-w-[1280px] px-6 py-20">
-    <h2 class="text-h1 text-center">¿Cómo <span class="text-accent-primary">verificamos</span> los datos?</h2>
+    <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary">¿Cómo verificamos los datos?</h2>
     <div class="mx-auto mt-12 grid max-w-3xl gap-8 md:grid-cols-3">
-      <div class="text-center">
-        <div class="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-accent-primary/10">
-          <span class="font-mono text-xl font-bold text-accent-primary">1</span>
+      {[
+        { n: "1", t: "Identificación", d: "Detectamos un caso con cobertura pública en el Poder Judicial, la Contraloría o el Ministerio Público." },
+        { n: "2", t: "Verificación", d: "Verificamos la existencia del expediente, RUC, RIT o informe directamente en la fuente oficial." },
+        { n: "3", t: "Publicación", d: "Publicamos el registro con enlace a la fuente. Mantenemos la presunción de inocencia en todo momento." },
+      ].map((step) => (
+        <div class="text-center">
+          <div class="mx-auto mb-4 flex size-12 items-center justify-center border border-border bg-surface-card">
+            <span class="font-mono text-xl font-medium text-primary">{step.n}</span>
+          </div>
+          <h3 class="font-body text-sm font-semibold uppercase tracking-wider text-primary">{step.t}</h3>
+          <p class="mt-2 text-body-sm text-secondary">{step.d}</p>
         </div>
-        <h3 class="font-label text-text-primary">Identificación</h3>
-        <p class="mt-2 text-body-sm text-text-secondary">
-          Detectamos un caso con cobertura pública en el Poder Judicial, la Contraloría o el Ministerio
-          Público.
-        </p>
-      </div>
-      <div class="text-center">
-        <div class="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-accent-highlight/10">
-          <span class="font-mono text-xl font-bold text-accent-highlight">2</span>
-        </div>
-        <h3 class="font-label text-text-primary">Verificación</h3>
-        <p class="mt-2 text-body-sm text-text-secondary">
-          Verificamos la existencia del expediente, RUC, RIT o informe directamente en la fuente
-          oficial.
-        </p>
-      </div>
-      <div class="text-center">
-        <div class="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-accent-info/10">
-          <span class="font-mono text-xl font-bold text-accent-info">3</span>
-        </div>
-        <h3 class="font-label text-text-primary">Publicación</h3>
-        <p class="mt-2 text-body-sm text-text-secondary">
-          Publicamos el registro con enlace a la fuente. Mantenemos la presunción de inocencia en
-          todo momento.
-        </p>
-      </div>
+      ))}
     </div>
   </section>
 </BaseLayout>

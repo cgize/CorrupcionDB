@@ -2,18 +2,17 @@
 export interface Props {
   type?: "standard" | "stat" | "case";
   accentBorder?: boolean;
-  accentColor?: string;
 }
 
-const { type = "standard", accentBorder = false, accentColor = "accent-primary" } = Astro.props;
+const { type = "standard", accentBorder = false } = Astro.props;
 
 const baseClasses =
-  "rounded-xl border border-border bg-surface-card p-6 transition-shadow duration-200";
+  "border border-border bg-surface-card p-7 transition-all duration-200";
 
 const typeClasses: Record<string, string> = {
-  standard: "shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)]",
-  stat: "shadow-[0_4px_16px_rgba(0,0,0,0.08)]",
-  case: "shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:border-accent-primary",
+  standard: "hover:border-border-strong",
+  stat: "",
+  case: "hover:border-primary/40",
 };
 
 const classes = [baseClasses, typeClasses[type]].join(" ");
@@ -21,9 +20,7 @@ const classes = [baseClasses, typeClasses[type]].join(" ");
 
 <div
   class={classes}
-  class:list={[
-    { [`border-t-[3px] border-t-${accentColor}`]: accentBorder && type === "stat" },
-  ]}
+  class:list={[{ "border-t-2 border-t-primary": accentBorder }]}
 >
   <slot />
 </div>

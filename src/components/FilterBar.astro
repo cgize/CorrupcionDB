@@ -44,7 +44,6 @@ const {
   cases = [],
 } = Astro.props;
 
-// Opciones fijas (estados y delitos)
 const estadoOptions = Object.entries(STATUS_LABELS).map(([value, label]) => ({
   value,
   label,
@@ -63,7 +62,6 @@ const delitoOptions = Object.entries(DELITO_LABELS).map(([value, label]) => ({
   label,
 }));
 
-// Opciones categóricas nuevas
 const puestoOptions = Object.entries(PUESTO_POLITICO_LABELS).map(([value, label]) => ({
   value,
   label,
@@ -83,7 +81,6 @@ const sectorOptions = Object.entries(SECTOR_POLITICO_LABELS).map(([value, label]
   label,
 }));
 
-// Opciones derivadas dinámicamente de los casos (partidos, fuentes y casos)
 const conteoPartidos = new Map<string, number>();
 const conteoFuentes = new Map<string, number>();
 const conteoRegiones = new Map<string, number>();
@@ -119,9 +116,9 @@ const fuenteOptions = Array.from(conteoFuentes.entries()).map(([value, count]) =
   count,
   dot:
     {
-      oficial: "bg-accent-info",
-      prensa: "bg-accent-highlight",
-      investigacion: "bg-accent-contrast",
+      oficial: "bg-status-investigation",
+      prensa: "bg-status-pending",
+      investigacion: "bg-status-active",
     }[value] || "",
 }));
 
@@ -129,8 +126,6 @@ const partidoOptions = Array.from(conteoPartidos.entries())
   .sort((a, b) => b[1] - a[1])
   .map(([value, count]) => ({ value, label: value, count }));
 
-// Opciones de "caso" (agrupaciones de personas en un mismo escándalo).
-// Solo mostramos en el filtro si tiene 2+ personas relacionadas.
 const casoOptions = Array.from(conteoCasos.entries())
   .filter(([, info]) => info.count >= 2)
   .map(([id, info]) => ({
@@ -140,7 +135,6 @@ const casoOptions = Array.from(conteoCasos.entries())
   }))
   .sort((a, b) => (b.count || 0) - (a.count || 0));
 
-// Regiones con conteo
 for (const c of cases) {
   const r = (c.data as { region?: string }).region;
   if (r) conteoRegiones.set(r, (conteoRegiones.get(r) || 0) + 1);
@@ -186,22 +180,21 @@ const hasAnyFilter =
 
 <div
   id="filter-bar"
-  class="sticky top-16 z-40 -mx-6 border-b border-border bg-surface/85 px-6 py-3 backdrop-blur-md lg:top-20"
+  class="sticky top-[65px] z-40 -mx-6 border-b border-border bg-surface/90 px-6 py-3 backdrop-blur-sm lg:top-[73px]"
   data-filter-bar
 >
   <div class="mx-auto max-w-[1280px]">
     <div class="scrollbar-thin flex items-center gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
-      <span class="mr-1 hidden shrink-0 font-label text-xs uppercase tracking-wider text-text-tertiary sm:inline">
-        Filtros:
+      <span class="mr-1 hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary sm:inline">
+        Filtrar:
       </span>
 
-      <!-- Todos (reset global) -->
       <a
         data-all-filters-link
         data-reset-filters
         href={buildHref({ estado: "", region: "", delito: "", fuente: "", puesto: "", cargo_estado: "", sector: "", partido: "", caso: "" })}
         class:list={[
-          "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-label text-xs transition-all duration-200",
+          "inline-flex shrink-0 items-center gap-1.5 border px-3.5 py-1.5 font-body text-xs font-medium transition-all duration-200 no-underline",
           !hasAnyFilter
             ? "border-accent-primary bg-accent-primary text-white shadow-sm"
             : "border-border bg-surface-card text-text-secondary hover:border-accent-primary hover:text-accent-primary",
@@ -210,7 +203,6 @@ const hasAnyFilter =
         Todos
       </a>
 
-      <!-- Estado (semántico, destacado) -->
       <FilterBadge
         label="Estado"
         paramKey="estado"
@@ -220,7 +212,6 @@ const hasAnyFilter =
         accent="primary"
       />
 
-      <!-- Puesto político -->
       <FilterBadge
         label="Puesto"
         paramKey="puesto"
@@ -230,7 +221,6 @@ const hasAnyFilter =
         accent="info"
       />
 
-      <!-- Cargo activo / sin funciones -->
       <FilterBadge
         label="Funciones"
         paramKey="cargo_estado"
@@ -240,7 +230,6 @@ const hasAnyFilter =
         accent="highlight"
       />
 
-      <!-- Región -->
       <FilterBadge
         label="Región"
         paramKey="region"
@@ -250,7 +239,6 @@ const hasAnyFilter =
         accent="info"
       />
 
-      <!-- Partido -->
       {partidoOptions.length > 0 && (
         <FilterBadge
           label="Partido"
@@ -262,7 +250,6 @@ const hasAnyFilter =
         />
       )}
 
-      <!-- Caso (agrupación de personas en un mismo escándalo) -->
       {casoOptions.length > 0 && (
         <FilterBadge
           label="Caso"
@@ -274,7 +261,6 @@ const hasAnyFilter =
         />
       )}
 
-      <!-- Sector político -->
       <FilterBadge
         label="Sector"
         paramKey="sector"
@@ -284,7 +270,6 @@ const hasAnyFilter =
         accent="contrast"
       />
 
-      <!-- Delito -->
       <FilterBadge
         label="Delito"
         paramKey="delito"
@@ -294,7 +279,6 @@ const hasAnyFilter =
         accent="contrast"
       />
 
-      <!-- Fuente -->
       {fuenteOptions.length > 0 && (
         <FilterBadge
           label="Fuente"
@@ -306,13 +290,12 @@ const hasAnyFilter =
         />
       )}
 
-      <!-- Limpiar todos -->
       <a
         data-clear-all-filters
         data-reset-filters
         href={buildHref({ estado: "", region: "", delito: "", fuente: "", puesto: "", cargo_estado: "", sector: "", partido: "", caso: "" })}
         class:list={[
-          "ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-label text-xs text-accent-contrast transition-colors hover:bg-accent-contrast/10",
+          "ml-auto inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 font-body text-xs font-medium text-accent-contrast transition-colors hover:bg-accent-contrast/10 no-underline",
           !hasAnyFilter && "hidden",
         ]}
       >
@@ -320,7 +303,7 @@ const hasAnyFilter =
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
-        Limpiar todo
+        Limpiar
       </a>
     </div>
   </div>

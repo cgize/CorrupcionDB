@@ -32,11 +32,11 @@ const fechaReciente = (() => {
 })();
 
 const fuenteColorMap: Record<string, string> = {
-  oficial: "bg-accent-info",
-  prensa: "bg-accent-highlight",
-  investigacion: "bg-accent-contrast",
+  oficial: "bg-status-investigation",
+  prensa: "bg-status-pending",
+  investigacion: "bg-status-active",
 };
-const fuenteColor = fuenteColorMap[data.fuente_tipo] || "bg-accent-info";
+const fuenteColor = fuenteColorMap[data.fuente_tipo] || "bg-status-investigation";
 
 const fechaFmt = new Date(data.fecha_actualizacion).toLocaleDateString("es-CL", {
   day: "2-digit",
@@ -44,7 +44,6 @@ const fechaFmt = new Date(data.fecha_actualizacion).toLocaleDateString("es-CL", 
   year: "numeric",
 });
 
-// Abreviaturas compactas para la lista
 const fuenteAbbr: Record<string, string> = {
   oficial: "Oficial",
   prensa: "Prensa",
@@ -62,7 +61,7 @@ const estadoAbbr: Record<string, string> = {
 };
 const estadoLabel = STATUS_LABELS[data.estado] || data.estado;
 const estadoAbbrLabel = estadoAbbr[data.estado] || estadoLabel;
-const estadoColor = STATUS_COLORS[data.estado] || "bg-text-tertiary";
+const estadoColor = STATUS_COLORS[data.estado] || "bg-status-archived";
 
 const delitoLabel = DELITO_LABELS[data.delito];
 
@@ -80,69 +79,61 @@ const puestoVisible = data.puesto_politico && PUESTO_POLITICO_LABELS[data.puesto
 
 <a
   href={`/casos/${caso.id}`}
-  class="group grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-1 rounded-xl border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-accent-primary/40 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] sm:px-5 sm:py-4 lg:grid-cols-[5rem_minmax(0,1fr)_11rem_10rem_5rem_8rem_auto] lg:gap-x-5"
+  class="group grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-1 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:px-5 sm:py-4 lg:grid-cols-[5rem_minmax(0,1fr)_11rem_10rem_5rem_8rem_auto] lg:gap-x-5 no-underline"
 >
-  <!-- Col 1: Estado -->
   <div class="row-start-1 self-center lg:w-full">
-    <span class:list={["inline-flex w-full items-center justify-center rounded-full px-1.5 py-1 text-center font-caption text-xs font-semibold uppercase tracking-wide text-white", estadoColor]} title={estadoLabel}>
+    <span class:list={["inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white", estadoColor]} title={estadoLabel}>
       {estadoAbbrLabel}
     </span>
   </div>
 
-  <!-- Col 2: Nombre + subtítulo -->
   <div class="col-start-2 row-start-1 min-w-0 lg:col-start-2 lg:row-start-1 lg:w-full">
     <div class="flex items-center gap-2">
-      <h3 class="truncate font-display text-base font-semibold leading-tight text-text-primary group-hover:text-accent-primary sm:text-lg">
+      <h3 class="truncate font-display text-base leading-tight text-primary transition-colors group-hover:text-accent sm:text-lg">
         {data.implicado}
       </h3>
       {
         fechaReciente && (
-          <span class="size-1.5 shrink-0 rounded-full bg-accent-contrast" aria-label="Caso nuevo" title="Caso nuevo"></span>
+          <span class="size-1.5 shrink-0 rounded-full bg-accent" aria-label="Caso nuevo" title="Caso nuevo"></span>
         )
       }
       {
         data.caso && (
-          <span class="hidden max-w-[6rem] shrink-0 items-center truncate rounded-full border border-accent-contrast/30 bg-accent-contrast/10 px-2 py-0.5 font-caption text-[0.7rem] font-semibold uppercase tracking-wide text-accent-contrast sm:inline-flex" title={data.caso.nombre}>
+          <span class="hidden max-w-[6rem] shrink-0 items-center truncate border border-primary/20 bg-surface-alt px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-primary sm:inline-flex" title={data.caso.nombre}>
             {data.caso.nombre}
           </span>
         )
       }
     </div>
 
-    <!-- Subtítulo: chips uniformes que envuelven a segunda línea si no caben -->
     <div class="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1">
-      <!-- Cargo -->
-      <span class="inline-flex shrink-0 items-center rounded bg-surface-alt px-1.5 py-0.5 font-caption text-xs font-medium text-text-secondary" title={data.cargo}>
+      <span class="inline-flex shrink-0 items-center border border-border bg-surface-alt px-1.5 py-0.5 font-body text-xs text-secondary" title={data.cargo}>
         {data.cargo}
       </span>
-      <!-- Puesto político (si no hay partido, como complemento) -->
       {
         !data.partido && puestoVisible && (
-          <span class="inline-flex shrink-0 items-center rounded bg-surface-alt px-1.5 py-0.5 font-caption text-xs font-medium text-text-tertiary" title={puestoVisible}>
+          <span class="inline-flex shrink-0 items-center border border-border bg-surface-alt px-1.5 py-0.5 font-body text-xs text-text-tertiary" title={puestoVisible}>
             {puestoVisible}
           </span>
         )
       }
-      <!-- Partido -->
       {
         data.partido && (
-          <span class="inline-flex shrink-0 items-center rounded border border-accent-primary/30 bg-accent-primary/10 px-1.5 py-0.5 font-caption text-xs font-semibold uppercase tracking-wide text-accent-primary" title={`Partido: ${data.partido}`}>
+          <span class="inline-flex shrink-0 items-center border border-primary/20 bg-surface-alt px-1.5 py-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-primary" title={`Partido: ${data.partido}`}>
             {data.partido}
           </span>
         )
       }
-      <!-- Sector -->
       {
         sectorVisible && (
-          <span class="inline-flex shrink-0 items-center rounded bg-accent-contrast/15 px-1.5 py-0.5 font-caption text-xs font-semibold uppercase tracking-wide text-accent-contrast" title={`Sector: ${sectorVisible}`}>
+          <span class="inline-flex shrink-0 items-center border border-border bg-surface-alt px-1.5 py-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-secondary" title={`Sector: ${sectorVisible}`}>
             {sectorVisible}
           </span>
         )
       }
-      <!-- Región -->
       {
         data.region && (
-          <span class="inline-flex shrink-0 items-center gap-1 rounded bg-surface-alt px-1.5 py-0.5 font-caption text-xs text-text-tertiary" title={`Región: ${data.region}`}>
+          <span class="inline-flex shrink-0 items-center gap-1 border border-border bg-surface-alt px-1.5 py-0.5 font-body text-xs text-text-tertiary" title={`Región: ${data.region}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
               <circle cx="12" cy="10" r="3"></circle>
@@ -154,46 +145,41 @@ const puestoVisible = data.puesto_politico && PUESTO_POLITICO_LABELS[data.puesto
     </div>
   </div>
 
-  <!-- Col 3: Delito -->
   <div class="hidden lg:col-start-3 lg:row-start-1 lg:flex lg:w-full">
-    <span class="inline-flex w-full items-center justify-center rounded bg-surface-alt px-1.5 py-1 text-center font-mono text-xs leading-tight text-text-secondary" title={delitoLabel}>
+    <span class="inline-flex w-full items-center justify-center border border-border bg-surface-alt px-1.5 py-1 text-center font-mono text-xs leading-tight text-secondary" title={delitoLabel}>
       {delitoLabel}
     </span>
   </div>
 
-  <!-- Col 4: Monto -->
   <div class="hidden lg:col-start-4 lg:row-start-1 lg:flex lg:w-full lg:justify-end">
     {
       data.monto ? (
-        <span class="block max-w-full truncate text-right font-mono text-[0.7rem] font-semibold text-accent-highlight" title={data.monto}>
+        <span class="block max-w-full truncate text-right font-mono text-xs font-medium text-primary" title={data.monto}>
           {data.monto}
         </span>
       ) : (
-        <span class="text-right font-mono text-[0.7rem] text-text-tertiary">—</span>
+        <span class="text-right font-mono text-xs text-text-tertiary">—</span>
       )
     }
   </div>
 
-  <!-- Col 5: Fuente (todos los badges mismo ancho) -->
   <div class="hidden lg:col-start-5 lg:row-start-1 lg:flex lg:w-full lg:justify-center">
     <span
-      class:list={["inline-flex min-w-[4rem] items-center justify-center rounded-full px-2 py-1 font-caption text-[0.7rem] font-semibold text-white", fuenteColor]}
+      class:list={["inline-flex min-w-[4rem] items-center justify-center px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white", fuenteColor]}
       title={fuenteLabel}
     >
       {fuenteAbbrLabel}
     </span>
   </div>
 
-  <!-- Col 6: Fecha -->
   <div class="hidden lg:col-start-6 lg:row-start-1 lg:flex lg:w-full lg:justify-end">
-    <span class="whitespace-nowrap font-mono text-[0.7rem] text-text-tertiary">
+    <span class="whitespace-nowrap font-mono text-xs text-text-tertiary">
       {fechaFmt}
     </span>
   </div>
 
-  <!-- Col 7: Chevron -->
   <span
-    class="col-start-3 row-start-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary transition-all duration-200 group-hover:bg-accent-primary group-hover:text-white lg:col-start-7"
+    class="col-start-3 row-start-1 inline-flex size-7 shrink-0 items-center justify-center border border-border text-text-tertiary transition-all duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-surface lg:col-start-7"
     aria-hidden="true"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

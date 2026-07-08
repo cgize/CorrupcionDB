@@ -13,14 +13,13 @@ const casosActivos = allCases.filter(
   (c) => c.data.estado === "active" || c.data.estado === "investigation"
 ).length;
 const casosResueltos = allCases.filter((c) => c.data.estado === "resolved").length;
-
 const fuentesUnicas = new Set(allCases.map((c) => c.data.fuente_tipo)).size;
 
 const stats = [
-  { label: "Casos registrados", value: totalCasos.toLocaleString("es-CL"), accent: "accent-primary" },
-  { label: "Casos activos", value: casosActivos.toLocaleString("es-CL"), accent: "accent-contrast" },
-  { label: "Resueltos", value: casosResueltos.toLocaleString("es-CL"), accent: "accent-highlight" },
-  { label: "Tipos de fuentes", value: fuentesUnicas.toString(), accent: "accent-info" },
+  { label: "Casos registrados", value: totalCasos.toLocaleString("es-CL") },
+  { label: "Casos activos", value: casosActivos.toLocaleString("es-CL") },
+  { label: "Resueltos", value: casosResueltos.toLocaleString("es-CL") },
+  { label: "Tipos de fuentes", value: fuentesUnicas.toString() },
 ];
 
 const latest = [...allCases]
@@ -38,34 +37,22 @@ const latest = [...allCases]
 >
   <!-- Hero -->
   <section
-    class="relative mx-auto flex min-h-[60dvh] max-w-[1280px] flex-col items-center gap-12 overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:flex-row lg:items-start"
+    class="mx-auto grid min-h-[60dvh] max-w-[1280px] items-end gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-12"
   >
-    <!-- Decoración geométrica -->
-    <div
-      class="pointer-events-none absolute -right-20 -top-20 size-[400px] rounded-full border-2 border-accent-highlight/20"
-      aria-hidden="true"
-    ></div>
-    <div
-      class="pointer-events-none absolute -left-10 top-1/2 size-[200px] rounded-full border-2 border-accent-primary/10"
-      aria-hidden="true"
-    ></div>
-
-    <!-- Columna izquierda -->
-    <div class="relative z-10 flex flex-1 flex-col items-start gap-6">
-      <span class="inline-flex items-center gap-2 rounded-full border border-accent-primary/20 bg-accent-primary/5 px-3 py-1 font-caption text-xs uppercase tracking-wider text-accent-primary">
-        <span class="size-1.5 rounded-full bg-accent-primary"></span>
+    <div class="lg:col-span-8">
+      <span class="inline-flex items-center gap-2 border border-border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">
         Base de datos abierta
       </span>
-      <h1 class="text-display leading-tight text-balance">
-        La corrupción, <span class="text-accent-contrast">con nombre y datos.</span>
+      <h1 class="mt-6 font-display text-hero leading-[0.94] tracking-[-0.045em] text-balance">
+        <span class="text-accent">L</span>a corrupción,<br />
+        con nombre y datos.
       </h1>
-      <p class="text-body max-w-prose text-text-secondary">
+      <p class="mt-6 max-w-prose text-body text-secondary">
         Una base de datos ciudadana, transparente y de código abierto que centraliza los casos de
         corrupción en Chile. Cada dato está vinculado a su fuente oficial.
       </p>
 
-      <!-- Barra de búsqueda -->
-      <form class="w-full max-w-lg" action="/casos" method="GET">
+      <form class="mt-8 w-full max-w-lg" action="/casos" method="GET">
         <div class="relative">
           <svg
             class="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-text-tertiary"
@@ -80,54 +67,55 @@ const latest = [...allCases]
             type="search"
             name="q"
             placeholder="Buscar por nombre, cargo, delito o RUC..."
-            class="w-full rounded-full border border-border-strong bg-surface-card py-3.5 pl-12 pr-6 font-body text-text-primary shadow-[0_4px_16px_rgba(0,0,0,0.06)] outline-none transition-shadow duration-200 focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/30"
+            class="w-full border border-border bg-surface-card py-3.5 pl-12 pr-6 font-body text-text-primary outline-none transition-colors hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </div>
       </form>
 
-      <div class="flex flex-wrap gap-4">
-        <Button variant="primary" size="lg" href="/casos">Explorar base de datos</Button>
-        <Button variant="outline" size="lg" href="/estadisticas">Ver estadísticas</Button>
+      <div class="mt-6 flex flex-wrap items-center gap-4">
+        <Button variant="primary" href="/casos">
+          Explorar base de datos<span class="text-accent">.</span>
+        </Button>
+        <Button variant="outline" href="/estadisticas">Ver estadísticas</Button>
       </div>
     </div>
 
-    <!-- Columna derecha: Stats -->
-    <div class="relative z-10 flex w-full flex-1 flex-col gap-4 self-stretch">
+    <div class="flex w-full flex-col gap-4 lg:col-span-4">
       <div class="grid grid-cols-2 gap-4">
-      {
-        stats.map((s) => (
-          <Card type="stat" accentBorder={true} accentColor={s.accent}>
-            <span class={`font-mono text-3xl font-bold text-${s.accent} sm:text-4xl tabular-nums`}>
-              {s.value}
-            </span>
-            <p class="mt-2 font-caption text-text-secondary">{s.label}</p>
-          </Card>
-        ))
-      }
+        {
+          stats.map((s) => (
+            <Card type="stat" accentBorder={true}>
+              <span class="font-mono text-3xl font-medium text-primary tabular-nums sm:text-4xl">
+                {s.value}
+              </span>
+              <p class="mt-2 font-body text-sm text-secondary">{s.label}</p>
+            </Card>
+          ))
+        }
       </div>
-      <p class="font-caption text-center text-xs leading-relaxed text-text-tertiary">
+      <p class="text-center font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">
         {DISCLAIMER}
       </p>
     </div>
   </section>
 
-  <!-- Sección: Últimos casos -->
+  <!-- Últimos casos -->
   <section class="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-16">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="font-caption text-xs uppercase tracking-wider text-accent-primary">
-          En vivo
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">
+          Actualizaciones recientes
         </p>
-        <h2 class="mt-2 font-display text-3xl font-bold text-text-primary sm:text-4xl">
-          Últimas <span class="text-accent-primary">actualizaciones</span>
+        <h2 class="mt-2 font-display text-h2 tracking-[-0.02em] text-primary">
+          Últimos casos documentados
         </h2>
-        <p class="mt-2 max-w-xl text-body text-text-secondary">
-          Los casos con movimiento procesal más reciente en la base de datos.
+        <p class="mt-2 max-w-xl text-body text-secondary">
+          Los registros con movimiento procesal más reciente en la base de datos.
         </p>
       </div>
       <a
         href="/casos"
-        class="inline-flex items-center gap-2 rounded-full border border-border bg-surface-card px-5 py-2.5 font-label text-sm text-text-primary transition-all hover:border-accent-primary hover:text-accent-primary"
+        class="inline-flex items-center gap-2 border border-border bg-surface-card px-5 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary no-underline"
       >
         Ver todos
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -146,37 +134,33 @@ const latest = [...allCases]
     </div>
   </section>
 
-  <!-- Línea decorativa -->
-  <div class="mx-auto mb-16 h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
+  <div class="mx-auto h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
 
-  <!-- Sección: ¿Qué es CorrupcionDB? -->
+  <!-- ¿Qué es CorrupcionDB? -->
   <section class="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-16">
-    <div class="grid items-center gap-12 lg:grid-cols-5">
-      <div class="lg:col-span-3">
-        <h2 class="text-h1 text-balance">
-          Transparencia que se puede <span class="text-accent-primary">verificar.</span>
+    <div class="grid items-center gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-8">
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-balance">
+          Transparencia que se puede verificar.
         </h2>
-        <p class="mt-6 text-body text-text-secondary">
+        <p class="mt-6 text-body text-secondary">
           CorrupcionDB nace de la necesidad de tener un registro público, estructurado y verificable
           de los casos de corrupción y faltas a la probidad que involucran a figuras políticas en
           Chile. No hacemos denuncias: <strong>rastreamos expedientes.</strong>
         </p>
-        <p class="mt-4 text-body text-text-secondary">
+        <p class="mt-4 text-body text-secondary">
           Cada registro en nuestra base de datos incluye el enlace a la fuente oficial: Poder
           Judicial, Contraloría General de la República, Ministerio Público, o investigaciones
           periodísticas verificables. Si no hay fuente, no hay dato.
         </p>
-        <p class="mt-4 text-body text-text-secondary">
+        <p class="mt-4 text-body text-secondary">
           Respetamos el principio de <strong>presunción de inocencia</strong>. Nuestro rol no es
           juzgar, sino hacer accesible la información que ya es pública pero está dispersa.
         </p>
       </div>
-      <div class="lg:col-span-2">
-        <div class="relative flex items-center justify-center">
-          <div class="size-48 rounded-full border-2 border-accent-highlight/20" aria-hidden="true"></div>
-          <div class="absolute size-32 rounded-full border-2 border-accent-primary/30" aria-hidden="true"></div>
-          <div class="absolute size-16 rounded-full bg-accent-contrast/10" aria-hidden="true"></div>
-          <span class="absolute font-mono text-4xl font-bold text-accent-contrast tabular-nums">
+      <div class="lg:col-span-4">
+        <div class="flex items-center justify-center border border-border p-10">
+          <span class="font-mono text-6xl font-medium text-primary tabular-nums">
             {totalCasos}
           </span>
         </div>
@@ -184,59 +168,38 @@ const latest = [...allCases]
     </div>
   </section>
 
-  <!-- Sección: ¿Cómo funciona? -->
+  <!-- ¿Cómo funciona? -->
   <section class="bg-surface-alt px-4 py-16 sm:px-6 sm:py-20">
     <div class="mx-auto max-w-[1280px]">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-h1 text-balance">
-          Datos abiertos, verificables, <span class="text-accent-highlight">accesibles.</span>
+      <div class="max-w-2xl">
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-balance">
+          Datos abiertos, verificables, accesibles.
         </h2>
       </div>
 
-      <div class="mt-16 grid gap-8 md:grid-cols-3">
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
         <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-primary/10">
-            <svg class="size-6 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-            </svg>
-          </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">Fuentes oficiales</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
+          <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">01</span>
+          <h3 class="mt-3 font-display text-xl text-primary">Fuentes oficiales</h3>
+          <p class="mt-3 text-body-sm text-secondary">
             Todos los datos provienen del Poder Judicial de Chile, la Contraloría General de la
-            República, el Ministerio Público o investigaciones periodísticas verificables. Cada
-            registro incluye el enlace a su fuente.
+            República, el Ministerio Público o investigaciones periodísticas verificables.
           </p>
         </Card>
 
         <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-highlight/10">
-            <svg class="size-6 text-accent-highlight" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="20" x2="12" y2="10"></line>
-              <line x1="18" y1="20" x2="18" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="16"></line>
-            </svg>
-          </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">Datos estructurados</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
+          <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">02</span>
+          <h3 class="mt-3 font-display text-xl text-primary">Datos estructurados</h3>
+          <p class="mt-3 text-body-sm text-secondary">
             Casos clasificados por estado procesal, región, año y tipo de delito. Líneas de tiempo
-            interactivas para seguir la cronología de cada causa.
+            para seguir la cronología de cada causa.
           </p>
         </Card>
 
         <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-info/10">
-            <svg class="size-6 text-accent-info" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">Código abierto</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
+          <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">03</span>
+          <h3 class="mt-3 font-display text-xl text-primary">Código abierto</h3>
+          <p class="mt-3 text-body-sm text-secondary">
             Todo el código de la plataforma es público bajo licencia Apache 2.0. Cualquier persona
             puede auditar, contribuir o replicar el proyecto.
           </p>
@@ -245,24 +208,22 @@ const latest = [...allCases]
     </div>
   </section>
 
-  <!-- Sección: CTA -->
+  <!-- CTA -->
   <section class="mx-auto max-w-[1280px] px-4 py-16 text-center sm:px-6 sm:py-20">
     <div class="mx-auto max-w-2xl">
-      <h2 class="text-h1 text-balance">
-        La transparencia se construye <span class="text-accent-contrast">entre todos.</span>
+      <h2 class="font-display text-h1 tracking-[-0.035em] text-balance">
+        La transparencia se construye entre todos.
       </h2>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         CorrupcionDB es un proyecto ciudadano, sin fines de lucro y de código abierto. Si tienes
         información verificable, habilidades técnicas o simplemente quieres apoyar, puedes
         contribuir.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <Button variant="cta" size="lg" href="https://github.com/cgize/CorrupcionDB" isExternal={true}>
-          Contribuir en GitHub
+        <Button variant="primary" href="https://github.com/cgize/CorrupcionDB" isExternal={true}>
+          Contribuir en GitHub<span class="text-accent">.</span>
         </Button>
-        <Button variant="outline" size="lg" href="/acerca">
-          Conocer más
-        </Button>
+        <Button variant="outline" href="/acerca">Conocer más</Button>
       </div>
     </div>
   </section>

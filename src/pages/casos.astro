@@ -126,50 +126,41 @@ const buildSearchHref = (q: string) => {
 >
   <!-- Hero compacto -->
   <section
-    class="relative overflow-hidden border-b border-border bg-gradient-to-b from-surface-alt to-surface px-4 py-12 sm:px-6 sm:py-16"
+    class="border-b border-border bg-surface-alt px-4 py-12 sm:px-6 sm:py-16"
   >
-    <div
-      class="pointer-events-none absolute -right-20 -top-20 size-[300px] rounded-full border-2 border-accent-highlight/15"
-      aria-hidden="true"
-    ></div>
-    <div
-      class="pointer-events-none absolute -left-10 bottom-0 size-[180px] rounded-full border-2 border-accent-primary/10"
-      aria-hidden="true"
-    ></div>
-    <div class="relative mx-auto max-w-[1280px]">
-      <p class="font-caption text-xs uppercase tracking-wider text-accent-primary">
+    <div class="mx-auto max-w-[1280px]">
+      <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">
         Base de datos pública
       </p>
       <h1
-        class="mt-3 font-display text-4xl font-bold leading-tight text-text-balance text-text-primary sm:text-5xl lg:text-6xl"
+        class="mt-3 font-display text-h1 tracking-[-0.035em] text-balance text-primary"
       >
-        Casos <span class="text-accent-primary">registrados</span>
+        <span class="text-accent">C</span>asos registrados
       </h1>
-      <p class="mt-4 max-w-2xl font-body text-base text-text-secondary sm:text-lg">
+      <p class="mt-4 max-w-2xl text-body text-secondary">
         Cada registro está vinculado a una fuente oficial verificable. Se presume la inocencia de todas
         las personas mencionadas mientras no exista sentencia firme.
       </p>
 
-      <!-- Stats inline -->
-      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-text-secondary">
+      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-secondary">
         <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-bold text-text-primary tabular-nums">{allCases.length}</span>
+          <span class="font-mono text-2xl font-medium text-primary tabular-nums">{allCases.length}</span>
           <span class="text-text-tertiary">casos totales</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-bold text-accent-contrast tabular-nums">
+          <span class="font-mono text-2xl font-medium text-accent-primary tabular-nums">
             {allCases.filter((c) => c.data.estado === "active" || c.data.estado === "investigation").length}
           </span>
           <span class="text-text-tertiary">en curso</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-bold text-status-resolved tabular-nums">
+          <span class="font-mono text-2xl font-medium text-status-resolved tabular-nums">
             {allCases.filter((c) => c.data.estado === "resolved").length}
           </span>
           <span class="text-text-tertiary">resueltos</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-bold text-accent-info tabular-nums">
+          <span class="font-mono text-2xl font-medium text-accent-info tabular-nums">
             {allCases.filter((c) => c.data.cargo_estado === "con_funciones").length}
           </span>
           <span class="text-text-tertiary">con funciones públicas</span>
@@ -182,11 +173,11 @@ const buildSearchHref = (q: string) => {
   <section class="mx-auto max-w-[1280px] px-4 pt-10 sm:px-6 sm:pt-14">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="font-caption text-xs uppercase tracking-wider text-accent-contrast">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent-contrast">
           Novedades
         </p>
-        <h2 class="mt-2 font-display text-2xl font-bold text-text-primary sm:text-3xl">
-          Últimos <span class="text-accent-contrast">agregados</span>
+        <h2 class="mt-2 font-display text-h2 tracking-[-0.02em] text-primary">
+          Últimos agregados
         </h2>
       </div>
     </div>
@@ -199,50 +190,38 @@ const buildSearchHref = (q: string) => {
     </div>
   </section>
 
-  <!-- Filter bar sticky con badges colapsables -->
+  <!-- Filter bar -->
   <div class="mt-10 sm:mt-14">
-  <FilterBar
-    currentEstado={statusFilter}
-    currentRegion={regionFilter}
-    currentDelito={delitoFilter}
-    currentFuente={fuenteFilter}
-    currentPuesto={puestoFilter}
-    currentCargoEstado={cargoEstadoFilter}
-    currentSector={sectorFilter}
-    currentPartido={partidoFilter}
-    currentCasos={casoFilter}
-    cases={allCases}
-  />
+    <FilterBar
+      currentEstado={statusFilter}
+      currentRegion={regionFilter}
+      currentDelito={delitoFilter}
+      currentFuente={fuenteFilter}
+      currentPuesto={puestoFilter}
+      currentCargoEstado={cargoEstadoFilter}
+      currentSector={sectorFilter}
+      currentPartido={partidoFilter}
+      currentCasos={casoFilter}
+      cases={allCases}
+    />
   </div>
 
   <!-- Contador + sort -->
   <section class="mx-auto max-w-[1280px] px-4 pt-4 sm:px-6 sm:pt-6">
     <div id="counter-row" class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-baseline gap-2">
-        <span id="case-count" class="font-display text-2xl font-bold text-text-primary tabular-nums">
+        <span id="case-count" class="font-display text-2xl font-medium text-primary tabular-nums">
           {filteredCases.length}
         </span>
-        <span id="case-count-label" class="font-label text-sm text-text-secondary">
+        <span id="case-count-label" class="font-body text-sm text-secondary">
           {filteredCases.length === 1 ? "caso" : "casos"}
           {hasFilters && <span class="text-text-tertiary"> de {allCases.length}</span>}
         </span>
       </div>
-      <SortControl
-        currentSort={sort}
-        currentEstado={statusFilter}
-        currentRegion={regionFilter}
-        currentDelito={delitoFilter}
-        currentFuente={fuenteFilter}
-        currentPuesto={puestoFilter}
-        currentCargoEstado={cargoEstadoFilter}
-        currentSector={sectorFilter}
-        currentPartido={partidoFilter}
-        currentCasos={casoFilter}
-        currentQ={searchQuery}
-      />
+      <SortControl currentSort={sort} />
     </div>
 
-    <!-- Buscador (debajo del contador de resultados) -->
+    <!-- Buscador -->
     <form id="search-form" action="/casos" method="GET" class="mt-6 max-w-2xl">
       <div class="relative">
         <svg
@@ -259,20 +238,20 @@ const buildSearchHref = (q: string) => {
           name="q"
           placeholder="Buscar por nombre, cargo, delito, RUC, RIT o etiqueta..."
           value={searchQuery}
-          class="w-full rounded-full border border-border bg-surface-card py-3 pl-12 pr-4 font-body text-sm text-text-primary transition-colors outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/30"
+          class="w-full border border-border bg-surface-card py-3 pl-12 pr-4 font-body text-sm text-primary outline-none transition-colors hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary"
         />
         {
           hasFilters && (
             <>
-<input type="hidden" name="estado" value={statusFilter} />
-               <input type="hidden" name="region" value={regionFilter} />
-               <input type="hidden" name="delito" value={delitoFilter} />
-               <input type="hidden" name="fuente" value={fuenteFilter} />
-               <input type="hidden" name="puesto" value={puestoFilter} />
-               <input type="hidden" name="cargo_estado" value={cargoEstadoFilter} />
-               <input type="hidden" name="sector" value={sectorFilter} />
-               <input type="hidden" name="partido" value={partidoFilter} />
-               <input type="hidden" name="caso" value={casoFilter} />
+              <input type="hidden" name="estado" value={statusFilter} />
+              <input type="hidden" name="region" value={regionFilter} />
+              <input type="hidden" name="delito" value={delitoFilter} />
+              <input type="hidden" name="fuente" value={fuenteFilter} />
+              <input type="hidden" name="puesto" value={puestoFilter} />
+              <input type="hidden" name="cargo_estado" value={cargoEstadoFilter} />
+              <input type="hidden" name="sector" value={sectorFilter} />
+              <input type="hidden" name="partido" value={partidoFilter} />
+              <input type="hidden" name="caso" value={casoFilter} />
             </>
           )
         }
@@ -281,7 +260,7 @@ const buildSearchHref = (q: string) => {
         <a
           id="clear-search-link"
           href={buildSearchHref("")}
-          class="mt-2 inline-flex items-center gap-1.5 font-caption text-xs text-accent-contrast hover:underline"
+          class="mt-2 inline-flex items-center gap-1.5 font-body text-xs text-accent-contrast hover:underline no-underline"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -293,7 +272,7 @@ const buildSearchHref = (q: string) => {
     </form>
   </section>
 
-  <!-- Listado de casos (formato lista) -->
+  <!-- Listado de casos -->
   <section id="results-section" class="mx-auto max-w-[1280px] px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-8">
     <div id="empty-state" class="hidden">
       <EmptyState
@@ -553,7 +532,6 @@ const buildSearchHref = (q: string) => {
       if (historyMode === "replace") history.replaceState({}, "", pathFromUrl(url));
     }
 
-    // Accordion para filter badges (event delegation)
     document.addEventListener("click", function accordionHandler(e) {
       const target = e.target as HTMLElement;
       const summary = target.closest("details.filter-badge > summary");
@@ -561,7 +539,7 @@ const buildSearchHref = (q: string) => {
         if (target.closest("a")) return;
         const details = summary.parentElement as HTMLDetailsElement;
         if (!details) return;
-        e.preventDefault(); // Prevenir toggle nativo del navegador
+        e.preventDefault();
         const isOpen = details.hasAttribute("open");
         if (isOpen) {
           details.removeAttribute("open");
@@ -592,7 +570,6 @@ const buildSearchHref = (q: string) => {
       applyUrl(url, "replace");
     }, 300);
 
-    // Event delegation: clicks en la filter bar
     document.addEventListener("click", function (e) {
       const target = e.target as HTMLElement;
 
@@ -616,7 +593,6 @@ const buildSearchHref = (q: string) => {
         return;
       }
 
-      // Link "Quitar búsqueda"
       const clearLink = target.closest("#clear-search-link");
       if (clearLink) {
         e.preventDefault();
@@ -627,7 +603,6 @@ const buildSearchHref = (q: string) => {
       }
     });
 
-    // Sort select: cambio de orden
     document.addEventListener("change", function (e) {
       const target = e.target as HTMLElement;
       if (target.id === "sort-select" && target instanceof HTMLSelectElement) {
@@ -638,7 +613,6 @@ const buildSearchHref = (q: string) => {
       }
     });
 
-    // Search input: búsqueda en vivo con debounce
     document.addEventListener("input", function (e) {
       const target = e.target as HTMLElement;
       if (target.id === "search-input" && target instanceof HTMLInputElement) {
@@ -646,7 +620,6 @@ const buildSearchHref = (q: string) => {
       }
     });
 
-    // Search form: prevenir submit tradicional
     document.addEventListener("submit", function (e) {
       const form = e.target as HTMLElement;
       if (form.id === "search-form" || form.closest("#search-form")) {
@@ -661,12 +634,10 @@ const buildSearchHref = (q: string) => {
       }
     });
 
-    // Navegación back/forward del navegador
     window.addEventListener("popstate", function () {
       applyUrl(new URL(window.location.href), "none");
     });
 
-    // Inicialización
     applyUrl(new URL(window.location.href), "replace");
   })();
 </script>

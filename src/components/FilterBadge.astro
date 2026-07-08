@@ -54,17 +54,15 @@ const id = `fb-${paramKey}`;
   <summary
     data-filter-summary
     class:list={[
-      "inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-label text-xs transition-all duration-200 select-none",
-      isActive
-        ? accentMap[accent]
-        : inactiveClass,
+      "inline-flex cursor-pointer items-center gap-2 border px-3.5 py-1.5 font-body text-xs font-medium transition-all duration-200 select-none no-underline",
+      isActive ? accentMap[accent] : inactiveClass,
     ]}
   >
-    <span class="font-medium uppercase tracking-wider">{label}</span>
+    <span class="uppercase tracking-wider">{label}</span>
     <span
       data-active-chip
       class:list={[
-        "inline-flex items-center gap-1 rounded-full bg-surface-card/60 px-2 py-0.5 text-[0.65rem] font-semibold normal-case",
+        "inline-flex items-center gap-1 bg-surface-card/60 px-2 py-0.5 text-[0.65rem] font-medium normal-case",
         !isActive && "hidden",
       ]}
     >
@@ -73,7 +71,7 @@ const id = `fb-${paramKey}`;
       <a
         data-filter-clear
         href={clearHref}
-        class="-mr-0.5 ml-0.5 inline-flex size-3.5 items-center justify-center rounded-full text-current/80 hover:text-accent-contrast"
+        class="-mr-0.5 ml-0.5 inline-flex size-3.5 items-center justify-center text-current/80 hover:text-accent"
         title="Quitar filtro"
         aria-label={`Quitar filtro ${label}`}
       >
@@ -92,28 +90,24 @@ const id = `fb-${paramKey}`;
   </summary>
 
   <div
-    class="absolute left-0 top-full z-50 mt-1.5 min-w-[14rem] max-w-[20rem] rounded-xl border border-border bg-surface-card p-2 shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
+    class="absolute left-0 top-full z-50 mt-1.5 min-w-[14rem] max-w-[20rem] border border-border bg-surface-card p-2 shadow-none"
   >
-    <!-- Cabecera del panel -->
     <div class="flex items-center justify-between px-2 pb-1.5 pt-1">
-      <span class="font-caption text-[0.65rem] uppercase tracking-wider text-text-tertiary">
+      <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">
         Filtrar por {label.toLowerCase()}
       </span>
-      {
         <a
-          data-panel-clear
-          href={clearHref}
-          class:list={[
-            "font-caption text-[0.65rem] font-semibold uppercase tracking-wider text-accent-contrast hover:underline",
-            !currentValue && "hidden",
-          ]}
-        >
-          Limpiar
-        </a>
-      }
+        data-panel-clear
+        href={clearHref}
+        class:list={[
+          "font-mono text-[0.65rem] font-semibold uppercase tracking-wider text-accent-contrast hover:underline no-underline",
+          !currentValue && "hidden",
+        ]}
+      >
+        Limpiar
+      </a>
     </div>
 
-    <!-- Opciones scrollables -->
     <div class="max-h-64 overflow-y-auto pr-0.5">
       <ul class="flex flex-col gap-0.5">
         {
@@ -128,7 +122,7 @@ const id = `fb-${paramKey}`;
                   data-dot={o.dot || ""}
                   href={buildHref({ [paramKey]: o.value })}
                   class:list={[
-                    "flex items-center gap-2.5 rounded-md px-2.5 py-1.5 font-label text-xs transition-colors",
+                    "flex items-center gap-2.5 px-2.5 py-1.5 font-body text-xs transition-colors no-underline",
                     sel
                       ? "bg-accent-primary/10 font-semibold text-accent-primary"
                       : "text-text-secondary hover:bg-surface-alt hover:text-text-primary",

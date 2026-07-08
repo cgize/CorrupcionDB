@@ -1,39 +1,54 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Card from "@/components/Card.astro";
 import Button from "@/components/Button.astro";
 
-const statsRows = [
-  { label: "Casos registrados", value: "1,247", accent: "accent-primary", description: "Total acumulado desde el inicio del proyecto" },
-  { label: "Casos activos", value: "384", accent: "accent-contrast", description: "Con investigación en curso, formalización o juicio pendiente" },
-  { label: "Casos resueltos", value: "512", accent: "accent-highlight", description: "Sentencia firme, sobreseimiento definitivo o archivados con resolución" },
-  { label: "En investigación preliminar", value: "351", accent: "accent-info", description: "Diligencias preliminares en curso, sin formalización" },
-];
+const allCases = await getCollection("cases");
+const total = allCases.length;
+const activos = allCases.filter((c) => c.data.estado === "active").length;
+const investigacion = allCases.filter((c) => c.data.estado === "investigation").length;
+const pendientes = allCases.filter((c) => c.data.estado === "pending").length;
+const resueltos = allCases.filter((c) => c.data.estado === "resolved").length;
+const archivados = allCases.filter((c) => c.data.estado === "archived").length;
 
 const distribution = [
-  { label: "Activos", value: 31, color: "bg-status-active" },
-  { label: "Investigación", value: 28, color: "bg-status-investigation" },
-  { label: "Pendientes", value: 12, color: "bg-status-pending" },
-  { label: "Resueltos", value: 21, color: "bg-status-resolved" },
-  { label: "Archivados", value: 8, color: "bg-status-archived" },
+  { label: "Activos", value: activos, key: "active" },
+  { label: "En investigación", value: investigacion, key: "investigation" },
+  { label: "Pendientes", value: pendientes, key: "pending" },
+  { label: "Resueltos", value: resueltos, key: "resolved" },
+  { label: "Archivados", value: archivados, key: "archived" },
 ];
 
-const topRegions = [
-  { name: "Metropolitana", value: 42 },
-  { name: "Valparaíso", value: 15 },
-  { name: "Biobío", value: 11 },
-  { name: "La Araucanía", value: 9 },
-  { name: "Antofagasta", value: 7 },
-  { name: "Otras regiones", value: 16 },
-];
+const regionMap = new Map<string, number>();
+for (const c of allCases) {
+  if (c.data.region) {
+    regionMap.set(c.data.region, (regionMap.get(c.data.region) || 0) + 1);
+  }
+}
+const topRegions = Array.from(regionMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5)
+  .map(([name, value]) => ({ name, value }));
 
-const topDelitos = [
-  { name: "Fraude al Fisco", value: 35 },
-  { name: "Malversación", value: 22 },
-  { name: "Cohecho", value: 18 },
-  { name: "Tráfico de Influencias", value: 14 },
-  { name: "Negociación Incompatible", value: 11 },
-];
+const delitoMap = new Map<string, number>();
+for (const c of allCases) {
+  delitoMap.set(c.data.delito, (delitoMap.get(c.data.delito) || 0) + 1);
+}
+const topDelitos = Array.from(delitoMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5)
+  .map(([key, value]) => ({
+    name: key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+    value,
+  }));
+
+const maxRegion = Math.max(...topRegions.map((r) => r.value), 1);
+const maxDelito = Math.max(...topDelitos.map((d) => d.value), 1);
+const maxDistribucion = Math.max(...distribution.map((d) => d.value), 1);
+
+function thinBarWidth(value: number, max: number) {
+  return `${Math.round((value / max) * 100)}%`;
+}
 ---
 
 <BaseLayout
@@ -41,10 +56,11 @@ const topDelitos = [
   description="Estadísticas y visualización de datos sobre casos de corrupción, faltas a la probidad y delitos contra el patrimonio público en Chile."
 >
   <section class="mx-auto max-w-[1280px] px-6 py-12">
-    <h1 class="text-h1 text-balance">
-      Estadísticas <span class="text-accent-primary">generales</span>
+    <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">Datos agregados</p>
+    <h1 class="mt-3 font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+      <span class="text-accent">E</span>stadísticas generales
     </h1>
-    <p class="mt-4 text-body text-text-secondary max-w-prose">
+    <p class="mt-4 max-w-prose text-body text-secondary">
       Visualización de datos agregados sobre los casos registrados en CorrupcionDB. Las cifras se
       actualizan periódicamente con base en los registros disponibles en las fuentes oficiales.
     </p>
@@ -52,75 +68,67 @@ const topDelitos = [
 
   <!-- Tarjetas principales -->
   <section class="mx-auto max-w-[1280px] px-6 pb-16">
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {statsRows.map((s) => (
-        <Card type="stat" accentBorder={true} accentColor={s.accent}>
-          <span class={`font-mono text-3xl font-bold text-${s.accent} tabular-nums`}>
-            {s.value}
-          </span>
-          <p class="mt-2 font-caption font-semibold text-text-primary">{s.label}</p>
-          <p class="mt-1 font-caption text-xs text-text-tertiary leading-relaxed">{s.description}</p>
-        </Card>
-      ))}
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="border border-border bg-surface-card p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Casos registrados</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-primary tabular-nums">{total.toLocaleString("es-CL")}</p>
+      </div>
+      <div class="border border-border bg-surface-card p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Casos activos</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-accent-primary tabular-nums">{activos.toLocaleString("es-CL")}</p>
+      </div>
+      <div class="border border-border bg-surface-card p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Resueltos</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-status-resolved tabular-nums">{resueltos.toLocaleString("es-CL")}</p>
+      </div>
+      <div class="border border-border bg-surface-card p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">En investigación</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-accent-info tabular-nums">{investigacion.toLocaleString("es-CL")}</p>
+      </div>
     </div>
   </section>
 
   <!-- Distribución por estado + por región -->
   <section class="bg-surface-alt px-6 py-20">
     <div class="mx-auto max-w-[1280px]">
-      <div class="grid gap-12 lg:grid-cols-2">
-        <!-- Distribución por estado (barras horizontales) -->
-        <div>
-          <h2 class="text-h1 text-balance">
-            Distribución por <span class="text-accent-contrast">estado procesal</span>
-          </h2>
-          <div class="mt-8 space-y-4">
-            {distribution.map((d) => {
-              const maxVal = Math.max(...distribution.map((x) => x.value));
-              const pct = Math.round((d.value / maxVal) * 100);
-              return (
-                <div>
-                  <div class="flex items-center justify-between font-caption text-text-secondary">
-                    <span>{d.label}</span>
-                    <span class="font-mono text-text-primary tabular-nums">{d.value}%</span>
-                  </div>
-                  <div class="mt-1 h-3 w-full overflow-hidden rounded-full bg-surface">
-                    <div
-                      class={`h-full rounded-full ${d.color} transition-all duration-500`}
-                      style={`width: ${pct}%`}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      <div class="grid gap-x-12 gap-y-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-primary">
+          Distribución por estado procesal
+        </h2>
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-primary">
+          Casos por región
+        </h2>
+        <div class="space-y-6">
+          {distribution.map((d, i) => (
+            <div>
+              <div class="flex items-center justify-between font-body text-sm text-secondary">
+                <span>{d.label}</span>
+                <span class="font-mono text-primary tabular-nums">{d.value}</span>
+              </div>
+              <div class="mt-2 h-[3px] w-full bg-chart-track">
+                <div
+                  class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+                  style={`width: ${thinBarWidth(d.value, maxDistribucion)}`}
+                ></div>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <!-- Top regiones (barras horizontales) -->
-        <div>
-          <h2 class="text-h1 text-balance">
-            Casos por <span class="text-accent-primary">región</span>
-          </h2>
-          <div class="mt-8 space-y-4">
-            {topRegions.map((r) => {
-              const maxVal = Math.max(...topRegions.map((x) => x.value));
-              const pct = Math.round((r.value / maxVal) * 100);
-              return (
-                <div>
-                  <div class="flex items-center justify-between font-caption text-text-secondary">
-                    <span>{r.name}</span>
-                    <span class="font-mono text-text-primary tabular-nums">{r.value}%</span>
-                  </div>
-                  <div class="mt-1 h-3 w-full overflow-hidden rounded-full bg-surface">
-                    <div
-                      class="h-full rounded-full bg-accent-primary transition-all duration-500"
-                      style={`width: ${pct}%`}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <div class="space-y-6">
+          {topRegions.map((r, i) => (
+            <div>
+              <div class="flex items-center justify-between font-body text-sm text-secondary">
+                <span>{r.name}</span>
+                <span class="font-mono text-primary tabular-nums">{r.value}</span>
+              </div>
+              <div class="mt-2 h-[3px] w-full bg-chart-track">
+                <div
+                  class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+                  style={`width: ${thinBarWidth(r.value, maxRegion)}`}
+                ></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -128,48 +136,42 @@ const topDelitos = [
 
   <!-- Top delitos -->
   <section class="mx-auto max-w-[1280px] px-6 py-20">
-    <h2 class="text-h1 text-balance text-center">
-      Tipos de <span class="text-accent-highlight">delito</span> más frecuentes
+    <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-center text-primary">
+      Tipos de delito más frecuentes
     </h2>
-    <div class="mx-auto mt-12 max-w-xl space-y-4">
-      {topDelitos.map((d) => {
-        const maxVal = Math.max(...topDelitos.map((x) => x.value));
-        const pct = Math.round((d.value / maxVal) * 100);
-        return (
-          <div>
-            <div class="flex items-center justify-between font-caption text-text-secondary">
-              <span>{d.name}</span>
-              <span class="font-mono text-text-primary tabular-nums">{d.value}%</span>
-            </div>
-            <div class="mt-1 h-4 w-full overflow-hidden rounded-full bg-surface-alt">
-              <div
-                class="h-full rounded-full bg-accent-highlight transition-all duration-500"
-                style={`width: ${pct}%`}
-              ></div>
-            </div>
+    <div class="mx-auto mt-12 max-w-xl space-y-6">
+      {topDelitos.map((d, i) => (
+        <div>
+          <div class="flex items-center justify-between font-body text-sm text-secondary">
+            <span>{d.name}</span>
+            <span class="font-mono text-primary tabular-nums">{d.value}</span>
           </div>
-        );
-      })}
+          <div class="mt-2 h-[3px] w-full bg-chart-track">
+            <div
+              class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+              style={`width: ${thinBarWidth(d.value, maxDelito)}`}
+            ></div>
+          </div>
+        </div>
+      ))}
     </div>
   </section>
 
   <!-- Datos abiertos -->
   <section class="border-t border-border bg-surface-alt px-6 py-16">
     <div class="mx-auto max-w-[1280px] text-center">
-      <h2 class="text-h1 text-balance">
-        Datos <span class="text-accent-primary">abiertos</span>
+      <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+        Datos abiertos
       </h2>
-      <p class="mx-auto mt-6 max-w-prose text-body text-text-secondary">
+      <p class="mx-auto mt-6 max-w-prose text-body text-secondary">
         Todas nuestras estadísticas se generan a partir de los datos públicos disponibles en las
         fuentes oficiales. Próximamente podrás descargar los datasets completos en formato CSV.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <Button variant="primary" size="lg" href="/casos">
-          Explorar todos los casos
+        <Button variant="primary" href="/casos">
+          Explorar todos los casos<span class="text-accent">.</span>
         </Button>
-        <Button variant="outline" size="lg" href="/fuentes">
-          Ver fuentes oficiales
-        </Button>
+        <Button variant="outline" href="/fuentes">Ver fuentes oficiales</Button>
       </div>
     </div>
   </section>

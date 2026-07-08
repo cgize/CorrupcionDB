@@ -3,27 +3,36 @@ import ThemeToggle from "./ThemeToggle.astro";
 ---
 
 <header
-  class="sticky left-0 right-0 top-0 z-100 border-b border-border bg-surface/95 px-6 py-4 backdrop-blur-sm"
+  class="sticky left-0 right-0 top-0 z-50 border-b border-border bg-surface/95 px-6 py-4 backdrop-blur-sm"
 >
   <nav class="mx-auto flex max-w-[1280px] items-center justify-between">
     <a
       href="/"
-      class="font-display text-xl font-bold tracking-tight text-text-primary transition-colors hover:text-accent-primary"
+      class="font-display text-2xl leading-none tracking-tight text-primary transition-colors hover:opacity-80"
+      aria-label="CorrupcionDB Inicio"
     >
       CorrupcionDB
     </a>
 
     <div class="hidden items-center gap-8 md:flex">
-      <a href="/casos" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+      <a
+        href="/casos"
+        class="font-body text-sm font-medium text-secondary no-underline transition-colors hover:text-primary"
         >Casos</a
       >
-      <a href="/estadisticas" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+      <a
+        href="/estadisticas"
+        class="font-body text-sm font-medium text-secondary no-underline transition-colors hover:text-primary"
         >Estadísticas</a
       >
-      <a href="/fuentes" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+      <a
+        href="/fuentes"
+        class="font-body text-sm font-medium text-secondary no-underline transition-colors hover:text-primary"
         >Fuentes</a
       >
-      <a href="/acerca" class="font-label text-text-secondary transition-colors hover:text-text-primary"
+      <a
+        href="/acerca"
+        class="font-body text-sm font-medium text-secondary no-underline transition-colors hover:text-primary"
         >Acerca</a
       >
     </div>
@@ -33,7 +42,7 @@ import ThemeToggle from "./ThemeToggle.astro";
         href="https://github.com/cgize/CorrupcionDB"
         target="_blank"
         rel="noopener noreferrer"
-        class="font-label text-text-secondary transition-colors hover:text-accent-primary"
+        class="hidden font-body text-sm font-medium text-secondary no-underline transition-colors hover:text-primary sm:inline-block"
       >
         GitHub
       </a>
@@ -43,10 +52,10 @@ import ThemeToggle from "./ThemeToggle.astro";
         id="mobile-menu-btn"
         type="button"
         aria-label="Abrir menú"
-        class="flex size-9 items-center justify-center md:hidden"
+        class="flex size-9 items-center justify-center text-primary md:hidden"
       >
         <svg
-          class="size-6 text-text-primary"
+          class="size-6"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -69,10 +78,10 @@ import ThemeToggle from "./ThemeToggle.astro";
     id="mobile-menu"
     class="mt-4 hidden flex-col gap-4 border-t border-border pt-4 md:hidden"
   >
-    <a href="/casos" class="font-label text-text-secondary">Casos</a>
-    <a href="/estadisticas" class="font-label text-text-secondary">Estadísticas</a>
-    <a href="/fuentes" class="font-label text-text-secondary">Fuentes</a>
-    <a href="/acerca" class="font-label text-text-secondary">Acerca</a>
+    <a href="/casos" class="font-body text-sm font-medium text-secondary no-underline">Casos</a>
+    <a href="/estadisticas" class="font-body text-sm font-medium text-secondary no-underline">Estadísticas</a>
+    <a href="/fuentes" class="font-body text-sm font-medium text-secondary no-underline">Fuentes</a>
+    <a href="/acerca" class="font-body text-sm font-medium text-secondary no-underline">Acerca</a>
   </div>
 </header>
 

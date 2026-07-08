@@ -1,26 +1,26 @@
 ---
-import { DISCLAIMER, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 ---
 
-<footer class="bg-surface-dark px-6 py-16">
+<footer class="border-t border-border bg-surface-alt px-6 py-16">
   <div class="mx-auto grid max-w-[1280px] gap-12 md:grid-cols-2 lg:grid-cols-4">
     <div>
-      <span class="font-display text-xl font-bold text-[#EDE8E0]">CorrupcionDB</span>
-      <p class="mt-4 font-body text-sm leading-relaxed text-text-dark-secondary">
+      <span class="font-display text-2xl text-primary">CorrupcionDB</span>
+      <p class="mt-4 font-body text-sm leading-relaxed text-secondary">
         Plataforma ciudadana de código abierto que centraliza y estructura información sobre
         casos de corrupción y faltas a la probidad en Chile.
       </p>
     </div>
 
     <div>
-      <h4 class="font-label text-text-dark-primary">Fuentes oficiales</h4>
+      <h4 class="font-body text-sm font-semibold uppercase tracking-wider text-primary">Fuentes oficiales</h4>
       <ul class="mt-4 space-y-2">
         <li>
           <a
             href="https://www.pjud.cl"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Poder Judicial</a
           >
         </li>
@@ -29,7 +29,7 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
             href="https://www.contraloria.cl"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Contraloría General</a
           >
         </li>
@@ -38,7 +38,7 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
             href="https://www.fiscaliadechile.cl"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Ministerio Público</a
           >
         </li>
@@ -46,19 +46,19 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
     </div>
 
     <div>
-      <h4 class="font-label text-text-dark-primary">Código abierto</h4>
+      <h4 class="font-body text-sm font-semibold uppercase tracking-wider text-primary">Código abierto</h4>
       <ul class="mt-4 space-y-2">
         <li>
           <a
             href="https://github.com/cgize/CorrupcionDB"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Repositorio GitHub</a
           >
         </li>
         <li>
-          <a href="/api" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a href="/api" class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >API de datos</a
           >
         </li>
@@ -67,7 +67,7 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
             href="https://www.apache.org/licenses/LICENSE-2.0"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Licencia Apache 2.0</a
           >
         </li>
@@ -75,19 +75,19 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
     </div>
 
     <div>
-      <h4 class="font-label text-text-dark-primary">Contribuir</h4>
+      <h4 class="font-body text-sm font-semibold uppercase tracking-wider text-primary">Contribuir</h4>
       <ul class="mt-4 space-y-2">
         <li>
           <a
             href={`${SITE.repo}/issues/new`}
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Reportar datos</a
           >
         </li>
         <li>
-          <a href="/contribuir" class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+          <a href="/contribuir" class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Guía de contribución</a
           >
         </li>
@@ -96,7 +96,7 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
             href={`${SITE.repo}/issues`}
             target="_blank"
             rel="noopener noreferrer"
-            class="font-body text-sm text-text-dark-secondary transition-colors hover:text-accent-primary"
+            class="font-body text-sm text-secondary no-underline transition-colors hover:text-primary"
             >Contacto</a
           >
         </li>
@@ -104,9 +104,4 @@ import { DISCLAIMER, SITE } from "@/lib/constants";
     </div>
   </div>
 
-  <div class="mx-auto mt-12 max-w-[1280px] border-t border-border-dark pt-8">
-    <p class="font-caption leading-relaxed text-text-dark-tertiary">
-      {DISCLAIMER}
-    </p>
-  </div>
 </footer>

@@ -1,7 +1,27 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Card from "@/components/Card.astro";
 import { SITE } from "@/lib/constants";
+
+const methods = [
+  {
+    n: "01",
+    t: "Clonar el repositorio",
+    d: "Clona el repositorio y accede a todos los archivos Markdown con frontmatter YAML estructurado. Cada caso está en src/content/cases/.",
+    code: `git clone ${SITE.repo}.git`,
+  },
+  {
+    n: "02",
+    t: "GitHub Raw",
+    d: "Accede directamente a los archivos raw desde GitHub. Ideal para consumir los datos desde scripts o aplicaciones externas sin necesidad de clonar.",
+    code: `${SITE.repo}/raw/main/src/content/cases/`,
+  },
+  {
+    n: "03",
+    t: "Esquema Zod",
+    d: "El esquema de validación está definido con Zod en el archivo de configuración de contenido de Astro. Puedes usarlo para validar tus propios datos.",
+    code: `${SITE.repo}/blob/main/src/content.config.ts`,
+  },
+];
 ---
 
 <BaseLayout
@@ -11,42 +31,39 @@ import { SITE } from "@/lib/constants";
   <!-- Hero -->
   <section class="mx-auto max-w-[1280px] px-6 py-16">
     <div class="mx-auto max-w-2xl text-center">
-      <h1 class="text-h1 text-balance">
-        Datos abiertos, <span class="text-accent-primary">listos para usar.</span>
+      <h1 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+        <span class="text-accent">D</span>atos abiertos, listos para usar.
       </h1>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         CorrupcionDB no ofrece una API REST tradicional, pero todos los datos están disponibles en
         formatos estructurados dentro del repositorio de código abierto.
       </p>
     </div>
   </section>
 
-  <!-- Línea decorativa -->
-  <div class="mx-auto mb-16 h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
+  <div class="mx-auto h-px w-20 bg-border-strong max-w-[1280px]" aria-hidden="true"></div>
 
   <!-- Cómo acceder a los datos -->
   <section class="mx-auto max-w-[1280px] px-6 pb-16">
-    <div class="grid items-center gap-12 lg:grid-cols-5">
-      <div class="lg:col-span-3">
-        <h2 class="text-h1 text-balance">
-          Accede a los datos <span class="text-accent-contrast">directamente.</span>
+    <div class="grid items-center gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-8">
+        <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+          Accede a los datos directamente.
         </h2>
-        <p class="mt-6 text-body text-text-secondary">
+        <p class="mt-6 text-body text-secondary">
           Cada caso de corrupción está almacenado como un archivo Markdown con frontmatter YAML
-          estructurado en el directorio <code class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-sm">src/content/cases/</code>
+          estructurado en el directorio <code class="border border-border bg-surface-alt px-1.5 py-0.5 font-mono text-sm">src/content/cases/</code>
           del repositorio. Puedes clonar el repositorio, leer los archivos directamente o usar el
           esquema de contenido de Astro para procesarlos.
         </p>
-        <p class="mt-4 text-body text-text-secondary">
-          El esquema de datos está definido en <code class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-sm">src/content.config.ts</code>
+        <p class="mt-4 text-body text-secondary">
+          El esquema de datos está definido en <code class="border border-border bg-surface-alt px-1.5 py-0.5 font-mono text-sm">src/content.config.ts</code>
           usando Zod, lo que garantiza que todos los registros sigan la misma estructura validada.
         </p>
       </div>
-      <div class="lg:col-span-2">
-        <div class="relative flex items-center justify-center">
-          <div class="size-48 rounded-full border-2 border-accent-info/20" aria-hidden="true"></div>
-          <div class="absolute size-32 rounded-full border-2 border-accent-primary/30" aria-hidden="true"></div>
-          <span class="absolute font-mono text-3xl font-bold text-accent-info">{`{.md}`}</span>
+      <div class="lg:col-span-4">
+        <div class="flex items-center justify-center border border-border p-10">
+          <span class="font-mono text-4xl font-medium text-primary">{`.md`}</span>
         </div>
       </div>
     </div>
@@ -55,60 +72,18 @@ import { SITE } from "@/lib/constants";
   <!-- Métodos de acceso -->
   <section class="bg-surface-alt px-6 py-20">
     <div class="mx-auto max-w-[1280px]">
-      <h2 class="text-center text-h1">Métodos de <span class="text-accent-highlight">acceso</span></h2>
-      <div class="mt-12 grid gap-8 md:grid-cols-3">
-        <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-primary/10">
-            <svg class="size-6 text-accent-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.5 12.5H12.5V3.5"></path>
-              <path d="M4.5 3.5A5 5 0 0 0 4.5 20.5"></path>
-            </svg>
+      <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary">Métodos de acceso</h2>
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {methods.map((m) => (
+          <div class="border border-border bg-surface-card p-7">
+            <span class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">{m.n}</span>
+            <h3 class="mt-3 font-display text-xl text-primary">{m.t}</h3>
+            <p class="mt-3 text-body-sm text-secondary">{m.d}</p>
+            <div class="mt-4 border border-border bg-surface-alt p-3">
+              <code class="break-all font-mono text-xs text-secondary">{m.code}</code>
+            </div>
           </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">Clonar el repositorio</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
-            Clona el repositorio y accede a todos los archivos Markdown con frontmatter YAML
-            estructurado. Cada caso está en <code class="rounded bg-surface-card px-1 font-mono text-xs">src/content/cases/</code>.
-          </p>
-          <div class="mt-4 rounded-lg bg-surface-card p-3">
-            <code class="font-mono text-xs text-text-secondary break-all">git clone {SITE.repo}.git</code>
-          </div>
-        </Card>
-
-        <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-highlight/10">
-            <svg class="size-6 text-accent-highlight" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-            </svg>
-          </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">GitHub Raw</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
-            Accede directamente a los archivos raw desde GitHub. Ideal para consumir los datos desde
-            scripts o aplicaciones externas sin necesidad de clonar.
-          </p>
-          <div class="mt-4 rounded-lg bg-surface-card p-3">
-            <code class="font-mono text-xs text-text-secondary break-all">{SITE.repo}/raw/main/src/content/cases/</code>
-          </div>
-        </Card>
-
-        <Card type="standard">
-          <div class="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent-info/10">
-            <svg class="size-6 text-accent-info" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-              <line x1="6" y1="6" x2="6.01" y2="6"></line>
-              <line x1="6" y1="18" x2="6.01" y2="18"></line>
-            </svg>
-          </div>
-          <h3 class="font-display text-lg font-semibold text-text-primary">Esquema Zod</h3>
-          <p class="mt-3 text-body-sm text-text-secondary">
-            El esquema de validación está definido con Zod en el archivo de configuración de
-            contenido de Astro. Puedes usarlo para validar tus propios datos.
-          </p>
-          <div class="mt-4 rounded-lg bg-surface-card p-3">
-            <code class="font-mono text-xs text-text-secondary break-all">{SITE.repo}/blob/main/src/content.config.ts</code>
-          </div>
-        </Card>
+        ))}
       </div>
     </div>
   </section>
@@ -116,15 +91,15 @@ import { SITE } from "@/lib/constants";
   <!-- Planes futuros -->
   <section class="mx-auto max-w-[1280px] px-6 py-20">
     <div class="mx-auto max-w-2xl">
-      <h2 class="text-h1 text-center">
-        API <span class="text-accent-primary">en el futuro</span>
+      <h2 class="text-center font-display text-h1 tracking-[-0.035em] text-primary">
+        API en el futuro
       </h2>
-      <p class="mt-6 text-body text-text-secondary">
+      <p class="mt-6 text-body text-secondary">
         Estamos explorando la posibilidad de construir una API REST pública que permita consultar
         los datos con filtros, búsqueda y paginación. Si te interesa contribuir con esta funcionalidad,
         revisa la guía de contribución o abre un issue en GitHub.
       </p>
-      <p class="mt-4 text-body text-text-secondary">
+      <p class="mt-4 text-body text-secondary">
         Mientras tanto, los datos estructurados en el repositorio están disponibles para cualquier
         persona que quiera procesarlos con sus propias herramientas.
       </p>
@@ -133,7 +108,7 @@ import { SITE } from "@/lib/constants";
           href={`${SITE.repo}/issues`}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 rounded-full border border-accent-primary/30 bg-accent-primary/10 px-6 py-3 font-label text-sm text-accent-primary transition-colors hover:bg-accent-primary/20"
+          class="inline-flex items-center gap-2 border border-primary/20 bg-primary/5 px-6 py-3 font-body text-sm font-medium text-primary transition-colors hover:bg-primary/10 no-underline"
         >
           Proponer funcionalidades en GitHub
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

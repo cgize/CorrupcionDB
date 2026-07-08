@@ -1,149 +1,134 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Fraunces";
-  src: url("https://unpkg.com/@fontsource/fraunces@5.1.1/files/fraunces-latin-wght-normal.woff2")
-    format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Source Serif 4";
-  src: url("https://unpkg.com/@fontsource/source-serif-4@5.1.1/files/source-serif-4-latin-wght-normal.woff2")
-    format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "DM Sans";
-  src: url("https://unpkg.com/@fontsource/dm-sans@5.1.1/files/dm-sans-latin-wght-normal.woff2")
-    format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("https://unpkg.com/@fontsource/jetbrains-mono@5.1.1/files/jetbrains-mono-latin-wght-normal.woff2")
-    format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
+/* ─────────────────────────────────────────────────────────────
+   Maison Vox — Design tokens
+   Fuente de verdad: DESIGN.md
+   ───────────────────────────────────────────────────────────── */
 
 @theme {
-  /* ── Superficies (Light) ── */
-  --color-surface: #f5f3ee;
-  --color-surface-alt: #faf8f4;
-  --color-surface-card: #ffffff;
+  /* Core palette */
+  --color-ink: #101010;
+  --color-bone: #fbf8f1;
+  --color-bone-lift: #f3efe7;
+  --color-tomato: #e0432a;
+  --color-secondary: #5a5a5a;
 
-  /* ── Superficies (Dark) ── */
-  --color-surface-dark: #14181c;
-  --color-surface-dark-alt: #1a1f25;
-  --color-surface-dark-card: #1e242b;
+  /* Semantic aliases */
+  --color-primary: #101010;
+  --color-surface: #fbf8f1;
+  --color-surface-alt: #f3efe7;
+  --color-surface-card: #fbf8f1;
+  --color-text: #101010;
+  --color-text-secondary: #5a5a5a;
+  --color-text-tertiary: rgba(16, 16, 16, 0.5);
+  --color-accent: #e0432a;
 
-  /* ── Texto (Light) ── */
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #555555;
-  --color-text-tertiary: #888888;
+  /* Borders */
+  --color-border: rgba(16, 16, 16, 0.1);
+  --color-border-strong: rgba(16, 16, 16, 0.14);
 
-  /* ── Texto (Dark) ── */
-  --color-text-dark-primary: #ede8e0;
-  --color-text-dark-secondary: #9ca3af;
-  --color-text-dark-tertiary: #6b7280;
-
-  /* ── Acentos ── */
-  --color-accent-primary: #0f766e;
-  --color-accent-contrast: #c2410c;
-  --color-accent-highlight: #d49b3e;
-  --color-accent-info: #6366f1;
-
-  /* ── Bordes (Light) ── */
-  --color-border: #e8d4c0;
-  --color-border-strong: #c4a882;
-
-  /* ── Bordes (Dark) ── */
-  --color-border-dark: #2d3540;
-  --color-border-dark-strong: #3d4755;
-
-  /* ── Estados ── */
-  --color-status-active: #e8553a;
-  --color-status-resolved: #10b981;
+  /* Reduced semantic palette for case states
+     (explicitly approved: paleta semántica reducida) */
+  --color-status-active: #e0432a;
+  --color-status-investigation: #2563eb;
+  --color-status-pending: #b45309;
+  --color-status-resolved: #15803d;
   --color-status-archived: #6b7280;
-  --color-status-pending: #d49b3e;
-  --color-status-investigation: #3b82f6;
 
-  /* ── Charts ── */
-  --color-chart-1: #0f766e;
-  --color-chart-2: #ef4444;
-  --color-chart-3: #d49b3e;
-  --color-chart-4: #a855f7;
-  --color-chart-5: #8b5cf6;
-  --color-chart-6: #ec4899;
-  --color-chart-7: #06b6d4;
-  --color-chart-8: #84cc16;
+  /* Charts: single tomato highlight, rest in ink at 18% */
+  --color-chart-highlight: #e0432a;
+  --color-chart-ink: rgba(16, 16, 16, 0.18);
+  --color-chart-track: rgba(16, 16, 16, 0.1);
 
-  /* ── Tipografía ── */
-  --font-display: "Fraunces", serif;
-  --font-body: "Source Serif 4", serif;
-  --font-label: "DM Sans", sans-serif;
-  --font-caption: "DM Sans", sans-serif;
+  /* Legacy accent aliases for compatibility with existing scripts/components */
+  --color-accent-primary: #e0432a;
+  --color-accent-contrast: #e0432a;
+  --color-accent-info: #2563eb;
+  --color-accent-highlight: #b45309;
+
+  /* Typography */
+  --font-display: "DM Serif Display", serif;
+  --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  /* ── Tamaños tipográficos ── */
-  --text-display: clamp(2.5rem, 5vw, 4rem);
-  --text-h1: 2.25rem;
-  --text-h2: 1.5rem;
-  --text-body: 1rem;
-  --text-body-sm: 0.875rem;
-  --text-label: 0.875rem;
-  --text-caption: 0.75rem;
-  --text-mono: 0.875rem;
+  /* Type scale */
+  --text-hero: clamp(3.5rem, 9vw, 7rem);
+  --text-h1: clamp(2.5rem, 6vw, 4rem);
+  --text-h2: clamp(1.75rem, 3.5vw, 2rem);
+  --text-h3: 1.25rem;
+  --text-body: 1.0625rem;
+  --text-body-sm: 0.9375rem;
+  --text-caption: 0.8125rem;
+  --text-marginalia: 0.6875rem;
 
-  /* ── Radios ── */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
+  /* Radius: sharp everywhere, pill reserved for status badges */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 9999px;
+
+  /* Motion */
+  --transition-base: 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @layer base {
   html {
     font-family: var(--font-body);
-    color: var(--color-text-primary);
+    color: var(--color-text);
     background-color: var(--color-surface);
   }
 
-  .dark {
-    color-scheme: dark;
-    --color-surface: var(--color-surface-dark);
-    --color-surface-alt: var(--color-surface-dark-alt);
-    --color-surface-card: var(--color-surface-dark-card);
-    --color-text-primary: var(--color-text-dark-primary);
-    --color-text-secondary: var(--color-text-dark-secondary);
-    --color-text-tertiary: var(--color-text-dark-tertiary);
-    --color-border: var(--color-border-dark);
-    --color-border-strong: var(--color-border-dark-strong);
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
   }
 
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    font-weight: 700;
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body);
+    font-weight: 500;
   }
 
   body {
     min-height: 100dvh;
-    line-height: 1.6;
+    line-height: 1.65;
+    letter-spacing: -0.005em;
   }
 
   p {
-    max-width: 72ch;
+    max-width: 60ch;
+  }
+
+  a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Dark mode: inverted Maison Vox
+     surface < surface-alt < surface-card so cards lift off the page */
+  .dark {
+    color-scheme: dark;
+    --color-primary: #fbf8f1;
+    --color-secondary: #b0b0b0;
+    --color-surface: #0f0f0f;
+    --color-surface-alt: #181818;
+    --color-surface-card: #2a2a2a;
+    --color-text: #fbf8f1;
+    --color-text-secondary: #b0b0b0;
+    --color-text-tertiary: rgba(251, 248, 241, 0.55);
+    --color-border: rgba(251, 248, 241, 0.2);
+    --color-border-strong: rgba(251, 248, 241, 0.35);
+    --color-chart-ink: rgba(251, 248, 241, 0.28);
+    --color-chart-track: rgba(251, 248, 241, 0.12);
   }
 }
 
@@ -151,8 +136,30 @@
   text-wrap: balance;
 }
 
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+@utility font-body {
+  font-family: var(--font-body);
+}
+
+@utility font-mono {
+  font-family: var(--font-mono);
+}
+
 @layer utilities {
-  /* Animación stagger para grids de cards */
+  /* Editorial headline: tomato first letter + tomato period on CTAs */
+  .headline-accent::first-letter {
+    color: var(--color-tomato);
+  }
+
+  .cta-period::after {
+    content: ".";
+    color: var(--color-tomato);
+  }
+
+  /* Stagger fade-in */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -182,12 +189,12 @@
   .stagger-item:nth-child(11) { animation-delay: 600ms; }
   .stagger-item:nth-child(12) { animation-delay: 660ms; }
 
-  /* Línea de scroll suave */
+  /* Scroll behaviour */
   html {
     scroll-behavior: smooth;
   }
 
-  /* Optimización: oculta scrollbar en horizontal scroll de filtros */
+  /* Thin scrollbar for filter rows */
   .scrollbar-thin::-webkit-scrollbar {
     height: 4px;
   }
@@ -195,23 +202,11 @@
     background: transparent;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 2px;
+    background: var(--color-border-strong);
+    border-radius: 0px;
   }
 
-  /* Respetar prefers-reduced-motion */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  /* Clamp helper para line-clamp */
+  /* Line clamps */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -229,5 +224,17 @@
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

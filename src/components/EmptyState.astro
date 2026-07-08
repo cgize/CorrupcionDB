@@ -14,20 +14,20 @@ const {
 } = Astro.props;
 ---
 
-<div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface-alt/50 px-6 py-16 text-center">
-  <div class="flex size-16 items-center justify-center rounded-full bg-surface-card text-text-tertiary">
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<div class="flex flex-col items-center justify-center border border-dashed border-border bg-surface-card px-6 py-16 text-center">
+  <div class="flex size-14 items-center justify-center border border-border bg-surface-card text-text-tertiary">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="11" cy="11" r="8"></circle>
       <path d="m21 21-4.3-4.3"></path>
     </svg>
   </div>
-  <h3 class="mt-6 font-display text-xl font-semibold text-text-primary">{title}</h3>
-  <p class="mt-2 max-w-md text-body-sm text-text-secondary">{message}</p>
+  <h3 class="mt-6 font-display text-xl text-primary">{title}</h3>
+  <p class="mt-2 max-w-md text-body-sm text-secondary">{message}</p>
   {
     showReset && (
       <a
         href={resetHref}
-        class="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface-card px-5 py-2.5 font-label text-sm text-text-primary transition-all hover:border-accent-primary hover:text-accent-primary"
+        class="mt-6 inline-flex items-center gap-2 border border-border bg-surface-card px-5 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary no-underline"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>

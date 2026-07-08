@@ -33,32 +33,32 @@ function buildHref(view: string): string {
 }
 ---
 
-<div class="inline-flex items-center rounded-full border border-border bg-surface-card p-1">
+<div class="inline-flex items-center border border-border bg-surface-card p-1">
   <a
     href={buildHref("grid")}
     class:list={[
-      "inline-flex size-8 items-center justify-center rounded-full transition-all duration-200",
+      "inline-flex size-8 items-center justify-center transition-all duration-200",
       currentView === "grid"
-        ? "bg-accent-primary text-white shadow-sm"
-        : "text-text-tertiary hover:text-text-primary",
+        ? "bg-primary text-surface"
+        : "text-text-tertiary hover:text-primary",
     ]}
     aria-label="Vista en grilla"
     title="Vista grilla"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect width="7" height="7" x="3" y="3" rx="1"></rect>
-      <rect width="7" height="7" x="14" y="3" rx="1"></rect>
-      <rect width="7" height="7" x="14" y="14" rx="1"></rect>
-      <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+      <rect width="7" height="7" x="3" y="3"></rect>
+      <rect width="7" height="7" x="14" y="3"></rect>
+      <rect width="7" height="7" x="14" y="14"></rect>
+      <rect width="7" height="7" x="3" y="14"></rect>
     </svg>
   </a>
   <a
     href={buildHref("list")}
     class:list={[
-      "inline-flex size-8 items-center justify-center rounded-full transition-all duration-200",
+      "inline-flex size-8 items-center justify-center transition-all duration-200",
       currentView === "list"
-        ? "bg-accent-primary text-white shadow-sm"
-        : "text-text-tertiary hover:text-text-primary",
+        ? "bg-primary text-surface"
+        : "text-text-tertiary hover:text-primary",
     ]}
     aria-label="Vista en lista"
     title="Vista lista"
