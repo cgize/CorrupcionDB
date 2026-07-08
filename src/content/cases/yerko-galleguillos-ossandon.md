@@ -32,12 +32,3 @@ hitos:
 ---
 
 Yerko Galleguillos Ossandón fue elegido alcalde de La Higuera por la UDI el 6 de diciembre de 2012. No se encontraron fuentes verificables en prensa nacional, periodismo de investigación ni registros oficiales que acrediten una investigación formal por fraude al fisco u otros delitos en su contra. La información sobre su presunta investigación por fraude al fisco no pudo ser corroborada y se considera no verificada.
-
-## Cronología
-
-- **2012-12-06** — Asunción como alcalde de La Higuera. Yerko Galleguillos Ossandón asume como alcalde de La Higuera por la UDI, sucediendo a Sylvia Clavería Mondaca.
-
-## Fuentes
-
-- [Wikipedia](https://es.wikipedia.org/wiki/Anexo:Alcaldes_de_La_Higuera)
-- [Wikipedia - La Higuera](https://es.wikipedia.org/wiki/La_Higuera_(Chile))

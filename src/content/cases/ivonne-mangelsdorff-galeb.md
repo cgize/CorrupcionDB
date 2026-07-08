@@ -63,17 +63,3 @@ hitos:
 ---
 
 Ivonne Mangelsdorff Galeb, militante de Renovación Nacional y jefa del Departamento Jurídico de la Municipalidad de Graneros, figura como imputada en la investigación penal que el Ministerio Público lleva adelante por el denominado caso Cuentas Corrientes. La indagatoria, declarada secreta por la Fiscalía Local de Chillán, pesquisa presuntos delitos de cohecho, soborno y fraude al fisco en licitaciones municipales de asesorías financieras, con ramificaciones en las regiones de Ñuble y O'Higgins. En abril de 2023, la PDI allanó dependencias de la Municipalidad de Graneros y el domicilio de Mangelsdorff, luego de que surgieran antecedentes sobre la entrega de un pendrive con especificaciones para una licitación por parte del empresario Rodrigo Carmona. Mangelsdorff declaró ante los investigadores y negó haber utilizado dicha información. La investigación sigue en curso y al momento de la última actualización tenía plazo hasta noviembre de 2023.
-
-## Cronología
-
-- **2023-04-14** — Allanamiento a Municipalidad de Graneros y domicilio de Mangelsdorff. La PDI allanó dependencias municipales de Graneros y el domicilio de Ivonne Mangelsdorff en el marco de la investigación del caso Cuentas Corrientes, en busca de evidencia sobre presuntos sobornos para adjudicar licitaciones de asesorías financieras.
-- **2023-05-08** — Electa consejera constitucional. Mangelsdorff resulta electa como integrante del Consejo Constitucional en representación de la 8ª Circunscripción (Región de O'Higgins), militando en RN dentro del pacto Chile Seguro.
-- **2023-09-06** — Aparece formalmente como imputada en caso Cuentas Corrientes. Medios de comunicación revelan que Ivonne Mangelsdorff figura como imputada en la investigación de la Fiscalía de Chillán, tras acceder al expediente que contiene escuchas telefónicas y su propia declaración ante la PDI.
-
-## Fuentes
-
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/region-de-ohiggins/2023/09/06/cuentas-corrientes-consejera-constitucional-mangelsdorff-rn-aparece-imputada-en-caso-de-fraude.shtml)
-- [CIPER Chile](https://www.ciperchile.cl/2018/04/16/las-millonarias-deudas-de-la-nueva-gobernadora-de-cachapoal/)
-- [T13 - Reportajes T13](https://www.t13.cl/videos/reportajes-t13/nacional/reportajes-t13-consejera-constitucional-investigada-por-fiscalia-imputada-cuent-5-9-2023)
-- [BioBioChile - Nuevo imputado en caso cuentas corrientes](https://www.biobiochile.cl/noticias/nacional/region-de-nuble/2023/04/16/nuevo-imputado-en-caso-cuentas-corrientes-fiscalia-investiga-cohecho-en-municipio-de-graneros.shtml)
-- [Biblioteca del Congreso Nacional - Ficha biográfica](https://www.bcn.cl/historiapolitica/proceso_constitucional/consejo_constitucional/ficha/Ivonne_Mangelsdorff_Galeb)

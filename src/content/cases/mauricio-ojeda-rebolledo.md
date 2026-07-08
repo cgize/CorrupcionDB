@@ -89,23 +89,3 @@ hitos:
 ---
 
 Mauricio Ojeda Rebolledo, exdiputado de la República y excandidato a gobernador de La Araucanía, fue formalizado el 3 de enero de 2025 ante el Juzgado de Garantía de Temuco por delitos reiterados de fraude al fisco en la arista 'Manicure' del Caso Convenios. La Fiscalía de Alta Complejidad de La Araucanía le imputa haber participado activamente en una trama de presunta corrupción relacionada con el traspaso de más de $730 millones desde el Gobierno Regional de La Araucanía a las fundaciones Folab y Educc para la realización de cursos que nunca se concretaron. El tribunal decretó la prisión preventiva, que se ha mantenido vigente con múltiples intentos de la defensa por obtener arresto domiciliario, los cuales han sido revertidos en sucesivas ocasiones por la Corte de Apelaciones de Temuco. La investigación se encuentra en curso y la acusación fiscal solicita penas que suman 19 años de cárcel.
-
-## Cronología
-
-- **2023-01-01** — Inicio de convenios entre GORE Araucanía y fundaciones Folab/Educc. Se suscriben convenios por más de $700 millones entre el Gobierno Regional de La Araucanía y las fundaciones Folab y Educc para la ejecución de cursos de capacitación.
-- **2025-01-03** — Formalización y prisión preventiva. El Juzgado de Garantía de Temuco formaliza a Mauricio Ojeda por delitos reiterados de fraude al fisco y decreta la prisión preventiva, tras ser desaforado.
-- **2025-04-02** — Tribunal modifica medida cautelar. El tribunal concede arresto domiciliario total a Ojeda con una caución de $40 millones.
-- **2025-04-10** — Corte de Apelaciones revierte arresto domiciliario. La Tercera Sala de la Corte de Apelaciones de Temuco acoge recursos del Ministerio Público y del GORE y ordena el reingreso a prisión preventiva.
-- **2025-06-06** — Nuevo intento de arresto domiciliario es revertido. No completó dos días fuera de prisión cuando la Corte revierte nuevamente el arresto domiciliario.
-- **2025-10-17** — Corte de Temuco revierte arresto domiciliario por quinta vez. La Tercera Sala de la Corte de Apelaciones de Temuco revoca nuevamente el arresto domiciliario y ordena el reingreso a prisión preventiva.
-- **2025-11-10** — Defensa presenta apelación a la Corte Suprema. La defensa de Ojeda, con el abogado Juan Carlos Manríquez, presenta apelación ante la Corte Suprema para revertir la prisión preventiva.
-- **2026-04-13** — Ojeda asegura su inocencia y anuncia querella contra fiscal Garrido. El exdiputado declara su 'inocencia absoluta' en transmisión en vivo y anuncia querella contra el fiscal regional Roberto Garrido.
-
-## Fuentes
-
-- [La Tercera](https://www.latercera.com/nacional/noticia/tribunal-fija-prision-preventiva-para-el-diputado-mauricio-ojeda/M6PHNA74TNHCJGTAVS76IWT5UU/)
-- [La Tercera - Exdiputado Ojeda asegura su inocencia absoluta](https://www.latercera.com/nacional/noticia/exdiputado-ojeda-asegura-su-inocencia-absoluta-en-caso-convenios-anuncio-querella-contra-fiscal-regional-de-la-araucania/)
-- [La Tercera - Corte revierte arresto domiciliario](https://www.latercera.com/nacional/noticia/corte-revierte-arresto-domiciliario-de-mauricio-ojeda-y-diputado-debera-volver-a-otra-vez-a-prision-preventiva/)
-- [La Tercera - Diputado Ojeda vuelve a prisión preventiva](https://www.latercera.com/nacional/noticia/diputado-mauricio-ojeda-vuelve-a-prision-preventiva/)
-- [La Tercera - Diputado Ojeda presenta apelación ante la Corte Suprema](https://www.latercera.com/nacional/noticia/diputado-mauricio-ojeda-presenta-apelacion-ante-la-corte-suprema-para-revertir-prision-preventiva/)
-- [CIPER Chile](https://www.ciperchile.cl)

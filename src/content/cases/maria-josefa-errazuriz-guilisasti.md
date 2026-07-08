@@ -64,17 +64,3 @@ hitos:
 ---
 
 Josefa Errázuriz, exalcaldesa de Providencia (2012-2016), fue investigada por presuntas irregularidades en la Corporación de Desarrollo Social (CDS) de Providencia, entidad que presidía como alcaldesa. En 2017, la municipalidad presentó una querella por malversación de fondos contra tres exfuncionarios, que posteriormente fue ampliada para incluir a Errázuriz. Una auditoría de KPMG detectó un déficit de $6.925 millones en la CDS entre subvenciones estatales y dineros sin respaldo, ocurridos entre 2014 y 2016. En un caso paralelo, la Contraloría General de la República estableció en enero de 2019 la responsabilidad de Errázuriz en el pago indebido de $31 millones en horas extras para 285 funcionarios, configurando una simulación de contrato. Sin embargo, el delito prescribió antes de que la notificación llegara al municipio en abril de 2019, por lo que no fue posible perseguir penalmente a la exalcaldesa. El caso de la CDS se encuentra archivado sin que Errázuriz haya sido formalizada.
-
-## Cronología
-
-- **2014-01-01** — Presuntas irregularidades en CDS. Durante la administración de Errázuriz se habrían producido irregularidades en la Corporación de Desarrollo Social de Providencia, según auditoría posterior de KPMG.
-- **2016-12-06** — Errázuriz deja la alcaldía. Evelyn Matthei asume como alcaldesa de Providencia tras vencer a Errázuriz en las elecciones municipales.
-- **2017-08-09** — Querella por malversación en CDS. La Municipalidad de Providencia amplía querella para incluir a Josefa Errázuriz por su calidad de presidenta del directorio de la Corporación de Desarrollo Social.
-- **2019-01-18** — Contraloría establece responsabilidad. El contralor Jorge Bermúdez firma resultado de sumario que establece responsabilidad de Errázuriz en simulación de contrato por pago indebido de $31 millones en horas extras.
-- **2019-04-04** — Notificación a municipio. La Municipalidad de Providencia recibe el resultado del sumario de Contraloría, pero el delito ya había prescrito en febrero de 2019.
-
-## Fuentes
-
-- [La Tercera](https://www.latercera.com/reportajes/noticia/la-excesiva-demora-contraloria-salvo-josefa-errazuriz/613135/)
-- [Wikipedia](https://es.wikipedia.org/wiki/Josefa_Err%C3%A1zuriz)
-- [El Mostrador](https://www.elmostrador.cl/noticias/pais/2017/08/09/josefa-errazuriz-fue-incluida-en-querella-por-malversacion-de-fondos-en-providencia/)

@@ -51,13 +51,3 @@ hitos:
 ---
 
 Claudio Eguiluz, exvicepresidente de Renovación Nacional (RN), fue condenado en junio de 2017 mediante un juicio abreviado en el marco del Caso SQM, tras reconocer haber emitido 25 boletas ideológicamente falsas por un total de $125 millones. Además, facilitó boletas a la minera SQM por otros $340 millones, las que fueron utilizadas para canalizar dineros a actividades políticas de forma irregular. El tribunal lo condenó por delito tributario reiterado a una pena de 800 días de cumplimiento en libertad y al pago de una multa de aproximadamente $3 millones. El caso SQM —que investigó el financiamiento ilegal de la política a través de boletas falsas emitidas a la minera— dejó 10 condenados en total, entre ellos Eguiluz, y más de 130 personas acogidas a salidas alternativas.
-
-## Cronología
-
-- **2015-02-09** — Inicio de investigación caso SQM. La Fiscalía Regional de Valparaíso y la Fiscalía Nacional inician la investigación por financiamiento ilegal de la política a través de SQM, formalizando a los primeros imputados.
-- **2017-06-29** — Condena mediante juicio abreviado. Claudio Eguiluz reconoce los hechos en juicio abreviado y es condenado a 800 días de pena cumplida en libertad y multa de $3 millones por delito tributario reiterado, tras emitir 25 boletas falsas por $125 millones a SQM.
-
-## Fuentes
-
-- [CIPER Chile](https://www.ciperchile.cl/2025/10/23/las-verdaderas-cifras-del-caso-sqm-10-condenados-132-acogidos-a-salida-alternativa-4-600-millones-recaudados-por-el-fisco-y-8-absueltos/)
-- [CIPER Chile - Archivo de artículos sobre Claudio Eguiluz](https://ciperchile.cl/tag/claudio-eguiluz/)

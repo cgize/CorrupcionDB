@@ -91,24 +91,3 @@ hitos:
 ---
 
 El exdirector general de la Policía de Investigaciones (PDI), Héctor Espinosa Valenzuela, fue condenado el 1 de diciembre de 2025 por el Cuarto Tribunal de Juicio Oral en lo Penal de Santiago a 17 años de presidio por los delitos de malversación de caudales públicos, falsificación de instrumento público y lavado de activos. La investigación, iniciada tras una alerta de la Unidad de Análisis Financiero (UAF) en diciembre de 2020, estableció que entre junio de 2015 y marzo de 2017 Espinosa desvió al menos $146 millones de los gastos reservados de la PDI mediante 53 depósitos en efectivo a su cuenta personal y a la de su cónyuge. La sentencia incluye el pago de una indemnización de $146 millones, el comiso de un departamento, una bodega y dos estacionamientos en Las Condes, además de la inhabilitación perpetua para ejercer cargos públicos. Su esposa, María Magdalena Neira, fue condenada a 541 días de presidio como autora de lavado de activos culposo. La defensa de Espinosa anunció la interposición de un recurso de nulidad, por lo que la sentencia se encuentra en primera instancia y es apelable.
-
-## Cronología
-
-- **2020-12-01** — Alerta de la UAF. La Unidad de Análisis Financiero (UAF) alerta sobre operaciones sospechosas de Héctor Espinosa, dando inicio a la investigación
-- **2021-01-01** — Investigación periodística de CIPER. CIPER revela que Espinosa era investigado por la compra de un inmueble de $338 millones
-- **2022-08-09** — Reformalización. Fiscalía reformaliza a Héctor Espinosa en etapa de recta final de la investigación
-- **2023-01-18** — Fiscalía solicita 20 años de presidio. Fiscal Regional de Magallanes pide 20 años de presidio efectivo para Espinosa
-- **2023-01-19** — Reapertura de investigación. Tribunal reabre investigación en contra del exdirector de la PDI
-- **2025-10-08** — Declaración en juicio oral. Exdirector de la PDI declara por 5 horas en el juicio por malversación, lavado de activos y falsificación
-- **2025-11-12** — Declarado culpable. El Cuarto Tribunal Oral en lo Penal de Santiago declara culpable a Héctor Espinosa de malversación de caudales públicos, falsificación de instrumento público y lavado de activos
-- **2025-12-01** — Sentencia: 17 años de presidio. 4° Tribunal de Juicio Oral en lo Penal de Santiago condena a Espinosa a 17 años de cárcel, inhabilitación perpetua, pago de $146 millones y comiso de inmuebles
-- **2025-12-11** — Corte rechaza recurso y mantiene prisión preventiva. Corte de Apelaciones rechaza recurso de la defensa y mantiene a Espinosa en prisión preventiva
-- **2026-01-29** — Defensa solicita nulidad del juicio. Exdirector de la PDI solicita nulidad del juicio que lo condenó a 17 años de cárcel
-
-## Fuentes
-
-- [CIPER Chile](https://www.ciperchile.cl/2025/12/01/radar-1-12/)
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/chile/2025/12/01/condenan-a-17-anos-de-carcel-al-exdirector-de-la-pdi-hector-espinosa.shtml)
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/chile/2023/01/18/fiscalia-pide-20-anos-de-presidio-para-exdirector-de-la-pdi-hector-espinosa-acusado-de-malversacion.shtml)
-- [Poder Judicial de Chile (vía Twitter)](https://twitter.com/PJudicialChile/status/1995500034612433001)
-- [CIPER Chile](https://www.ciperchile.cl/2025/11/12/radar-12-11/)

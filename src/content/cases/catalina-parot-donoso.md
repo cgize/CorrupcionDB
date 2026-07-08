@@ -35,12 +35,3 @@ hitos:
 ---
 
 Catalina Parot, ministra de Bienes Nacionales del gobierno de José Antonio Kast y exconsejera del CNTV, fue investigada por CIPER por una presunta incompatibilidad de funciones: su asesora de campaña para la gobernación de la Región Metropolitana, Carla Winckler, trabajaba simultáneamente como Directora de Administración y Finanzas del CNTV, institución presidida por Parot hasta enero de 2021. Esto generó dudas sobre un posible uso de recursos públicos para fines políticos. Adicionalmente, El Mostrador reportó que su cónyuge, Guillermo Toro, fue tesorero de la Fundación Augusto Pinochet.
-
-## Cronología
-
-- **2021-08-01** — CIPER revela presunta incompatibilidad de Parot en CNTV. Asesora de campaña de Parot trabajaba simultáneamente en el CNTV, presidido por Parot.
-
-## Fuentes
-
-- [CIPER Chile](https://ciperchile.cl/2021/08/01/presunta-incompatibilidad-de-catalina-parot/)
-- [El Mostrador](https://www.elmostrador.cl/noticias/sin-editar/2012/02/28/el-vinculo-del-marido-de-la-ministra-de-bienes-nacionales-con-la-fundacion-pinochet/)

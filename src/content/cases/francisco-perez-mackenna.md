@@ -33,7 +33,3 @@ hitos:
 ---
 
 Francisco Pérez Mackenna, ministro de Relaciones Exteriores del gobierno de José Antonio Kast y exgerente general de Quiñenco —la matriz industrial del Grupo Luksic—, fue mencionado en una investigación de CIPER de 2017 que reveló cómo empresas del Grupo Luksic utilizaron 22 sociedades 'zombi' vinculadas a John Cuneo para no pagar impuestos por más de una década. La investigación detalla el uso de testaferros y sociedades en paraísos fiscales para ocultar activos y eludir tributación. Pérez Mackenna no fue formalizado personalmente, pero aparece en el centro de la estructura corporativa investigada.
-
-## Cronología
-
-- **2017-08-16** — CIPER revela uso de sociedades zombi por Grupo Luksic. Investigación detalla cómo empresas de Luksic usaron 22 sociedades vinculadas a Cuneo para eludir impuestos.

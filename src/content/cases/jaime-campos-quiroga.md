@@ -34,8 +34,3 @@ hitos:
 ---
 
 Jaime Campos, ministro de Agricultura del gobierno de José Antonio Kast, fue cuestionado en 2016 cuando CIPER reveló que mantenía sociedades comerciales (Inmobiliaria Bicentenario y Minera Bicentenario) con Francisco Zúñiga, abogado de la empresa Morpho, la cual era proveedora del Registro Civil y fue cuestionada por fallas en el sistema de identificación. Campos, entonces ministro de Justicia de Michelle Bachelet, descartó cualquier conflicto de interés. Adicionalmente, el propio José Antonio Kast —siendo diputado— denunció a Campos en 2018 por presunto cohecho y soborno en la designación de un notario en San Fernando, denuncia que fue archivada. Paradójicamente, Kast nombró a Campos como su ministro de Agricultura en 2026.
-
-## Cronología
-
-- **2016-10-21** — CIPER revela sociedades de Campos con abogado de Morpho. Campos tenía sociedades con Francisco Zúñiga, abogado de Morpho, empresa proveedora del Registro Civil.
-- **2018-01-01** — Kast denuncia a Campos por cohecho. El entonces diputado José Antonio Kast denunció a Campos y Bachelet por cohecho en designación de notario.

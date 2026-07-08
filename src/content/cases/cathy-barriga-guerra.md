@@ -72,20 +72,3 @@ hitos:
 ---
 
 Cathy Barriga Guerra, exalcaldesa de Maipú y militante UDI, fue formalizada en enero de 2024 por fraude al fisco y falsificación de instrumento público; en abril de 2025 fue reformalizada por malversación reiterada de caudales públicos y negociación incompatible. El 31 de diciembre de 2025 la Fiscalía Metropolitana Oriente presentó acusación ante el 9° Juzgado de Garantía de Santiago y pidió penas que, sumadas, superan los 23 años de cárcel. Según esa acusación, el perjuicio atribuido ronda los $33.500 millones. La audiencia de preparación de juicio oral fue fijada para el 3 de febrero de 2026, pero el tribunal la aplazó al 4 de agosto de 2026 a solicitud de la defensa. Al cierre de esta actualización, la causa seguía en etapa de acusación y sin sentencia firme.
-
-## Cronología
-
-- **2024-01-18** — Formalización inicial. El 9° Juzgado de Garantía de Santiago formalizó a Cathy Barriga por fraude al fisco y falsificación o uso malicioso de documento público, según cobertura de Radio Universidad de Chile del 24 de enero de 2024.
-- **2025-04-01** — Reformalización y ampliación de la investigación. El tribunal reformalizó a Barriga por malversación reiterada de caudales públicos y negociación incompatible, y amplió el plazo investigativo por 60 días.
-- **2025-12-31** — Fiscalía presenta acusación. La Fiscalía Metropolitana Oriente informó la presentación de la acusación contra la exalcaldesa y solicitó penas que, en conjunto, superan los 23 años de cárcel.
-- **2026-01-11** — Defensa busca reabrir la investigación. La defensa pidió reabrir la investigación y sostuvo que la audiencia de preparación de juicio oral ya estaba fijada para el 3 de febrero de 2026.
-- **2026-02-03** — Se aplaza la preparación de juicio oral. El Noveno Juzgado de Garantía de Santiago acogió una solicitud de la defensa y reprogramó la audiencia de preparación de juicio oral para el 4 de agosto de 2026.
-
-## Fuentes
-
-- [Diario y Radio Universidad de Chile](https://radio.uchile.cl/2026/02/03/tribunal-acoge-solicitud-de-la-defensa-y-aplaza-preparacion-de-juicio-oral-de-cathy-barriga-hasta-agosto/)
-- [Diario y Radio Universidad de Chile](https://radio.uchile.cl/2025/12/31/fiscalia-presenta-acusacion-contra-cathy-barriga-y-pide-23-anos-de-carcel/)
-- [Diario y Radio Universidad de Chile](https://radio.uchile.cl/2026/01/11/defensa-de-cathy-barriga-busca-reabrir-investigacion-y-presenta-informe-que-descartaria-el-deficit/)
-- [La Voz de Maipú](https://lavozdemaipu.cl/juicio-oral-contra-cathy-barriga-fiscalia-busca-hasta-23-anos-de-carcel-por-fraude-de-mas-de-32-800-millones/)
-- [Diario y Radio Universidad de Chile](https://radio.uchile.cl/2024/01/24/fiscalia-ingreso-anoche-recurso-para-insistir-en-prision-preventiva-de-barriga/)
-- [Diario y Radio Universidad de Chile](https://radio.uchile.cl/2025/04/01/tribunal-extiende-por-dos-meses-investigacion-contra-cathy-barriga-y-le-imputa-nuevos-delitos/)

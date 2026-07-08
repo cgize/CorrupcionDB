@@ -53,14 +53,3 @@ hitos:
 ---
 
 Guillermo Yéber, ex alcalde de Bulnes (Región de Ñuble) militante del Partido Demócrata Cristiano, fue formalizado en febrero de 2024 en el marco del Caso Cuentas Corrientes, una investigación de la Fiscalía Regional de Los Lagos que indaga una red de cohecho y fraude al fisco en licitaciones municipales. La justicia decretó la prisión preventiva de Yéber, imputado por los delitos de cohecho y fraude al fisco, tras ser detenido por la Brigada de Delitos Económicos (Bridec) de Chillán. La investigación, iniciada en junio de 2023, también alcanzó a otros alcaldes de la Región de Ñuble, entre ellos César Figueroa de San Ignacio, y al representante de la empresa Gestión Global SPA, Rodrigo Carmona. Yéber es el tercer alcalde formalizado en esta causa, que investiga presuntos pagos irregulares en asesorías financieras a municipios.
-
-## Cronología
-
-- **2023-06-01** — Inicio de la investigación. La Fiscalía Regional de Los Lagos inicia la investigación del Caso Cuentas Corrientes por presuntos delitos de cohecho, soborno y violación de secreto en licitaciones municipales.
-- **2024-02-13** — Detención de Guillermo Yéber. La Brigada de Delitos Económicos (Bridec) de Chillán detiene al alcalde de Bulnes, Guillermo Yéber, en el marco del Caso Cuentas Corrientes.
-- **2024-02-14** — Prisión preventiva decretada. El tribunal decretó la prisión preventiva para Guillermo Yéber, formalizado por los delitos de cohecho y fraude al fisco.
-
-## Fuentes
-
-- [CNN Chile](https://www.cnnchile.com/pais/prision-preventiva-alcalde-bulnes-cochecho-fraude-al-fisco/)
-- [Ministerio Público - Fiscalía Regional de Los Lagos](https://www.fiscaliadechile.cl)

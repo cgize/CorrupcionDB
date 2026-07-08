@@ -74,19 +74,3 @@ hitos:
 ---
 
 El exalcalde de Ñuñoa Andrés Zarhi (ex RN) fue formalizado el 28 de febrero de 2024 por el 8° Juzgado de Garantía de Santiago como presunto autor del delito de fraude al fisco, tras una investigación iniciada por una querella de la actual alcaldesa Emilia Ríos (RD) en agosto de 2022. Según la formalización, Zarhi habría suscrito y permitido contratos con cláusulas abusivas de indemnizaciones durante su presidencia de la Corporación Municipal de Desarrollo Social de Ñuñoa, entre mayo de 2019 y junio de 2021, generando un pasivo de más de $190 millones. El tribunal decretó las medidas cautelares de arresto domiciliario nocturno y arraigo nacional. La defensa del exalcalde, a cargo del abogado Óscar Rivera, anunció que recurriría a la Corte de Apelaciones para modificar las medidas cautelares. El caso se encuentra en etapa de investigación.
-
-## Cronología
-
-- **2022-07-15** — Contraloría detecta pagos irregulares. La Contraloría General de la República publica auditoría que detecta millonarios pagos en exceso en indemnizaciones a directivos de la Corporación Municipal de Desarrollo Social de Ñuñoa, durante la gestión de Andrés Zarhi.
-- **2022-08-22** — Querella de Emilia Ríos. La alcaldesa de Ñuñoa, Emilia Ríos, presenta querella contra Andrés Zarhi por presuntos delitos de fraude al fisco y malversación de caudales públicos.
-- **2023-12-16** — Fijación de fecha de formalización. El tribunal fija para el 9 de febrero de 2024 la audiencia de formalización de Andrés Zarhi por malversación de fondos públicos y fraude al Fisco.
-- **2024-02-28** — Formalización y medidas cautelares. El 8° Juzgado de Garantía de Santiago formaliza a Andrés Zarhi por el delito de fraude al fisco y decreta arresto domiciliario nocturno y arraigo nacional. La defensa anuncia recurso ante la Corte de Apelaciones.
-
-## Fuentes
-
-- [La Tercera](https://www.latercera.com/nacional/noticia/fijan-fecha-de-formalizacion-para-ex-alcalde-de-nunoa-andres-zarhi-por-malversacion-de-fondos-publicos/KJZSGHS43NHWRNNPURJHXQFAAU/)
-- [El Dínamo](https://www.eldinamo.cl/pais/2024/02/28/arresto-domiciliario-nocturno-para-andres-zarhi-tras-ser-formalizado-por-fraude-al-fisco/)
-- [ADN Radio](https://www.adnradio.cl/2024/02/28/tras-ser-formalizado-por-fraude-al-fisco-exalcalde-de-nunoa-andres-zarhi-queda-con-arresto-domiciliario-nocturno/)
-- [Contraloría General de la República (vía El Dínamo)](https://www.eldinamo.cl/pais/2022/07/15/contraloria-detecta-millonario-pago-de-indemnizaciones-durante-gestion-de-andres-zarhi-en-nunoa/)
-- [El Ciudadano](https://www.elciudadano.com/justicia/andres-zarhi-exalcalde-de-nunoa-sera-formalizado-por-malversacion-de-fondos-publicos-y-fraude-al-fisco/12/16/)
-- [Nuevo Poder](https://www.nuevopoder.cl/exalcalde-zarhi-con-arresto-domiciliario-nocturno-tras-formalizacion-por-fraude-al-fisco/)

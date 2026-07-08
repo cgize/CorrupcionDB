@@ -108,27 +108,3 @@ hitos:
 ---
 
 Eduardo Gordon Valcárcel, ex general director de Carabineros de Chile entre 2008 y 2011, fue formalizado el 1 de marzo de 2018 por el delito de malversación de caudales públicos en el marco del megafraude conocido como Pacogate. En septiembre de 2019 fue reformalizado, imputándosele aproximadamente $70 millones adicionales por la arista Gastos de Representación. El 23 de noviembre de 2024, el Cuarto Tribunal Oral en lo Penal de Santiago lo condenó (causa 148-2023) como autor del delito consumado de malversación de caudales públicos por $75.479.839, imponiéndole una pena de tres años y un día de presidio con el beneficio de libertad vigilada intensiva, multa de 11 UTM e inhabilitación absoluta perpetua para cargos públicos. El caso Pacogate es considerado el mayor fraude en la historia de Carabineros, con un perjuicio fiscal superior a los $35 mil millones y más de 130 personas formalizadas.
-
-## Cronología
-
-- **2006-01-01** — Inicio de los hechos investigados. La Fiscalía fija el año 2006 como el inicio de las maniobras ilícitas de malversación en Carabineros, según la investigación del fiscal Eugenio Campos.
-- **2015-12-09** — Alerta de BancoEstado. BancoEstado alerta al general Flavio Echeverría sobre movimientos irregulares en una cuenta corriente de Carabineros. Echeverría asegura que investigaría pero no lo hace.
-- **2016-10-01** — Apertura de investigación fiscal. La Fiscalía Regional de Magallanes, a cargo del fiscal Eugenio Campos, abre investigación tras reporte de operación sospechosa del Banco Falabella sobre el capitán Felipe Ávila.
-- **2017-03-06** — Bruno Villalobos reconoce fraude. El entonces general director Bruno Villalobos reconoce públicamente la existencia de un 'importante fraude fiscal' en Carabineros y anuncia la expulsión de 9 oficiales.
-- **2017-03-24** — CIPER revela mecanismos del fraude. CIPER Chile publica reportaje 'Así operaba la asociación criminal de oficiales de Carabineros', detallando tres vías de extracción de fondos: remuneraciones, desahucios y asignaciones.
-- **2018-03-01** — Formalización de Eduardo Gordon. El Séptimo Juzgado de Garantía de Santiago formaliza a Eduardo Gordon por malversación de caudales públicos por $21.703.191. Queda con arraigo nacional y firma mensual.
-- **2018-04-16** — Reformalización a 35 carabineros. Fiscalía reformaliza a 35 carabineros; el monto del fraude asciende a $27.989 millones e incluye delitos de asociación ilícita y lavado de activos.
-- **2019-05-14** — Primeras condenas del Pacogate. Se dictan las primeras sentencias condenatorias contra cinco excarabineros y un civil por su participación como cuentacorrentistas en el fraude.
-- **2019-09-06** — Reformalización de Gordon. Eduardo Gordon es reformalizado por el delito de malversación de caudales públicos imputándosele cerca de $70 millones adicionales en la arista Gastos de Representación.
-- **2024-11-23** — Condena a Eduardo Gordon. El Cuarto Tribunal Oral en lo Penal de Santiago condena a Gordon a 3 años y un día de presidio con libertad vigilada intensiva, multa de 11 UTM e inhabilitación absoluta perpetua para cargos públicos (causa 148-2023). Sustrajo $75.479.839 entre 2010 y 2011.
-- **2026-04-10** — Condena a 28 implicados del fraude principal. El Cuarto Tribunal Oral en lo Penal de Santiago condena a 28 sujetos (causa rol 182-2020) como autores de malversación, lavado de activos y otros delitos, con un perjuicio fiscal de $28.348.928.198.
-
-## Fuentes
-
-- [El Ciudadano](https://www.elciudadano.com/actualidad/exgeneral-gordon-condenado-por-megafraude-en-carabineros-cumplira-pena-en-libertad-vigilada/11/23/)
-- [CIPER Chile](https://ciperchile.cl/2017/03/24/asi-operaba-la-asociacion-criminal-de-oficiales-de-carabineros/)
-- [Cooperativa](https://www.cooperativa.cl/noticias/pais/ff-aa-y-de-orden/carabineros/fraude-en-carabineros-ex-general-director-eduardo-gordon-quedo-con/2018-03-01/091736.html)
-- [La Tercera](https://www.latercera.com/nacional/noticia/reformalizan-exgeneral-director-carabineros-eduardo-gordon/812559/)
-- [Wikipedia](https://es.wikipedia.org/wiki/Pacogate)
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/chile/2018/04/16/pacogate-reformalizan-a-35-carabineros-por-fraude-y-monto-alcanza-casi-28-mil-millones.shtml)
-- [El Ciudadano](https://www.elciudadano.com/actualidad/malversacion-de-caudales-publicos-y-lavado-de-activos-los-28-condenados-caso-fraude-en-carabineros-por-mas-de-28-mil-millones/04/11/)

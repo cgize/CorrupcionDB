@@ -69,18 +69,3 @@ hitos:
 ---
 
 El Caso Canastas investiga un posible fraude al fisco en la compra directa de canastas de alimentos y mascarillas durante la pandemia de COVID-19 en la Región de Antofagasta, cuando Edgar Blanco se desempeñaba como intendente designado por el presidente Sebastián Piñera. La Contraloría General de la República detectó irregularidades en los contratos adjudicados a empresas creadas días antes, como Limpieza Industrial SpA, cuyo dueño Pablo Ormeño era amigo de Blanco, que recibió contratos por $1.648 millones. En agosto de 2024, el Juzgado de Garantía de Antofagasta ordenó reabrir la investigación y la PDI incautó el celular del ex intendente. El caso se encuentra en etapa de investigación, sin que se haya formalizado a Blanco hasta la fecha.
-
-## Cronología
-
-- **2020-03-25** — Creación de Limpieza Industrial SpA. Se constituye la empresa Limpieza Industrial SpA, propiedad de Pablo Ormeño, amigo del intendente Edgar Blanco.
-- **2020-04-06** — Adjudicación de contrato por $1.648 millones. El Servicio de Salud de Antofagasta adjudica a Limpieza Industrial la compra de mascarillas por $1.648 millones.
-- **2020-05-01** — Contratos por canastas de alimentos. La Intendencia Regional adjudica a EDS JCM Spa y Need Solutions la compra de 40 mil canastas familiares por $1.665 millones.
-- **2021-01-23** — Publicación de investigación de CIPER. CIPER publica investigación revelando los cuestionados vínculos de empresas contratadas en Antofagasta.
-- **2024-08-01** — Reapertura de investigación. El Juzgado de Garantía de Antofagasta ordena reabrir la investigación del Caso Canastas.
-- **2024-09-21** — Incautación del celular de Edgar Blanco. La PDI incauta documentos y el celular del ex intendente Edgar Blanco como parte de las nuevas diligencias.
-
-## Fuentes
-
-- [CIPER Chile](https://www.ciperchile.cl/2021/01/23/los-cuestionados-vinculos-de-empresas-contratadas-en-antofagasta/)
-- [El Diario de Antofagasta - Caso Canastas](https://www.diarioantofagasta.cl/investigacion/198120/caso-canastas-las-claves-del-que-podria-ser-uno-de-los-mayores-casos-de-corrupcion-en-la-historia-reciente-de-antofagasta/)
-- [Wikipedia - Edgar Blanco](https://es.wikipedia.org/wiki/Edgar_Blanco)

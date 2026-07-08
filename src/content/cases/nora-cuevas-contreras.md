@@ -55,15 +55,3 @@ hitos:
 ---
 
 Nora Cuevas, exalcaldesa de San Bernardo por la UDI y exdiputada, fue querellada criminalmente en noviembre de 2021 por el entonces alcalde Christopher White por los delitos de fraude al Fisco, malversación de recursos públicos y desfalco. La querella se fundamenta en el Informe de Investigación Especial N° 904 de la Contraloría General de la República, de septiembre de 2017, que detectó que más de $9.000 millones de la Subvención Escolar Preferencial (SEP) no fueron utilizados en los fines del convenio ni reintegrados. El caso también es investigado por la Fiscalía de San Bernardo, y existe una querella del Consejo de Defensa del Estado por los mismos hechos. Al corte de esta actualización, no se registra formalización en la causa.
-
-## Cronología
-
-- **2017-09-21** — Informe de Contraloría N° 904. La Contraloría General de la República emite el Informe de Investigación Especial N° 904 que detecta irregularidades en el uso de fondos SEP en la Municipalidad de San Bernardo por más de $9.000 millones.
-- **2021-11-25** — Querella del alcalde White contra Nora Cuevas. El alcalde de San Bernardo, Christopher White, presenta querella criminal contra Nora Cuevas y Jorge Antonio Ruiz por fraude al Fisco, malversación de caudales públicos y desfalco, por $9.000 millones de la Subvención Escolar Preferencial.
-
-## Fuentes
-
-- [Radio Universidad de Chile](https://radio.uchile.cl/2021/11/25/alcalde-de-san-bernardo-se-querella-contra-ex-edil-nora-cuevas-por-fraude-al-fisco/)
-- [El Ciudadano](https://www.elciudadano.com/politica/los-18-emblematicos-alcaldes-corruptos-de-la-derecha-historias-de-un-tsunami-delictual/06/22/)
-- [Wikipedia](https://es.wikipedia.org/wiki/Nora_Cuevas)
-- [Biblioteca del Congreso Nacional de Chile](https://www.bcn.cl/historiapolitica/resenas_parlamentarias/wiki/Nora_Cuevas_Contreras)

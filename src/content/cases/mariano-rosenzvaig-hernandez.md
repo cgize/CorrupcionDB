@@ -78,22 +78,3 @@ hitos:
 ---
 
 Mariano Rosenzvaig Hernández, sociólogo y fundador de Revolución Democrática (RD), fue director de Educación de la Corporación de Desarrollo Social de Providencia entre marzo de 2014 y diciembre de 2016, durante la administración de la exalcaldesa Josefa Errázuriz. En 2017, un preinforme de la Contraloría detectó $2.885 millones en gastos no rendidos, lo que derivó en una investigación del Ministerio Público. En enero de 2020, RD suspendió su militancia y la Fiscalía Metropolitana Oriente lo formalizó por los delitos de malversación de caudales públicos y aplicación pública diferente, por el uso indebido de fondos de la Subvención Escolar Preferencial (SEP) y FAEP destinados a banquetería, vinos, gift cards y otros gastos no educativos. El 21 de diciembre de 2022, el 8° Juzgado de Garantía de Santiago decretó la suspensión condicional de la causa por un año, con las condiciones de firma mensual, fijación de domicilio y dictar una charla sobre educación coordinada con el Mineduc.
-
-## Cronología
-
-- **2014-12-29** — Inicio del período de los hechos investigados. Comienza el período en que habrían ocurrido los delitos de malversación, según la acusación fiscal.
-- **2017-07-11** — Preinforme de Contraloría revela $2.885 millones en gastos objetados. La Contraloría detectó que la Corporación de Desarrollo Social de Providencia no rindió $2.740 millones durante la gestión de Josefa Errázuriz, con gastos improcedentes con cargo a la SEP.
-- **2020-01-02** — RD suspende militancia de Rosenzvaig. La directiva nacional de Revolución Democrática suspende la militancia de Rosenzvaig luego de que el Ministerio Público anunciara su formalización.
-- **2020-07-03** — Formalización de cargos. El 8° Juzgado de Garantía de Santiago formaliza a Mariano Rosenzvaig por malversación de caudales públicos y aplicación pública diferente, junto a otros dos exfuncionarios.
-- **2022-12-21** — Suspensión condicional de la causa. El 8° Juzgado de Garantía de Santiago decreta la suspensión condicional de la causa por un año, con firma mensual, fijación de domicilio y una charla educativa.
-
-## Fuentes
-
-- [T13](https://www.t13.cl/noticia/politica/decretan-suspension-condicional-causa-malversacion-fondos-fundador-rd-21-12-2022)
-- [El Mostrador](https://www.elmostrador.cl/dia/2020/01/02/rd-suspende-militancia-a-fundador-y-ex-funcionario-de-providencia-que-sera-formalizado-por-malversacion-de-caudales-publicos/)
-- [EMOL](https://www.emol.com/noticias/Nacional/2022/12/21/1081657/suspension-condicional-malversacion-caudales.html)
-- [El Líbero](https://ellibero.cl/actualidad/quien-es-mariano-rosenzvaig-el-fundador-de-rd-que-dejo-2-885-millones-en-gastos-objetados-tras-su-paso-por-providencia/)
-- [Cooperativa](https://www.cooperativa.cl/noticias/pais/politica/frente-amplio/rd-suspendio-a-militante-historico-que-sera-formalizado-por-malversacion/2020-01-03/070356.html)
-- [CNN Chile](https://www.cnnchile.com/lodijeronencnn/matthei-suspension-condicional-causa-rosenzvaig/)
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/region-metropolitana/2020/01/02/rd-suspende-militancia-de-exdirectivo-de-providencia-por-formalizacion-es-acusado-de-malversacion.shtml)
-- [Radio Ritmo](https://www.radioritmo.cl/blog/formalizan-ex-funcionarios-de-providencia/)

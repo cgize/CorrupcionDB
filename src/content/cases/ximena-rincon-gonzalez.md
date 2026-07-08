@@ -35,8 +35,3 @@ hitos:
 ---
 
 Ximena Rincón, ministra de Energía del gobierno de José Antonio Kast, es investigada por presunta negociación incompatible tras revelarse que su yerno, Felipe Díaz, asumió como director subrogante del Servicio Nacional de la Mujer y la Equidad de Género (SernamEG) luego de la controvertida salida de Priscilla Carrasco. Según CIPER, Díaz había sido seleccionado como subdirector pese a tener peor calificación que otros postulantes en el concurso de Alta Dirección Pública. Rincón también enfrenta una investigación de la Fiscalía Sur por ofrecer ayuda para gestionar viviendas a comités de La Granja a cambio de que se inscribieran en el partido Demócratas, del cual era presidenta en ese entonces.
-
-## Cronología
-
-- **2026-03-31** — CIPER revela que yerno de Rincón asume como director subrogante del SernamEG. Felipe Díaz, yerno de la ministra Rincón, asumió como director subrogante tras la salida de Priscilla Carrasco, pese a tener peor calificación en concurso ADP.
-- **2024-01-19** — Fiscalía Sur investiga a militante de Demócratas por ofrecer ayuda de vivienda. CIPER reveló que un militante de Demócratas ofreció ayuda de la senadora Rincón a comités de vivienda de La Granja a cambio de afiliación política.

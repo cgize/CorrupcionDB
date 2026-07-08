@@ -71,20 +71,3 @@ hitos:
 ---
 
 Ángela Vivanco Martínez, ex ministra de la Corte Suprema, fue formalizada en enero de 2026 en la arista Belaz-Movitec del Caso Hermosilla / Audios. Según el Ministerio Público, la investigación de la Fiscalía Regional de Los Lagos la vincula con hechos de cohecho y lavado de activos relacionados con decisiones judiciales que favorecieron al consorcio Belaz Movitec. El 30 de enero de 2026, el 7° Juzgado de Garantía decretó su prisión preventiva tras cuatro jornadas de formalización. Al cierre de esta ficha, la causa se mantiene activa y la Fiscalía ha señalado públicamente que evalúa una eventual reformalización por otros hechos.
-
-## Cronología
-
-- **2024-06-15** — CIPER publica chats sobre gestiones de Gonzalo Migueles. CIPER difundió mensajes vinculados a Gonzalo Migueles, pareja de Ángela Vivanco, en la última nominación de fiscal nacional, antecedente que amplió el escrutinio sobre su entorno.
-- **2024-09-09** — Se abre investigación de oficio por la arista Belaz-Movitec. Según CIPER, tras la apertura del cuaderno de remoción en la Corte Suprema, el Ministerio Público abrió de oficio una investigación por el caso CBM-Codelco y la radicó en la Fiscalía Regional de Los Lagos.
-- **2025-11-04** — Allanamiento e incautación en el domicilio de Vivanco. Personal policial allanó el domicilio de Ángela Vivanco y Gonzalo Migueles en una diligencia de la arista bielorrusa; se incautaron artículos electrónicos y dinero en efectivo, según CIPER.
-- **2026-01-29** — Fiscalía plantea posible reformalización. En la tercera jornada de formalización, el fiscal Marcos Muñoz señaló que la investigación contaba con más antecedentes y que podrían incorporarse otros hechos en una futura reformalización, según CIPER.
-- **2026-01-30** — Prisión preventiva para Ángela Vivanco. La Fiscalía Regional de Los Lagos informó que el 7° Juzgado de Garantía decretó prisión preventiva para la ex ministra, al estimar configurados los presupuestos de cautela respecto de cohecho y lavado de activos.
-
-## Fuentes
-
-- [Ministerio Público](https://www.fiscaliadechile.cl/actualidad/noticias/regionales/la-fiscalia-regional-de-los-lagos-obtuvo-prision-preventiva-para-la)
-- [CIPER Chile](https://www.ciperchile.cl/2024/09/11/angela-vivanco-fallo-a-favor-de-consorcio-chileno-bielorruso-sin-transparentar-su-relacion-cercana-con-abogado-de-esa-empresa/)
-- [CIPER Chile](https://www.ciperchile.cl/2025/11/05/la-fiscalia-incauto-un-sobre-con-dinero-en-efectivo-en-el-domicilio-de-la-exsuprema-angela-vivanco/)
-- [CIPER Chile](https://www.ciperchile.cl/2026/01/29/radar-29-01-2026/)
-- [CIPER Chile](https://www.ciperchile.cl/2026/01/30/radar-angela-vivanco-a-prision/)
-- [CIPER Chile](https://www.ciperchile.cl/2024/06/15/chats-de-hermosilla-revelan-gestiones-de-la-pareja-de-la-suprema-angela-vivanco-en-la-ultima-nominacion-de-fiscal-nacional/)

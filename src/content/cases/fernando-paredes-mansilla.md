@@ -56,18 +56,3 @@ hitos:
 ---
 
 Fernando Paredes Mansilla, exalcalde de Puerto Natales por la UDI, fue formalizado el 20 de noviembre de 2018 por el delito de malversación de fondos, por pagos irregulares a la directora de SECOM del municipio. La formalización fue cubierta por BioBioChile y otros medios regionales, aunque los artículos originales ya no están accesibles en línea. Posteriormente, entre 2022 y 2023, Paredes enfrentó una segunda investigación en el marco del Caso LED (luminarias), donde fue formalizado por cohecho y violación de secreto, imputación por la que inicialmente se decretó prisión preventiva en enero de 2023, medida que fue rebajada a arresto domiciliario total en agosto de 2023 por la Corte de Apelaciones de Punta Arenas. Según la querella del Consejo de Defensa del Estado, Paredes habría recibido sobornos por aproximadamente $50 millones para favorecer a la empresa Itelecom en la licitación de luminarias LED. El estado procesal de la causa de 2018 no ha sido actualizado en fuentes abiertas.
-
-## Cronología
-
-- **2018-11-20** — Formalización por malversación de fondos. Fernando Paredes es formalizado por malversación de caudales públicos debido a pagos irregulares realizados a la directora de SECOM de la Municipalidad de Puerto Natales.
-- **2022-11-11** — CDE presenta querella por Caso Luminarias en Natales. El Consejo de Defensa del Estado presenta querella contra Fernando Paredes y otros 9 imputados por cohecho y violación de secretos en el marco de la licitación de luminarias LED en Puerto Natales, por un monto de $1.673.754.000.
-- **2023-01-23** — Formalización por cohecho en Caso LED y prisión preventiva. Paredes es formalizado por cohecho y violación de secreto en el marco del Caso LED. El Juzgado de Garantía de Puerto Natales decreta prisión preventiva.
-- **2023-08-17** — Corte revoca prisión preventiva y concede arresto domiciliario. La Corte de Apelaciones de Punta Arenas acoge recurso de la defensa y rebaja la medida cautelar de Paredes a arresto domiciliario total, al considerar que la reformalización varió circunstancias fácticas que permiten morigerar las cautelares.
-
-## Fuentes
-
-- [BioBioChile](https://www.biobiochile.cl/noticias/nacional/region-de-magallanes/2018/11/20/alcalde-de-puerto-natales-es-formalizado-por-malversacion-de-fondos-pagados-a-directora-de-secom.shtml)
-- [BioBioChile - Caso LED: arresto domiciliario para exalcalde de Puerto Natales (2023)](https://www.biobiochile.cl/noticias/nacional/region-de-magallanes/2023/08/17/caso-led-arresto-domiciliario-para-exalcalde-de-puerto-natales-imputado-por-cohecho.shtml)
-- [BioBioChile - Caso LED: prisión preventiva para exalcalde formalizado por cohecho (2023)](https://www.biobiochile.cl/noticias/nacional/region-de-magallanes/2023/01/23/caso-led-prision-preventiva-para-exalcalde-de-puerto-natales-formalizado-por-cohecho.shtml)
-- [BioBioChile - CDE se querella contra exalcalde y otros 9 imputados en arista del Caso Luminarias (2022)](https://www.biobiochile.cl/noticias/nacional/region-de-magallanes/2022/11/11/cde-se-querella-contra-exalcalde-y-otros-9-imputados-en-arista-del-caso-luminarias-en-natales.shtml)
-- [El Ciudadano - Los 18 emblemáticos alcaldes corruptos de la derecha](https://www.elciudadano.com/politica/los-18-emblematicos-alcaldes-corruptos-de-la-derecha-historias-de-un-tsunami-delictual/06/22/)

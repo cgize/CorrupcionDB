@@ -74,19 +74,3 @@ hitos:
 ---
 
 Cristian Alvarado Oyarzo fue condenado en diciembre de 2021 por el Tribunal de Juicio Oral en lo Penal de Coyhaique a 10 anios de presidio como autor del delito de malversacion de caudales publicos, cometidos entre enero de 2013 y agosto de 2016 durante su gestion como alcalde de Guaitecas, Region de Aysen. La investigacion de la Fiscalia Regional de Aysen establecio que Alvarado, junto al jefe de finanzas municipal, transfirio fraudulentamente fondos desde las cuentas del municipio y de la Empresa Electrica Municipal de Melinka hacia cuentas personales, utilizando facturas ideologicamente falsas y decretos de pago sin respaldo. La defensa presento un recurso de nulidad que fue rechazado primero por la Corte de Apelaciones de Coyhaique y luego, tras una revision ordenada por la Corte Suprema, por la Corte de Apelaciones de Puerto Montt en octubre de 2023, quedando la condena firme. Ademas de la pena privativa de libertad, se le impuso inhabilitacion absoluta perpetua para cargos publicos y el pago de 15 UTM, y debera restituir solidariamente con los otros condenados los 351 millones sustraidos.
-
-## Cronología
-
-- **2013-01-01** — Inicio de los hechos. Inicio del periodo en que se cometieron las transferencias fraudulentas desde cuentas municipales y de la Empresa Electrica Municipal de Melinka.
-- **2016-08-01** — Fin del periodo de los hechos. Fin del periodo en que se cometieron los delitos de malversacion, segun determino el tribunal.
-- **2021-12-09** — Condena del TOP de Coyhaique. El Tribunal de Juicio Oral en lo Penal de Coyhaique condeno a Cristian Alvarado a 10 anios de presidio por malversacion de caudales publicos.
-- **2023-02-08** — Corte Suprema ordena revisar causa. La Corte Suprema acogio un recurso de queja presentado por la defensa y ordeno que la Corte de Apelaciones de Puerto Montt revisara la causa.
-- **2023-10-16** — Corte de Apelaciones de Puerto Montt rechaza recurso de nulidad. La Corte de Apelaciones de Puerto Montt rechazo el recurso de nulidad, confirmando la sentencia de 10 anios de presidio. La resolucion quedo firme y ejecutoriada.
-
-## Fuentes
-
-- [Cooperativa](https://www.cooperativa.cl/noticias/pais/region-de-aysen/corte-rechaza-nulidad-y-exalcalde-de-guaitecas-debera-ir-a-prision/2023-10-17/161412.html)
-- [CNN Chile](https://www.cnnchile.com/pais/condena-10-anos-carcel-exalcalde-guaitecas-malversacion/)
-- [El Ciudadano](https://www.elciudadano.com/chile/justicia-confirma-condena-de-10-anos-de-carcel-a-ex-alcalde-de-guaitecas-es-la-mas-alta-en-materia-de-corrupcion-desde-la-reforma-procesal-penal/10/17/)
-- [Municipalidad de Guaitecas (web oficial)](https://muniguaitecas.cl/2023/10/18/alcalde-silva-valoro-ratificacion-de-la-condena-de-carcel-en-del-ex-alcalde-cristian-alvarado-e-indico-que-espera-que-esto-permita-recuperar-los-recursos-malversados-que-tienen-en-un-complejo-escenar/)
-- [Cooperativa (2021 - sentencia inicial)](https://www.cooperativa.cl/noticias/pais/region-de-aysen/justicia-condeno-a-ex-alcalde-de-guaitecas-por-malversacion-de-caudales/2021-12-09/221629.html)
