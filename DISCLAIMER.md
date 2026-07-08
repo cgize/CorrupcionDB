@@ -24,8 +24,8 @@ CorrupcionDB es una plataforma ciudadana de código abierto que recopila, estruc
 
 ## Derechos de autor
 
-- El código fuente se distribuye bajo licencia Apache 2.0.
-- Los datos estructurados se publican bajo [CC0](https://creativecommons.org/publicdomain/zero/1.0/deed.es) (Dedicación al Dominio Público), renunciando hasta donde permite la ley a todos los derechos de autor.
+- El código fuente se distribuye bajo [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/). El titular de los derechos es `cgize <cgize@aol.com>`. Prohibido el uso comercial sin autorización expresa.
+- Los datos estructurados (casos en `src/content/cases/`) se publican bajo [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es) (Atribución 4.0 Internacional). Cualquiera puede usarlos, incluso comercialmente, mientras atribuya a CorrupcionDB como fuente.
 - El diseño y la marca visual son propiedad de sus respectivos autores.
 
 ## Contacto

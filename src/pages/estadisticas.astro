@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/Button.astro";
+import { STATUS_COLORS } from "@/lib/constants";
 
 const allCases = await getCollection("cases");
 const total = allCases.length;
@@ -107,7 +108,7 @@ function thinBarWidth(value: number, max: number) {
               </div>
               <div class="mt-2 h-[3px] w-full bg-chart-track">
                 <div
-                  class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+                  class={`h-full transition-all duration-500 ${STATUS_COLORS[d.key] || "bg-accent"}`}
                   style={`width: ${thinBarWidth(d.value, maxDistribucion)}`}
                 ></div>
               </div>
@@ -123,7 +124,7 @@ function thinBarWidth(value: number, max: number) {
               </div>
               <div class="mt-2 h-[3px] w-full bg-chart-track">
                 <div
-                  class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+                  class="h-full transition-all duration-500 bg-accent"
                   style={`width: ${thinBarWidth(r.value, maxRegion)}`}
                 ></div>
               </div>
@@ -148,7 +149,7 @@ function thinBarWidth(value: number, max: number) {
           </div>
           <div class="mt-2 h-[3px] w-full bg-chart-track">
             <div
-              class={`h-full transition-all duration-500 ${i === 0 ? "bg-accent" : "bg-chart-ink"}`}
+              class="h-full transition-all duration-500 bg-accent"
               style={`width: ${thinBarWidth(d.value, maxDelito)}`}
             ></div>
           </div>

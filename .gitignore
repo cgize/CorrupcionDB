@@ -41,3 +41,5 @@ design.md
 .opencode/
 
 outline.yaml
+*.xlsx
+opencode.jsonc
