@@ -8,8 +8,16 @@ import SortControl from "@/components/SortControl.astro";
 import EmptyState from "@/components/EmptyState.astro";
 
 const allCases = await getCollection("cases");
+const PAGE_SIZE = 30;
 
-const searchQuery = Astro.url.searchParams.get("q")?.toLowerCase() || "";
+const normalizeText = (value: string) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+const searchQuery = Astro.url.searchParams.get("q") || "";
+const normalizedSearchQuery = normalizeText(searchQuery);
 const statusFilter = Astro.url.searchParams.get("estado") || "";
 const regionFilter = Astro.url.searchParams.get("region") || "";
 const delitoFilter = Astro.url.searchParams.get("delito") || "";
@@ -40,16 +48,16 @@ const filteredCases = allCases
     if (sectorFilter && c.data.sector_politico !== sectorFilter) return false;
     if (partidoFilter && c.data.partido !== partidoFilter) return false;
     if (casoFilter && c.data.caso?.id !== casoFilter) return false;
-    if (searchQuery) {
-      const q = searchQuery;
+    if (normalizedSearchQuery) {
+      const q = normalizedSearchQuery;
       return (
-        c.data.implicado.toLowerCase().includes(q) ||
-        c.data.cargo.toLowerCase().includes(q) ||
-        c.data.delito.toLowerCase().includes(q) ||
-        (c.data.ruc || "").toLowerCase().includes(q) ||
-        (c.data.rit || "").toLowerCase().includes(q) ||
-        (c.data.partido || "").toLowerCase().includes(q) ||
-        (c.data.tags || []).some((t) => t.toLowerCase().includes(q))
+        normalizeText(c.data.implicado).includes(q) ||
+        normalizeText(c.data.cargo).includes(q) ||
+        normalizeText(c.data.delito).includes(q) ||
+        normalizeText(c.data.ruc || "").includes(q) ||
+        normalizeText(c.data.rit || "").includes(q) ||
+        normalizeText(c.data.partido || "").includes(q) ||
+        (c.data.tags || []).some((t) => normalizeText(t).includes(q))
       );
     }
     return true;
@@ -74,6 +82,8 @@ const filteredCases = allCases
     }
   });
 
+const initialCases = filteredCases.slice(0, PAGE_SIZE);
+
 const hasFilters =
   !!(
     statusFilter ||
@@ -87,20 +97,6 @@ const hasFilters =
     casoFilter ||
     searchQuery
   );
-
-const filterableText = (c: (typeof allCases)[number]) =>
-  [
-    c.data.implicado,
-    c.data.cargo,
-    c.data.delito,
-    c.data.ruc,
-    c.data.rit,
-    c.data.partido,
-    ...(c.data.tags || []),
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
 
 const buildSearchHref = (q: string) => {
   const params = new URLSearchParams();
@@ -282,33 +278,53 @@ const buildSearchHref = (q: string) => {
     </div>
     <div id="results-list" class="space-y-3">
       {
-        allCases.map((c) => (
-          <div
-            class="stagger-item"
-            data-case-item
-            data-estado={c.data.estado}
-            data-region={c.data.region || ""}
-            data-delito={c.data.delito}
-            data-fuente={c.data.fuente_tipo}
-            data-puesto={c.data.puesto_politico || ""}
-            data-cargo-estado={c.data.cargo_estado || ""}
-            data-sector={c.data.sector_politico || ""}
-            data-partido={c.data.partido || ""}
-            data-caso={c.data.caso?.id || ""}
-            data-search={filterableText(c)}
-            data-fecha={c.data.fecha_actualizacion.toISOString()}
-            data-implicado={c.data.implicado}
-            data-monto={c.data.monto_clp || 0}
-          >
+        initialCases.map((c) => (
+          <div class="case-list-row">
             <CaseListItem caso={c} />
           </div>
         ))
       }
     </div>
+    <div class:list={["mt-6 flex justify-center", initialCases.length >= filteredCases.length && "hidden"]} id="load-more-wrapper">
+      <button
+        id="load-more"
+        type="button"
+        class="inline-flex items-center gap-2 border border-border bg-surface-card px-5 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary"
+      >
+        Cargar más
+      </button>
+    </div>
   </section>
 </BaseLayout>
 
 <script>
+  type CaseIndexItem = {
+    id: string;
+    href: string;
+    implicado: string;
+    cargo: string;
+    estado: string;
+    estadoLabel: string;
+    estadoAbbr: string;
+    estadoColor: string;
+    region: string;
+    delito: string;
+    delitoLabel: string;
+    fuente: string;
+    fuenteLabel: string;
+    fuenteAbbr: string;
+    fuenteColor: string;
+    puesto: string;
+    cargoEstado: string;
+    sector: string;
+    partido: string;
+    caso: string;
+    monto: number;
+    fecha: string;
+    fechaLabel: string;
+    searchText: string;
+  };
+
   function debounce(fn: (...args: any[]) => void, delay: number) {
     let timer: ReturnType<typeof setTimeout>;
     return function (this: any, ...args: any[]) {
@@ -318,6 +334,7 @@ const buildSearchHref = (q: string) => {
   }
 
   (function () {
+    const PAGE_SIZE = 30;
     const FILTER_KEYS = [
       "estado",
       "region",
@@ -342,6 +359,10 @@ const buildSearchHref = (q: string) => {
       caso: "caso",
     };
 
+    let casesIndex: CaseIndexItem[] | null = null;
+    let activeResults: CaseIndexItem[] = [];
+    let visibleLimit = PAGE_SIZE;
+
     const SUMMARY_INACTIVE =
       "border-border bg-surface-card text-text-secondary hover:border-accent-primary/40 hover:text-text-primary";
     const SUMMARY_ACTIVE: Record<string, string> = {
@@ -356,8 +377,8 @@ const buildSearchHref = (q: string) => {
       "border-border bg-surface-card text-text-secondary hover:border-accent-primary hover:text-accent-primary";
     const ALL_ACTIVE = "border-accent-primary bg-accent-primary text-white shadow-sm";
 
-    const items = Array.from(document.querySelectorAll<HTMLElement>("[data-case-item]"));
-    const total = items.length;
+    let total = Number(document.getElementById("case-count-label")?.textContent?.match(/de (\d+)/)?.[1]) ||
+      Number(document.getElementById("case-count")?.textContent || 0);
 
     function splitClasses(value: string) {
       return value.split(" ").filter(Boolean);
@@ -461,52 +482,136 @@ const buildSearchHref = (q: string) => {
       });
     }
 
-    function itemMatches(item: HTMLElement, params: URLSearchParams, q: string) {
-      for (const key of FILTER_KEYS) {
-        const value = params.get(key);
-        const dataKey = DATA_KEY[key];
-        if (value && item.dataset[dataKey] !== value) return false;
-      }
-      return !q || (item.dataset.search || "").includes(q);
+    function normalizeText(value: string) {
+      return value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
     }
 
-    function sortItems(sort: string) {
+    function escapeHtml(value: string | number) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function itemMatchesIndex(item: CaseIndexItem, params: URLSearchParams, q: string) {
+      for (const key of FILTER_KEYS) {
+        const value = params.get(key);
+        const dataKey = DATA_KEY[key] as keyof CaseIndexItem;
+        if (value && item[dataKey] !== value) return false;
+      }
+      return !q || item.searchText.includes(q);
+    }
+
+    function sortItems(items: CaseIndexItem[], sort: string) {
       return [...items].sort((a, b) => {
         switch (sort) {
           case "antiguos":
-            return new Date(a.dataset.fecha || "").getTime() - new Date(b.dataset.fecha || "").getTime();
+            return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
           case "az":
-            return (a.dataset.implicado || "").localeCompare(b.dataset.implicado || "", "es");
+            return a.implicado.localeCompare(b.implicado, "es");
           case "monto_desc":
-            return Number(b.dataset.monto || 0) - Number(a.dataset.monto || 0);
+            return b.monto - a.monto;
           case "recientes":
           default:
-            return new Date(b.dataset.fecha || "").getTime() - new Date(a.dataset.fecha || "").getTime();
+            return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
         }
       });
     }
 
-    function applyUrl(url: URL, historyMode: "push" | "replace" | "none" = "push") {
-      const params = url.searchParams;
-      const q = (params.get("q") || "").toLowerCase();
-      const sort = params.get("sort") || "recientes";
-      const list = document.getElementById("results-list");
-      let visibleCount = 0;
+    function renderCase(item: CaseIndexItem) {
+      const recent = Date.now() - new Date(item.fecha).getTime() < 1000 * 60 * 60 * 24 * 7;
+      const region = item.region
+        ? `<span class="inline-flex shrink-0 items-center gap-1 border border-border bg-surface-alt px-1.5 py-0.5 font-body text-[0.65rem] text-text-tertiary" title="Región: ${escapeHtml(item.region)}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            ${escapeHtml(item.region)}
+          </span>`
+        : "";
 
-      sortItems(sort).forEach((item) => {
-        const matches = itemMatches(item, params, q);
-        item.hidden = !matches;
-        if (matches) visibleCount += 1;
-        list?.appendChild(item);
-      });
+      return `<div class="case-list-row">
+        <a href="${escapeHtml(item.href)}" class="group grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline">
+          <div class="w-full">
+            <span class="inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white ${item.estadoColor}" title="${escapeHtml(item.estadoLabel)}">
+              ${escapeHtml(item.estadoAbbr)}
+            </span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex min-w-0 items-center gap-2">
+              <h3 class="min-w-0 truncate font-display text-base leading-tight text-primary transition-colors group-hover:text-accent sm:text-lg" title="${escapeHtml(item.implicado)}">
+                ${escapeHtml(item.implicado)}
+              </h3>
+              ${recent ? `<span class="size-1.5 shrink-0 rounded-full bg-accent" aria-label="Caso nuevo" title="Caso nuevo"></span>` : ""}
+            </div>
+            <div class="mt-1 flex min-w-0 items-center gap-1.5">
+              <p class="min-w-0 truncate font-body text-xs text-secondary" title="${escapeHtml(item.cargo)}">
+                ${escapeHtml(item.cargo)}
+              </p>
+              ${region}
+            </div>
+          </div>
+          <div class="hidden min-w-0 text-right sm:block">
+            <div class="flex items-center justify-end gap-2">
+              <span class="inline-flex items-center justify-center whitespace-nowrap border border-border bg-surface-alt px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-secondary" title="${escapeHtml(item.delitoLabel)}">
+                ${escapeHtml(item.delitoLabel)}
+              </span>
+              <span class="inline-flex min-w-[4rem] items-center justify-center px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white ${item.fuenteColor}" title="${escapeHtml(item.fuenteLabel)}">
+                ${escapeHtml(item.fuenteAbbr)}
+              </span>
+            </div>
+            <div class="mt-1 flex items-center justify-end gap-2 font-mono text-xs text-text-tertiary">
+              <span class="whitespace-nowrap">${escapeHtml(item.fechaLabel)}</span>
+            </div>
+          </div>
+          <span class="inline-flex size-7 shrink-0 items-center justify-center border border-border text-text-tertiary transition-all duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-surface" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </span>
+        </a>
+      </div>`;
+    }
+
+    function renderResults() {
+      const list = document.getElementById("results-list");
+      if (!list) return;
+
+      const visible = activeResults.slice(0, visibleLimit);
+      list.innerHTML = visible.map(renderCase).join("");
+
+      const loadMoreWrapper = document.getElementById("load-more-wrapper");
+      loadMoreWrapper?.classList.toggle("hidden", visible.length >= activeResults.length);
+
+      const loadMoreButton = document.getElementById("load-more");
+      if (loadMoreButton) {
+        const remaining = Math.max(activeResults.length - visible.length, 0);
+        loadMoreButton.textContent = remaining > PAGE_SIZE ? `Cargar ${PAGE_SIZE} más` : `Cargar ${remaining} más`;
+      }
+    }
+
+    function applyUrl(url: URL, historyMode: "push" | "replace" | "none" = "push", resetLimit = true) {
+      if (!casesIndex) return;
+      const params = url.searchParams;
+      const q = normalizeText(params.get("q") || "");
+      const sort = params.get("sort") || "recientes";
+      if (resetLimit) visibleLimit = PAGE_SIZE;
+      activeResults = sortItems(casesIndex.filter((item) => itemMatchesIndex(item, params, q)), sort);
+      const visibleCount = activeResults.length;
+      renderResults();
 
       const count = document.getElementById("case-count");
       if (count) count.textContent = String(visibleCount);
 
       const label = document.getElementById("case-count-label");
       if (label) {
-        label.innerHTML = `${visibleCount === 1 ? "caso" : "casos"}${
-          hasFilterParams(params) || q ? ` <span class="text-text-tertiary">de ${total}</span>` : ""
+        label.textContent = `${visibleCount === 1 ? "caso" : "casos"}${
+          hasFilterParams(params) || q ? ` de ${total}` : ""
         }`;
       }
 
@@ -575,6 +680,7 @@ const buildSearchHref = (q: string) => {
 
       const filterLink = target.closest<HTMLAnchorElement>("#filter-bar a");
       if (filterLink) {
+        if (!casesIndex) return;
         e.preventDefault();
         const url = new URL(window.location.href);
         const badge = filterLink.closest<HTMLElement>("[data-filter-badge]");
@@ -595,6 +701,7 @@ const buildSearchHref = (q: string) => {
 
       const clearLink = target.closest("#clear-search-link");
       if (clearLink) {
+        if (!casesIndex) return;
         e.preventDefault();
         const url = new URL(window.location.href);
         url.searchParams.delete("q");
@@ -606,6 +713,7 @@ const buildSearchHref = (q: string) => {
     document.addEventListener("change", function (e) {
       const target = e.target as HTMLElement;
       if (target.id === "sort-select" && target instanceof HTMLSelectElement) {
+        if (!casesIndex) return;
         const url = new URL(window.location.href);
         if (target.value && target.value !== "recientes") url.searchParams.set("sort", target.value);
         else url.searchParams.delete("sort");
@@ -623,6 +731,7 @@ const buildSearchHref = (q: string) => {
     document.addEventListener("submit", function (e) {
       const form = e.target as HTMLElement;
       if (form.id === "search-form" || form.closest("#search-form")) {
+        if (!casesIndex) return;
         e.preventDefault();
         const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
         if (searchInput) {
@@ -634,10 +743,28 @@ const buildSearchHref = (q: string) => {
       }
     });
 
+    document.getElementById("load-more")?.addEventListener("click", function () {
+      if (!casesIndex) return;
+      visibleLimit += PAGE_SIZE;
+      renderResults();
+    });
+
     window.addEventListener("popstate", function () {
       applyUrl(new URL(window.location.href), "none");
     });
 
-    applyUrl(new URL(window.location.href), "replace");
+    fetch("/cases-index.json")
+      .then((response) => {
+        if (!response.ok) throw new Error("No se pudo cargar cases-index.json");
+        return response.json();
+      })
+      .then((data: CaseIndexItem[]) => {
+        casesIndex = data;
+        total = data.length;
+        applyUrl(new URL(window.location.href), "replace");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   })();
 </script>
