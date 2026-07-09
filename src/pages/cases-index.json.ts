@@ -17,6 +17,14 @@ const estadoAbbr: Record<string, string> = {
   archived: "Archiv.",
 };
 
+const estadoShortAbbr: Record<string, string> = {
+  active: "Act.",
+  investigation: "Inv.",
+  pending: "Pen.",
+  resolved: "Res.",
+  archived: "Arc.",
+};
+
 const fuenteAbbr: Record<string, string> = {
   oficial: "Oficial",
   prensa: "Prensa",
@@ -64,6 +72,7 @@ export const GET: APIRoute = async () => {
         estado: d.estado,
         estadoLabel: STATUS_LABELS[d.estado] || d.estado,
         estadoAbbr: estadoAbbr[d.estado] || STATUS_LABELS[d.estado] || d.estado,
+        estadoShortAbbr: estadoShortAbbr[d.estado] || estadoAbbr[d.estado] || STATUS_LABELS[d.estado] || d.estado,
         estadoColor: STATUS_COLORS[d.estado] || "bg-status-archived",
         region: d.region || "",
         delito: d.delito,

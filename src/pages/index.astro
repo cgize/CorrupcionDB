@@ -13,6 +13,7 @@ const casosActivos = allCases.filter(
   (c) => c.data.estado === "active" || c.data.estado === "investigation"
 ).length;
 const casosResueltos = allCases.filter((c) => c.data.estado === "resolved").length;
+const casosConFunciones = allCases.filter((c) => c.data.cargo_estado === "con_funciones").length;
 const fuentesUnicas = new Set(allCases.map((c) => c.data.fuente_tipo)).size;
 
 const stats = [
@@ -40,9 +41,6 @@ const latest = [...allCases]
     class="mx-auto grid min-h-[60dvh] max-w-[1280px] items-end gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-12"
   >
     <div class="lg:col-span-8">
-      <span class="inline-flex items-center gap-2 border border-border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">
-        Base de datos abierta
-      </span>
       <h1 class="mt-6 font-display text-hero leading-[0.94] tracking-[-0.045em] text-balance">
         <span class="text-accent">L</span>a corrupción,<br />
         con nombre y datos.
@@ -99,38 +97,75 @@ const latest = [...allCases]
     </div>
   </section>
 
-  <!-- Últimos casos -->
-  <section class="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-16">
-    <div class="flex flex-wrap items-end justify-between gap-4">
+  <!-- Base de datos pública + últimos casos -->
+  <section
+    class="border-y border-border bg-surface-alt px-4 py-12 sm:px-6 sm:py-16"
+  >
+    <div class="mx-auto max-w-[1280px]">
       <div>
-        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">
-          Actualizaciones recientes
-        </p>
-        <h2 class="mt-2 font-display text-h2 tracking-[-0.02em] text-primary">
-          Últimos casos documentados
+        <h2
+          class="font-display text-h1 tracking-[-0.035em] text-balance text-primary"
+        >
+          <span class="text-accent">C</span>asos registrados
         </h2>
-        <p class="mt-2 max-w-xl text-body text-secondary">
-          Los registros con movimiento procesal más reciente en la base de datos.
+        <p class="mt-4 max-w-2xl text-body text-secondary">
+          Cada registro está vinculado a una fuente oficial verificable. Se presume la inocencia de todas
+          las personas mencionadas mientras no exista sentencia firme.
         </p>
-      </div>
-      <a
-        href="/casos"
-        class="inline-flex items-center gap-2 border border-border bg-surface-card px-5 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary no-underline"
-      >
-        Ver todos
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"></path>
-          <path d="m12 5 7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
 
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {latest.map((c) => (
-        <div class="stagger-item">
-          <CaseCard caso={c} showDescription={false} />
+        <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-secondary">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-2xl font-medium text-primary tabular-nums">{totalCasos}</span>
+            <span class="text-text-tertiary">casos totales</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-2xl font-medium text-accent-primary tabular-nums">
+              {casosActivos}
+            </span>
+            <span class="text-text-tertiary">en curso</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-2xl font-medium text-status-resolved tabular-nums">
+              {casosResueltos}
+            </span>
+            <span class="text-text-tertiary">resueltos</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-2xl font-medium text-accent-info tabular-nums">
+              {casosConFunciones}
+            </span>
+            <span class="text-text-tertiary">con funciones públicas</span>
+          </div>
         </div>
-      ))}
+      </div>
+
+      <div class="mt-12 border-t border-border pt-10 sm:mt-14 sm:pt-12">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 class="mt-2 font-display text-h2 tracking-[-0.02em] text-primary">
+              Últimos casos documentados
+            </h2>
+          </div>
+          <a
+            href="/casos"
+            class="inline-flex items-center gap-2 border border-border bg-surface-card px-5 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary no-underline"
+          >
+            Ver todos
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {latest.map((c) => (
+            <div class="stagger-item">
+              <CaseCard caso={c} showDescription={false} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 

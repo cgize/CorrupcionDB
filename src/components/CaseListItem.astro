@@ -59,8 +59,16 @@ const estadoAbbr: Record<string, string> = {
   resolved: "Resuelto",
   archived: "Archiv.",
 };
+const estadoShortAbbr: Record<string, string> = {
+  active: "Act.",
+  investigation: "Inv.",
+  pending: "Pen.",
+  resolved: "Res.",
+  archived: "Arc.",
+};
 const estadoLabel = STATUS_LABELS[data.estado] || data.estado;
 const estadoAbbrLabel = estadoAbbr[data.estado] || estadoLabel;
+const estadoShortAbbrLabel = estadoShortAbbr[data.estado] || estadoAbbrLabel;
 const estadoColor = STATUS_COLORS[data.estado] || "bg-status-archived";
 
 const delitoLabel = DELITO_LABELS[data.delito];
@@ -68,11 +76,12 @@ const delitoLabel = DELITO_LABELS[data.delito];
 
 <a
   href={`/casos/${caso.id}`}
-  class="group grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline"
+  class="group grid grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-2.5 border border-border bg-surface-card px-3 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline"
 >
   <div class="w-full">
-    <span class:list={["inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white", estadoColor]} title={estadoLabel}>
-      {estadoAbbrLabel}
+    <span class:list={["inline-flex w-full items-center justify-center px-1 py-0.5 text-center font-mono text-[0.52rem] font-medium uppercase tracking-normal text-white sm:px-2 sm:py-1 sm:text-[0.65rem] sm:tracking-wider", estadoColor]} title={estadoLabel}>
+      <span class="sm:hidden">{estadoShortAbbrLabel}</span>
+      <span class="hidden sm:inline">{estadoAbbrLabel}</span>
     </span>
   </div>
 

@@ -119,52 +119,9 @@ const buildSearchHref = (q: string) => {
 <BaseLayout
   title="Casos"
   description="Base de datos de casos de corrupción, faltas a la probidad y delitos contra el patrimonio público en Chile. Filtros por puesto político, estado procesal, región, partido y sector."
+  noindex={hasFilters}
 >
-  <!-- Hero compacto -->
-  <section
-    class="border-b border-border bg-surface-alt px-4 py-12 sm:px-6 sm:py-16"
-  >
-    <div class="mx-auto max-w-[1280px]">
-      <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">
-        Base de datos pública
-      </p>
-      <h1
-        class="mt-3 font-display text-h1 tracking-[-0.035em] text-balance text-primary"
-      >
-        <span class="text-accent">C</span>asos registrados
-      </h1>
-      <p class="mt-4 max-w-2xl text-body text-secondary">
-        Cada registro está vinculado a una fuente oficial verificable. Se presume la inocencia de todas
-        las personas mencionadas mientras no exista sentencia firme.
-      </p>
-
-      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-secondary">
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-medium text-primary tabular-nums">{allCases.length}</span>
-          <span class="text-text-tertiary">casos totales</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-medium text-accent-primary tabular-nums">
-            {allCases.filter((c) => c.data.estado === "active" || c.data.estado === "investigation").length}
-          </span>
-          <span class="text-text-tertiary">en curso</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-medium text-status-resolved tabular-nums">
-            {allCases.filter((c) => c.data.estado === "resolved").length}
-          </span>
-          <span class="text-text-tertiary">resueltos</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-2xl font-medium text-accent-info tabular-nums">
-            {allCases.filter((c) => c.data.cargo_estado === "con_funciones").length}
-          </span>
-          <span class="text-text-tertiary">con funciones públicas</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  <h1 class="sr-only">Casos registrados</h1>
   <!-- Últimos casos agregados -->
   <section class="mx-auto max-w-[1280px] px-4 pt-10 sm:px-6 sm:pt-14">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -300,13 +257,16 @@ const buildSearchHref = (q: string) => {
   <div class="case-list-row">
     <a
       data-row-link
-      class="group grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline"
+      class="group grid grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-2.5 border border-border bg-surface-card px-3 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline"
     >
       <div class="w-full">
         <span
           data-estado
-          class="inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white"
-        ></span>
+          class="inline-flex w-full items-center justify-center px-1 py-0.5 text-center font-mono text-[0.52rem] font-medium uppercase tracking-normal text-white sm:px-2 sm:py-1 sm:text-[0.65rem] sm:tracking-wider"
+        >
+          <span data-estado-mobile class="sm:hidden"></span>
+          <span data-estado-desktop class="hidden sm:inline"></span>
+        </span>
       </div>
 
       <div class="min-w-0">
@@ -375,6 +335,7 @@ const buildSearchHref = (q: string) => {
     estado: string;
     estadoLabel: string;
     estadoAbbr: string;
+    estadoShortAbbr: string;
     estadoColor: string;
     region: string;
     delito: string;
@@ -626,7 +587,9 @@ const buildSearchHref = (q: string) => {
       const link = row.querySelector<HTMLAnchorElement>("[data-row-link]");
       if (link) link.href = item.href;
 
-      const estado = setText(row, "[data-estado]", item.estadoAbbr);
+      setText(row, "[data-estado-mobile]", item.estadoShortAbbr || item.estadoAbbr);
+      setText(row, "[data-estado-desktop]", item.estadoAbbr);
+      const estado = row.querySelector<HTMLElement>("[data-estado]");
       if (estado) {
         estado.classList.add(item.estadoColor);
         estado.title = item.estadoLabel;

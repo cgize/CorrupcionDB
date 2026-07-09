@@ -77,9 +77,61 @@ const formatDate = (dt: Date) =>
   });
 
 const description = d.resumen_corto || d.extracto || `${d.implicado} - ${d.cargo}`;
+
+const canonicalUrl = new URL(`/casos/${caso.id}`, "https://corrupciondb.cl").href;
+const imageUrl = "https://corrupciondb.cl/og-default.svg";
+const datePublished = d.fecha_publicacion
+  ? new Date(d.fecha_publicacion).toISOString()
+  : new Date(d.fecha_inicio).toISOString();
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ReportageNewsArticle",
+  headline: d.implicado,
+  description: description,
+  datePublished: datePublished,
+  dateModified: new Date(d.fecha_actualizacion).toISOString(),
+  url: canonicalUrl,
+  image: imageUrl,
+  inLanguage: "es-CL",
+  author: d.periodistas && d.periodistas.length > 0
+    ? d.periodistas.map((p) => ({ "@type": "Person", name: p }))
+    : { "@type": "Organization", name: "CorrupcionDB", url: "https://corrupciondb.cl" },
+  publisher: {
+    "@type": "Organization",
+    name: "CorrupcionDB",
+    url: "https://corrupciondb.cl",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://corrupciondb.cl/favicon.svg",
+    },
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": canonicalUrl,
+  },
+  ...(d.tags && d.tags.length > 0 ? { keywords: d.tags.join(", ") } : {}),
+  ...(d.region ? { contentLocation: { "@type": "Place", name: d.region } } : {}),
+  ...(d.fuente_url ? {
+    citation: {
+      "@type": "CreativeWork",
+      url: d.fuente_url,
+      name: d.fuente,
+    },
+  } : {}),
+};
+
+const jsonLdScript = JSON.stringify(jsonLd, null, 0);
 ---
 
-<BaseLayout title={d.implicado} description={description}>
+<BaseLayout
+  title={`${d.implicado} — ${d.cargo}`}
+  description={description}
+  canonical={canonicalUrl}
+  ogType="article"
+>
+  <script is:inline type="application/ld+json" set:html={jsonLdScript} slot="head" />
+
   <article class="mx-auto max-w-[1280px] px-4 sm:px-6">
     <!-- Breadcrumb -->
     <nav class="pt-8 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary" aria-label="Breadcrumb">

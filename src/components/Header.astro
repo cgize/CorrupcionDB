@@ -52,7 +52,9 @@ import ThemeToggle from "./ThemeToggle.astro";
         id="mobile-menu-btn"
         type="button"
         aria-label="Abrir menú"
-        class="flex size-9 items-center justify-center text-primary md:hidden"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        class="flex size-9 items-center justify-center border border-border text-primary transition-colors hover:border-primary md:hidden"
       >
         <svg
           class="size-6"
@@ -76,17 +78,39 @@ import ThemeToggle from "./ThemeToggle.astro";
 
   <div
     id="mobile-menu"
-    class="mt-4 hidden flex-col gap-4 border-t border-border pt-4 md:hidden"
+    class="mt-4 hidden border-t border-border pt-4 md:hidden"
   >
-    <a href="/casos" class="font-body text-sm font-medium text-secondary no-underline">Casos</a>
-    <a href="/estadisticas" class="font-body text-sm font-medium text-secondary no-underline">Estadísticas</a>
-    <a href="/fuentes" class="font-body text-sm font-medium text-secondary no-underline">Fuentes</a>
-    <a href="/acerca" class="font-body text-sm font-medium text-secondary no-underline">Acerca</a>
+    <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Navegación móvil">
+      <a
+        href="/casos"
+        class="min-w-fit flex-1 border border-border bg-surface-card px-3 py-2 text-center font-body text-xs font-medium text-primary no-underline transition-colors hover:border-primary"
+        >Casos</a
+      >
+      <a
+        href="/estadisticas"
+        class="min-w-fit flex-1 border border-border bg-surface-card px-3 py-2 text-center font-body text-xs font-medium text-primary no-underline transition-colors hover:border-primary"
+        >Estadísticas</a
+      >
+      <a
+        href="/fuentes"
+        class="min-w-fit flex-1 border border-border bg-surface-card px-3 py-2 text-center font-body text-xs font-medium text-primary no-underline transition-colors hover:border-primary"
+        >Fuentes</a
+      >
+      <a
+        href="/acerca"
+        class="min-w-fit flex-1 border border-border bg-surface-card px-3 py-2 text-center font-body text-xs font-medium text-primary no-underline transition-colors hover:border-primary"
+        >Acerca</a
+      >
+    </nav>
   </div>
 </header>
 
 <script>
-  document.getElementById("mobile-menu-btn")?.addEventListener("click", () => {
-    document.getElementById("mobile-menu")?.classList.toggle("hidden");
+  const mobileMenuButton = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  mobileMenuButton?.addEventListener("click", () => {
+    const isOpen = !mobileMenu?.classList.toggle("hidden");
+    mobileMenuButton.setAttribute("aria-expanded", String(isOpen));
   });
 </script>

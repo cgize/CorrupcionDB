@@ -20,6 +20,7 @@
   "license": "PolyForm-Noncommercial-1.0.0",
   "dependencies": {
     "@astrojs/check": "^0.9.9",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/dm-sans": "^5.2.8",
     "@fontsource/fraunces": "^5.2.9",
     "@fontsource/jetbrains-mono": "^5.2.8",

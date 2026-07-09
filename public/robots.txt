@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Recursos internos no destinados a indexación
+Disallow: /cases-index.json
+Disallow: /api
+
+Sitemap: https://corrupciondb.cl/sitemap-index.xml
