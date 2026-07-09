@@ -1,5 +1,5 @@
 ---
-implicado: "Camila Flores Oliva"
+implicado: "Camila Flores Oporto"
 cargo: "Senadora por Valparaíso (ex diputada)"
 puesto_politico: "senador"
 cargo_estado: "con_funciones"
