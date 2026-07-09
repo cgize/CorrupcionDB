@@ -295,6 +295,75 @@ const buildSearchHref = (q: string) => {
       </button>
     </div>
   </section>
+
+<template id="case-row-template">
+  <div class="case-list-row">
+    <a
+      data-row-link
+      class="group grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline"
+    >
+      <div class="w-full">
+        <span
+          data-estado
+          class="inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white"
+        ></span>
+      </div>
+
+      <div class="min-w-0">
+        <div class="flex min-w-0 items-center gap-2">
+          <h3
+            data-implicado
+            class="min-w-0 truncate font-display text-base leading-tight text-primary transition-colors group-hover:text-accent sm:text-lg"
+          ></h3>
+          <span
+            data-recent
+            class="hidden size-1.5 shrink-0 rounded-full bg-accent"
+            aria-label="Caso nuevo"
+            title="Caso nuevo"
+          ></span>
+        </div>
+        <div class="mt-1 flex min-w-0 items-center gap-1.5">
+          <p data-cargo class="min-w-0 truncate font-body text-xs text-secondary"></p>
+          <span
+            data-region-badge
+            class="hidden shrink-0 items-center gap-1 border border-border bg-surface-alt px-1.5 py-0.5 font-body text-[0.65rem] text-text-tertiary"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span data-region></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="hidden min-w-0 text-right sm:block">
+        <div class="flex items-center justify-end gap-2">
+          <span
+            data-delito
+            class="inline-flex items-center justify-center whitespace-nowrap border border-border bg-surface-alt px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-secondary"
+          ></span>
+          <span
+            data-fuente
+            class="inline-flex min-w-[4rem] items-center justify-center px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white"
+          ></span>
+        </div>
+        <div class="mt-1 flex items-center justify-end gap-2 font-mono text-xs text-text-tertiary">
+          <span data-fecha class="whitespace-nowrap"></span>
+        </div>
+      </div>
+
+      <span
+        class="inline-flex size-7 shrink-0 items-center justify-center border border-border text-text-tertiary transition-all duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-surface"
+        aria-hidden="true"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </span>
+    </a>
+  </div>
+</template>
 </BaseLayout>
 
 <script>
@@ -321,7 +390,9 @@ const buildSearchHref = (q: string) => {
     caso: string;
     monto: number;
     fecha: string;
+    fechaTs: number;
     fechaLabel: string;
+    sortName: string;
     searchText: string;
   };
 
@@ -362,6 +433,9 @@ const buildSearchHref = (q: string) => {
     let casesIndex: CaseIndexItem[] | null = null;
     let activeResults: CaseIndexItem[] = [];
     let visibleLimit = PAGE_SIZE;
+    let lastRenderedKey = "";
+    let lastFilterSignature = "";
+    let lastFilterLinkSignature = "";
 
     const SUMMARY_INACTIVE =
       "border-border bg-surface-card text-text-secondary hover:border-accent-primary/40 hover:text-text-primary";
@@ -379,6 +453,18 @@ const buildSearchHref = (q: string) => {
 
     let total = Number(document.getElementById("case-count-label")?.textContent?.match(/de (\d+)/)?.[1]) ||
       Number(document.getElementById("case-count")?.textContent || 0);
+    const resultsList = document.getElementById("results-list");
+    const emptyState = document.getElementById("empty-state");
+    const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
+    const countEl = document.getElementById("case-count");
+    const countLabelEl = document.getElementById("case-count-label");
+    const clearSearchWrapper = document.getElementById("clear-search-wrapper");
+    const clearSearchLabel = document.getElementById("clear-search-label");
+    const clearSearchLink = document.getElementById("clear-search-link") as HTMLAnchorElement | null;
+    const sortSelect = document.getElementById("sort-select") as HTMLSelectElement | null;
+    const loadMoreWrapper = document.getElementById("load-more-wrapper");
+    const loadMoreButton = document.getElementById("load-more");
+    const rowTemplate = document.getElementById("case-row-template") as HTMLTemplateElement | null;
 
     function splitClasses(value: string) {
       return value.split(" ").filter(Boolean);
@@ -392,6 +478,10 @@ const buildSearchHref = (q: string) => {
 
     function hasFilterParams(params: URLSearchParams) {
       return FILTER_KEYS.some((key) => !!params.get(key));
+    }
+
+    function filterSignature(params: URLSearchParams) {
+      return FILTER_KEYS.map((key) => `${key}:${params.get(key) || ""}`).join("|");
     }
 
     function pathFromUrl(url: URL) {
@@ -435,7 +525,16 @@ const buildSearchHref = (q: string) => {
         });
       });
 
-      const clearSearchLink = document.getElementById("clear-search-link") as HTMLAnchorElement | null;
+      if (clearSearchLink) clearSearchLink.href = urlWith({ q: "" }, currentUrl);
+    }
+
+    function updateSearchControls(params: URLSearchParams, q: string, currentUrl: URL) {
+      if (searchInput && searchInput.value !== (params.get("q") || "")) {
+        searchInput.value = params.get("q") || "";
+      }
+
+      clearSearchWrapper?.classList.toggle("hidden", !q);
+      if (clearSearchLabel) clearSearchLabel.textContent = `Quitar búsqueda «${params.get("q") || ""}»`;
       if (clearSearchLink) clearSearchLink.href = urlWith({ q: "" }, currentUrl);
     }
 
@@ -489,15 +588,6 @@ const buildSearchHref = (q: string) => {
         .toLowerCase();
     }
 
-    function escapeHtml(value: string | number) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
     function itemMatchesIndex(item: CaseIndexItem, params: URLSearchParams, q: string) {
       for (const key of FILTER_KEYS) {
         const value = params.get(key);
@@ -511,84 +601,79 @@ const buildSearchHref = (q: string) => {
       return [...items].sort((a, b) => {
         switch (sort) {
           case "antiguos":
-            return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+            return a.fechaTs - b.fechaTs;
           case "az":
-            return a.implicado.localeCompare(b.implicado, "es");
+            return a.sortName.localeCompare(b.sortName, "es");
           case "monto_desc":
             return b.monto - a.monto;
           case "recientes":
           default:
-            return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+            return b.fechaTs - a.fechaTs;
         }
       });
     }
 
-    function renderCase(item: CaseIndexItem) {
-      const recent = Date.now() - new Date(item.fecha).getTime() < 1000 * 60 * 60 * 24 * 7;
-      const region = item.region
-        ? `<span class="inline-flex shrink-0 items-center gap-1 border border-border bg-surface-alt px-1.5 py-0.5 font-body text-[0.65rem] text-text-tertiary" title="Región: ${escapeHtml(item.region)}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            ${escapeHtml(item.region)}
-          </span>`
-        : "";
+    function setText(root: ParentNode, selector: string, value: string | number) {
+      const el = root.querySelector<HTMLElement>(selector);
+      if (el) el.textContent = String(value);
+      return el;
+    }
 
-      return `<div class="case-list-row">
-        <a href="${escapeHtml(item.href)}" class="group grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3 border border-border bg-surface-card px-4 py-3 transition-all duration-200 hover:border-primary/40 sm:grid-cols-[6.5rem_minmax(0,1fr)_12rem_auto] sm:gap-5 sm:px-5 sm:py-4 no-underline">
-          <div class="w-full">
-            <span class="inline-flex w-full items-center justify-center px-2 py-1 text-center font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white ${item.estadoColor}" title="${escapeHtml(item.estadoLabel)}">
-              ${escapeHtml(item.estadoAbbr)}
-            </span>
-          </div>
-          <div class="min-w-0">
-            <div class="flex min-w-0 items-center gap-2">
-              <h3 class="min-w-0 truncate font-display text-base leading-tight text-primary transition-colors group-hover:text-accent sm:text-lg" title="${escapeHtml(item.implicado)}">
-                ${escapeHtml(item.implicado)}
-              </h3>
-              ${recent ? `<span class="size-1.5 shrink-0 rounded-full bg-accent" aria-label="Caso nuevo" title="Caso nuevo"></span>` : ""}
-            </div>
-            <div class="mt-1 flex min-w-0 items-center gap-1.5">
-              <p class="min-w-0 truncate font-body text-xs text-secondary" title="${escapeHtml(item.cargo)}">
-                ${escapeHtml(item.cargo)}
-              </p>
-              ${region}
-            </div>
-          </div>
-          <div class="hidden min-w-0 text-right sm:block">
-            <div class="flex items-center justify-end gap-2">
-              <span class="inline-flex items-center justify-center whitespace-nowrap border border-border bg-surface-alt px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-secondary" title="${escapeHtml(item.delitoLabel)}">
-                ${escapeHtml(item.delitoLabel)}
-              </span>
-              <span class="inline-flex min-w-[4rem] items-center justify-center px-2 py-1 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-white ${item.fuenteColor}" title="${escapeHtml(item.fuenteLabel)}">
-                ${escapeHtml(item.fuenteAbbr)}
-              </span>
-            </div>
-            <div class="mt-1 flex items-center justify-end gap-2 font-mono text-xs text-text-tertiary">
-              <span class="whitespace-nowrap">${escapeHtml(item.fechaLabel)}</span>
-            </div>
-          </div>
-          <span class="inline-flex size-7 shrink-0 items-center justify-center border border-border text-text-tertiary transition-all duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-surface" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          </span>
-        </a>
-      </div>`;
+    function createCaseElement(item: CaseIndexItem) {
+      const row = rowTemplate?.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
+      if (!row) return document.createTextNode("");
+
+      const link = row.querySelector<HTMLAnchorElement>("[data-row-link]");
+      if (link) link.href = item.href;
+
+      const estado = setText(row, "[data-estado]", item.estadoAbbr);
+      if (estado) {
+        estado.classList.add(item.estadoColor);
+        estado.title = item.estadoLabel;
+      }
+
+      const implicado = setText(row, "[data-implicado]", item.implicado);
+      if (implicado) implicado.title = item.implicado;
+
+      const recent = row.querySelector<HTMLElement>("[data-recent]");
+      recent?.classList.toggle("hidden", Date.now() - item.fechaTs >= 1000 * 60 * 60 * 24 * 7);
+
+      const cargo = setText(row, "[data-cargo]", item.cargo);
+      if (cargo) cargo.title = item.cargo;
+
+      const regionBadge = row.querySelector<HTMLElement>("[data-region-badge]");
+      regionBadge?.classList.toggle("hidden", !item.region);
+      regionBadge?.classList.toggle("inline-flex", !!item.region);
+      if (regionBadge) regionBadge.title = item.region ? `Región: ${item.region}` : "";
+      setText(row, "[data-region]", item.region);
+
+      const delito = setText(row, "[data-delito]", item.delitoLabel);
+      if (delito) delito.title = item.delitoLabel;
+
+      const fuente = setText(row, "[data-fuente]", item.fuenteAbbr);
+      if (fuente) {
+        fuente.classList.add(item.fuenteColor);
+        fuente.title = item.fuenteLabel;
+      }
+
+      setText(row, "[data-fecha]", item.fechaLabel);
+      return row;
     }
 
     function renderResults() {
-      const list = document.getElementById("results-list");
-      if (!list) return;
+      if (!resultsList) return;
 
       const visible = activeResults.slice(0, visibleLimit);
-      list.innerHTML = visible.map(renderCase).join("");
+      const renderKey = visible.map((item) => item.id).join("|");
+      if (renderKey !== lastRenderedKey || resultsList.childElementCount !== visible.length) {
+        const fragment = document.createDocumentFragment();
+        fragment.append(...visible.map(createCaseElement));
+        resultsList.replaceChildren(fragment);
+        lastRenderedKey = renderKey;
+      }
 
-      const loadMoreWrapper = document.getElementById("load-more-wrapper");
       loadMoreWrapper?.classList.toggle("hidden", visible.length >= activeResults.length);
 
-      const loadMoreButton = document.getElementById("load-more");
       if (loadMoreButton) {
         const remaining = Math.max(activeResults.length - visible.length, 0);
         loadMoreButton.textContent = remaining > PAGE_SIZE ? `Cargar ${PAGE_SIZE} más` : `Cargar ${remaining} más`;
@@ -605,33 +690,28 @@ const buildSearchHref = (q: string) => {
       const visibleCount = activeResults.length;
       renderResults();
 
-      const count = document.getElementById("case-count");
-      if (count) count.textContent = String(visibleCount);
+      if (countEl) countEl.textContent = String(visibleCount);
 
-      const label = document.getElementById("case-count-label");
-      if (label) {
-        label.textContent = `${visibleCount === 1 ? "caso" : "casos"}${
+      if (countLabelEl) {
+        countLabelEl.textContent = `${visibleCount === 1 ? "caso" : "casos"}${
           hasFilterParams(params) || q ? ` de ${total}` : ""
         }`;
       }
 
-      document.getElementById("empty-state")?.classList.toggle("hidden", visibleCount > 0);
-
-      const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
-      if (searchInput && searchInput.value !== (params.get("q") || "")) {
-        searchInput.value = params.get("q") || "";
-      }
-
-      const clearSearchWrapper = document.getElementById("clear-search-wrapper");
-      clearSearchWrapper?.classList.toggle("hidden", !q);
-      const clearSearchLabel = document.getElementById("clear-search-label");
-      if (clearSearchLabel) clearSearchLabel.textContent = `Quitar búsqueda «${params.get("q") || ""}»`;
-
-      const sortSelect = document.getElementById("sort-select") as HTMLSelectElement | null;
+      emptyState?.classList.toggle("hidden", visibleCount > 0);
+      updateSearchControls(params, q, url);
       if (sortSelect) sortSelect.value = sort;
 
-      updateBadges(params);
-      updateFilterLinks(url);
+      const nextFilterSignature = filterSignature(params);
+      const nextFilterLinkSignature = `${nextFilterSignature}|sort:${sort}`;
+      if (nextFilterSignature !== lastFilterSignature) {
+        updateBadges(params);
+        lastFilterSignature = nextFilterSignature;
+      }
+      if (nextFilterLinkSignature !== lastFilterLinkSignature) {
+        updateFilterLinks(url);
+        lastFilterLinkSignature = nextFilterLinkSignature;
+      }
 
       if (historyMode === "push") history.pushState({}, "", pathFromUrl(url));
       if (historyMode === "replace") history.replaceState({}, "", pathFromUrl(url));
@@ -733,7 +813,6 @@ const buildSearchHref = (q: string) => {
       if (form.id === "search-form" || form.closest("#search-form")) {
         if (!casesIndex) return;
         e.preventDefault();
-        const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
         if (searchInput) {
           const url = new URL(window.location.href);
           if (searchInput.value) url.searchParams.set("q", searchInput.value);

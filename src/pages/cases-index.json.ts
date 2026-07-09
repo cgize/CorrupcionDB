@@ -41,6 +41,7 @@ export const GET: APIRoute = async () => {
   const payload = cases
     .map((c) => {
       const d = c.data;
+      const fechaTs = d.fecha_actualizacion.getTime();
       const searchText = normalizeText(
         [
           d.implicado,
@@ -78,15 +79,17 @@ export const GET: APIRoute = async () => {
         caso: d.caso?.id || "",
         monto: d.monto_clp || 0,
         fecha: d.fecha_actualizacion.toISOString(),
+        fechaTs,
         fechaLabel: d.fecha_actualizacion.toLocaleDateString("es-CL", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         }),
+        sortName: normalizeText(d.implicado),
         searchText,
       };
     })
-    .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+    .sort((a, b) => b.fechaTs - a.fechaTs);
 
   return new Response(JSON.stringify(payload), {
     headers: {
