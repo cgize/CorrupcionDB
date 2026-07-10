@@ -2,9 +2,41 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/Button.astro";
-import { STATUS_COLORS } from "@/lib/constants";
+import {
+  STATUS_COLORS,
+  SECTOR_POLITICO_LABELS,
+  DELITO_LABELS,
+  FUENTE_TIPO_LABELS,
+  PARTIDO_SECTOR_MAP,
+} from "@/lib/constants";
 
 const allCases = await getCollection("cases");
+
+// ── Helpers ──
+
+function thinBarWidth(value: number, max: number) {
+  return `${Math.round((value / max) * 100)}%`;
+}
+
+function formatCLP(amount: number): string {
+  if (amount >= 1_000_000_000) {
+    return `$${(amount / 1_000_000_000).toFixed(1)} mil MM`;
+  }
+  if (amount >= 1_000_000) {
+    return `$${Math.round(amount / 1_000_000).toLocaleString("es-CL")} millones`;
+  }
+  return `$${amount.toLocaleString("es-CL")}`;
+}
+
+function formatCLPShort(amount: number): string {
+  if (amount >= 1_000_000_000) return `$${(amount / 1_000_000_000).toFixed(1)} MM`;
+  if (amount >= 1_000_000) return `$${Math.round(amount / 1_000_000)} M`;
+  if (amount >= 1_000) return `$${Math.round(amount / 1_000)} K`;
+  return `$${amount}`;
+}
+
+// ── Basic counts ──
+
 const total = allCases.length;
 const activos = allCases.filter((c) => c.data.estado === "active").length;
 const investigacion = allCases.filter((c) => c.data.estado === "investigation").length;
@@ -20,6 +52,103 @@ const distribution = [
   { label: "Archivados", value: archivados, key: "archived" },
 ];
 
+const maxDistribucion = Math.max(...distribution.map((d) => d.value), 1);
+
+// ── Montos ──
+
+const casesWithMonto = allCases.filter(
+  (c) => c.data.monto_clp != null && c.data.monto_clp > 0
+);
+const montoTotal = casesWithMonto.reduce((sum, c) => sum + (c.data.monto_clp ?? 0), 0);
+const condenados = allCases.filter((c) => c.data.tipo_proceso === "condena").length;
+
+const topMontos = [...casesWithMonto]
+  .sort((a, b) => (b.data.monto_clp ?? 0) - (a.data.monto_clp ?? 0))
+  .slice(0, 10);
+
+// ── Sector político (derived from partido when not set explicitly) ──
+
+const sectorCountMap = new Map<string, number>();
+const sectorMontoMap = new Map<string, number>();
+
+function resolveSector(c: (typeof allCases)[number]): string | undefined {
+  if (c.data.sector_politico) return c.data.sector_politico;
+  if (c.data.partido) return PARTIDO_SECTOR_MAP[c.data.partido];
+  return undefined;
+}
+
+for (const c of allCases) {
+  const sector = resolveSector(c);
+  if (sector) {
+    sectorCountMap.set(sector, (sectorCountMap.get(sector) || 0) + 1);
+    if (c.data.monto_clp && c.data.monto_clp > 0) {
+      sectorMontoMap.set(sector, (sectorMontoMap.get(sector) || 0) + c.data.monto_clp);
+    }
+  }
+}
+
+const sectorData = Array.from(sectorCountMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .map(([key, count]) => ({
+    key,
+    label:
+      SECTOR_POLITICO_LABELS[key as keyof typeof SECTOR_POLITICO_LABELS] ??
+      key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+    count,
+    monto: sectorMontoMap.get(key) || 0,
+  }));
+
+const totalClassified = sectorData.reduce((sum, s) => sum + s.count, 0);
+const sinClasificar = total - totalClassified;
+if (sinClasificar > 0) {
+  let sinClasificarMonto = 0;
+  for (const c of allCases) {
+    if (!resolveSector(c) && c.data.monto_clp && c.data.monto_clp > 0) {
+      sinClasificarMonto += c.data.monto_clp;
+    }
+  }
+  sectorData.push({
+    key: "sin_clasificar",
+    label: "Sin clasificar",
+    count: sinClasificar,
+    monto: sinClasificarMonto,
+  });
+}
+
+// ── Partido ──
+
+const partidoMap = new Map<string, number>();
+for (const c of allCases) {
+  if (c.data.partido) {
+    partidoMap.set(c.data.partido, (partidoMap.get(c.data.partido) || 0) + 1);
+  }
+}
+const topPartidos = Array.from(partidoMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 8);
+
+const maxPartido = Math.max(...topPartidos.map((p) => p[1]), 1);
+
+// ── Tipo de fuente ──
+
+const fuenteMap = new Map<string, number>();
+for (const c of allCases) {
+  fuenteMap.set(c.data.fuente_tipo, (fuenteMap.get(c.data.fuente_tipo) || 0) + 1);
+}
+const fuenteData = Array.from(fuenteMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .map(([key, value]) => ({
+    key,
+    label:
+      FUENTE_TIPO_LABELS[key as keyof typeof FUENTE_TIPO_LABELS] ??
+      key.charAt(0).toUpperCase() + key.slice(1),
+    value,
+  }));
+
+const maxFuente = Math.max(...fuenteData.map((f) => f.value), 1);
+
+// ── Regiones ──
+
 const regionMap = new Map<string, number>();
 for (const c of allCases) {
   if (c.data.region) {
@@ -31,32 +160,156 @@ const topRegions = Array.from(regionMap.entries())
   .slice(0, 5)
   .map(([name, value]) => ({ name, value }));
 
+const maxRegion = Math.max(...topRegions.map((r) => r.value), 1);
+
+// ── Delitos ──
+
 const delitoMap = new Map<string, number>();
 for (const c of allCases) {
   delitoMap.set(c.data.delito, (delitoMap.get(c.data.delito) || 0) + 1);
 }
 const topDelitos = Array.from(delitoMap.entries())
   .sort((a, b) => b[1] - a[1])
-  .slice(0, 5)
+  .slice(0, 8)
   .map(([key, value]) => ({
-    name: key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+    key,
+    name:
+      DELITO_LABELS[key as keyof typeof DELITO_LABELS] ??
+      key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
     value,
   }));
 
-const maxRegion = Math.max(...topRegions.map((r) => r.value), 1);
 const maxDelito = Math.max(...topDelitos.map((d) => d.value), 1);
-const maxDistribucion = Math.max(...distribution.map((d) => d.value), 1);
 
-function thinBarWidth(value: number, max: number) {
-  return `${Math.round((value / max) * 100)}%`;
+// ── Evolución temporal ──
+
+const yearMap = new Map<number, number>();
+for (const c of allCases) {
+  const year = c.data.fecha_inicio.getFullYear();
+  if (!isNaN(year)) {
+    yearMap.set(year, (yearMap.get(year) || 0) + 1);
+  }
 }
+const yearData = Array.from(yearMap.entries()).sort((a, b) => a[0] - b[0]);
+const maxYear = Math.max(...yearData.map((y) => y[1]), 1);
+
+// ── Donut chart data ──
+
+const DONUT_RADIUS = 70;
+const circumference = 2 * Math.PI * DONUT_RADIUS;
+
+const SECTOR_COLORS: Record<string, string> = {
+  derecha: "#e0432a",
+  centro_derecha: "#b45309",
+  centro: "#15803d",
+  centro_izquierda: "#2563eb",
+  izquierda: "#7c3aed",
+  independiente: "#0891b2",
+  diversos: "#be185d",
+  no_aplica: "#6b7280",
+  sin_clasificar: "#9ca3af",
+};
+
+const donutSegments = (() => {
+  let cumulative = 0;
+  return sectorData
+    .filter((s) => s.count > 0)
+    .map((s) => {
+      const fraction = s.count / total;
+      const dash = fraction * circumference;
+      const offset = -cumulative;
+      cumulative += dash;
+      return {
+        key: s.key,
+        label: s.label,
+        count: s.count,
+        monto: s.monto,
+        percentage: Math.round(fraction * 100),
+        dash: dash.toFixed(3),
+        offset: offset.toFixed(3),
+        color: SECTOR_COLORS[s.key] || "#9ca3af",
+      };
+    });
+})();
+
+// ── Mapped sector for montos table ──
+
+const sectorTableData = sectorData
+  .filter((s) => s.count > 0)
+  .map((s) => ({
+    ...s,
+    percentage: Math.round((s.count / total) * 100),
+  }));
+
+const maxSectorMonto = Math.max(...sectorTableData.map((s) => s.monto), 1);
 ---
 
 <BaseLayout
   title="Estadísticas"
   description="Estadísticas y visualización de datos sobre casos de corrupción, faltas a la probidad y delitos contra el patrimonio público en Chile."
 >
-  <section class="mx-auto max-w-[1280px] px-6 py-12">
+  <style is:global>
+    @keyframes donut-grow {
+      from {
+        stroke-dasharray: 0 440;
+      }
+      to {
+        stroke-dasharray: var(--dash) 440;
+      }
+    }
+
+    @keyframes bar-expand {
+      from {
+        width: 0%;
+      }
+      to {
+        width: var(--target);
+      }
+    }
+
+    @keyframes stat-enter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bar-animate {
+      animation: bar-expand 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    .stat-card-animate {
+      opacity: 0;
+      animation: stat-enter 420ms ease-out both;
+    }
+
+    .donut-segment {
+      animation: donut-grow 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    .stagger-delay-1 { animation-delay: 60ms; }
+    .stagger-delay-2 { animation-delay: 120ms; }
+    .stagger-delay-3 { animation-delay: 180ms; }
+    .stagger-delay-4 { animation-delay: 240ms; }
+    .stagger-delay-5 { animation-delay: 300ms; }
+    .stagger-delay-6 { animation-delay: 360ms; }
+    .stagger-delay-7 { animation-delay: 420ms; }
+    .stagger-delay-8 { animation-delay: 480ms; }
+    .stagger-delay-9 { animation-delay: 540ms; }
+    .stagger-delay-10 { animation-delay: 600ms; }
+
+    .table-row-animate {
+      opacity: 0;
+      animation: stat-enter 320ms ease-out both;
+    }
+  </style>
+
+  <!-- Hero -->
+  <section class="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-16">
     <p class="font-mono text-[0.65rem] uppercase tracking-wider text-accent">Datos agregados</p>
     <h1 class="mt-3 font-display text-h1 tracking-[-0.035em] text-balance text-primary">
       <span class="text-accent">E</span>stadísticas generales
@@ -68,65 +321,195 @@ function thinBarWidth(value: number, max: number) {
   </section>
 
   <!-- Tarjetas principales -->
-  <section class="mx-auto max-w-[1280px] px-6 pb-16">
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="border border-border bg-surface-card p-6">
+  <section class="mx-auto max-w-[1280px] px-4 pb-12 sm:px-6 sm:pb-16">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="stat-card-animate stagger-delay-1 border border-border bg-surface-card p-5 sm:p-6">
         <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Casos registrados</p>
         <p class="mt-2 font-mono text-4xl font-medium text-primary tabular-nums">{total.toLocaleString("es-CL")}</p>
       </div>
-      <div class="border border-border bg-surface-card p-6">
+      <div class="stat-card-animate stagger-delay-2 border border-border bg-surface-card p-5 sm:p-6">
         <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Casos activos</p>
-        <p class="mt-2 font-mono text-4xl font-medium text-accent-primary tabular-nums">{activos.toLocaleString("es-CL")}</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-accent tabular-nums">{activos.toLocaleString("es-CL")}</p>
       </div>
-      <div class="border border-border bg-surface-card p-6">
+      <div class="stat-card-animate stagger-delay-3 border border-border bg-surface-card p-5 sm:p-6">
         <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Resueltos</p>
         <p class="mt-2 font-mono text-4xl font-medium text-status-resolved tabular-nums">{resueltos.toLocaleString("es-CL")}</p>
       </div>
-      <div class="border border-border bg-surface-card p-6">
-        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">En investigación</p>
-        <p class="mt-2 font-mono text-4xl font-medium text-accent-info tabular-nums">{investigacion.toLocaleString("es-CL")}</p>
+      <div class="stat-card-animate stagger-delay-4 border border-border bg-surface-card p-5 sm:p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Monto promedio</p>
+        <p class="mt-2 font-mono text-3xl font-medium text-accent-info tabular-nums sm:text-4xl">{formatCLPShort(Math.round(montoTotal / Math.max(casesWithMonto.length, 1)))}</p>
+      </div>
+      <div class="stat-card-animate stagger-delay-5 border border-border bg-surface-card p-5 sm:p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Monto total defraudado</p>
+        <p class="mt-2 font-mono text-3xl font-medium text-accent-highlight tabular-nums sm:text-4xl">{formatCLP(montoTotal)}</p>
+      </div>
+      <div class="stat-card-animate stagger-delay-6 border border-border bg-surface-card p-5 sm:p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Casos con condena</p>
+        <p class="mt-2 font-mono text-4xl font-medium text-status-resolved tabular-nums">{condenados.toLocaleString("es-CL")}</p>
       </div>
     </div>
   </section>
 
-  <!-- Distribución por estado + por región -->
-  <section class="bg-surface-alt px-6 py-20">
+  <!-- Sector político + partidos -->
+  <section class="border-y border-border bg-surface-alt px-4 py-16 sm:px-6 sm:py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <!-- Donut chart -->
+        <div>
+          <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+            Casos por sector político
+          </h2>
+          <p class="mt-2 font-body text-sm text-secondary">
+            Distribución de los {totalClassified} casos con afiliación política identificada
+            {sinClasificar > 0 ? (
+              <>
+                (+{sinClasificar} sin clasificar)
+              </>
+            ) : ""}.
+          </p>
+
+          <div class="mt-8 flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-10">
+            <!-- SVG Donut -->
+            <svg
+              viewBox="0 0 200 200"
+              class="h-[200px] w-[200px] shrink-0 sm:h-[220px] sm:w-[220px]"
+              aria-label={`Gráfico de torta: distribución por sector político`}
+              role="img"
+            >
+              <title>Distribución por sector político</title>
+              {donutSegments.map((seg, i) => (
+                <circle
+                  cx="100"
+                  cy="100"
+                  r={DONUT_RADIUS}
+                  fill="none"
+                  stroke={seg.color}
+                  stroke-width="26"
+                  stroke-linecap="butt"
+                  transform={`rotate(-90 100 100)`}
+                  stroke-dasharray={`${seg.dash} ${circumference.toFixed(3)}`}
+                  stroke-dashoffset={seg.offset}
+                  style={`--dash:${seg.dash}`}
+                  class="donut-segment"
+                  class:list={[`stagger-delay-${i + 1}`]}
+                />
+              ))}
+              <!-- Center text -->
+              <text
+                x="100"
+                y="92"
+                text-anchor="middle"
+                class="font-display text-xl"
+                fill="currentColor"
+              >
+                {total}
+              </text>
+              <text
+                x="100"
+                y="112"
+                text-anchor="middle"
+                class="font-body text-[0.65rem]"
+                fill="var(--color-text-tertiary)"
+              >
+                total de casos
+              </text>
+            </svg>
+
+            <!-- Legend -->
+            <div class="space-y-1.5">
+              {donutSegments.map((seg, i) => (
+                <div class="stat-card-animate flex items-center gap-2.5 font-body text-sm">
+                  <span
+                    class={`stagger-delay-${i + 1}`}
+                    class="size-2.5 shrink-0 rounded-full"
+                    style={`background-color: ${seg.color}`}
+                  ></span>
+                  <span class="text-secondary min-w-0">{seg.label}</span>
+                  <span class="ml-auto shrink-0 font-mono tabular-nums text-primary">
+                    {seg.count}
+                  </span>
+                  <span class="shrink-0 font-mono text-xs tabular-nums text-text-tertiary w-8 text-right">
+                    {seg.percentage}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Partidos -->
+        <div>
+          <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+            Top partidos políticos
+          </h2>
+          <p class="mt-2 font-body text-sm text-secondary">
+            Partidos con mayor número de casos registrados.
+          </p>
+          <div class="mt-8 space-y-5">
+            {topPartidos.map(([partido, value], i) => (
+              <div class="stat-card-animate">
+                <div class={`stagger-delay-${i + 1}`}>
+                  <div class="flex items-center justify-between font-body text-sm text-secondary">
+                    <span>{partido}</span>
+                    <span class="font-mono text-primary tabular-nums">{value}</span>
+                  </div>
+                  <div class="mt-2 h-[4px] w-full bg-chart-track">
+                    <div
+                      class="bar-animate h-full bg-chart-ink"
+                      style={`--target: ${thinBarWidth(value, maxPartido)}`}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Distribución estado + Regiones -->
+  <section class="px-4 py-16 sm:px-6 sm:py-20">
     <div class="mx-auto max-w-[1280px]">
       <div class="grid gap-x-12 gap-y-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
-        <h2 class="font-display text-h1 tracking-[-0.035em] text-primary">
+        <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
           Distribución por estado procesal
         </h2>
-        <h2 class="font-display text-h1 tracking-[-0.035em] text-primary">
+        <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
           Casos por región
         </h2>
-        <div class="space-y-6">
+        <div class="space-y-5">
           {distribution.map((d, i) => (
-            <div>
-              <div class="flex items-center justify-between font-body text-sm text-secondary">
-                <span>{d.label}</span>
-                <span class="font-mono text-primary tabular-nums">{d.value}</span>
-              </div>
-              <div class="mt-2 h-[3px] w-full bg-chart-track">
-                <div
-                  class={`h-full transition-all duration-500 ${STATUS_COLORS[d.key] || "bg-accent"}`}
-                  style={`width: ${thinBarWidth(d.value, maxDistribucion)}`}
-                ></div>
+            <div class="stat-card-animate">
+              <div class={`stagger-delay-${i + 1}`}>
+                <div class="flex items-center justify-between font-body text-sm text-secondary">
+                  <span>{d.label}</span>
+                  <span class="font-mono text-primary tabular-nums">{d.value}</span>
+                </div>
+                <div class="mt-2 h-[3px] w-full bg-chart-track">
+                  <div
+                    class={`bar-animate h-full ${STATUS_COLORS[d.key] || "bg-accent"}`}
+                    style={`--target: ${thinBarWidth(d.value, maxDistribucion)}`}
+                  ></div>
+                </div>
               </div>
             </div>
           ))}
         </div>
-        <div class="space-y-6">
+        <div class="space-y-5">
           {topRegions.map((r, i) => (
-            <div>
-              <div class="flex items-center justify-between font-body text-sm text-secondary">
-                <span>{r.name}</span>
-                <span class="font-mono text-primary tabular-nums">{r.value}</span>
-              </div>
-              <div class="mt-2 h-[3px] w-full bg-chart-track">
-                <div
-                  class="h-full transition-all duration-500 bg-accent"
-                  style={`width: ${thinBarWidth(r.value, maxRegion)}`}
-                ></div>
+            <div class="stat-card-animate">
+              <div class={`stagger-delay-${i + 1}`}>
+                <div class="flex items-center justify-between font-body text-sm text-secondary">
+                  <span>{r.name}</span>
+                  <span class="font-mono text-primary tabular-nums">{r.value}</span>
+                </div>
+                <div class="mt-2 h-[3px] w-full bg-chart-track">
+                  <div
+                    class="bar-animate h-full bg-accent"
+                    style={`--target: ${thinBarWidth(r.value, maxRegion)}`}
+                  ></div>
+                </div>
               </div>
             </div>
           ))}
@@ -135,33 +518,180 @@ function thinBarWidth(value: number, max: number) {
     </div>
   </section>
 
-  <!-- Top delitos -->
-  <section class="mx-auto max-w-[1280px] px-6 py-20">
-    <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-center text-primary">
-      Tipos de delito más frecuentes
-    </h2>
-    <div class="mx-auto mt-12 max-w-xl space-y-6">
-      {topDelitos.map((d, i) => (
-        <div>
-          <div class="flex items-center justify-between font-body text-sm text-secondary">
-            <span>{d.name}</span>
-            <span class="font-mono text-primary tabular-nums">{d.value}</span>
-          </div>
-          <div class="mt-2 h-[3px] w-full bg-chart-track">
-            <div
-              class="h-full transition-all duration-500 bg-accent"
-              style={`width: ${thinBarWidth(d.value, maxDelito)}`}
-            ></div>
-          </div>
+  <!-- Top delitos + Tipo de fuente -->
+  <section class="border-y border-border bg-surface-alt px-4 py-16 sm:px-6 sm:py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <div class="grid gap-x-12 gap-y-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+        <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+          Tipos de delito más frecuentes
+        </h2>
+        <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+          Tipos de fuente
+        </h2>
+        <div class="space-y-5">
+          {topDelitos.map((d, i) => (
+            <div class="stat-card-animate">
+              <div class={`stagger-delay-${i + 1}`}>
+                <div class="flex items-center justify-between font-body text-sm text-secondary">
+                  <span>{d.name}</span>
+                  <span class="font-mono text-primary tabular-nums">{d.value}</span>
+                </div>
+                <div class="mt-2 h-[3px] w-full bg-chart-track">
+                  <div
+                    class="bar-animate h-full bg-accent"
+                    style={`--target: ${thinBarWidth(d.value, maxDelito)}`}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+        <div class="space-y-5">
+          {fuenteData.map((f, i) => (
+            <div class="stat-card-animate">
+              <div class={`stagger-delay-${i + 1}`}>
+                <div class="flex items-center justify-between font-body text-sm text-secondary">
+                  <span>{f.label}</span>
+                  <span class="font-mono text-primary tabular-nums">{f.value}</span>
+                </div>
+                <div class="mt-2 h-[3px] w-full bg-chart-track">
+                  <div
+                    class="bar-animate h-full bg-accent-info"
+                    style={`--target: ${thinBarWidth(f.value, maxFuente)}`}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Datos abiertos -->
-  <section class="border-t border-border bg-surface-alt px-6 py-16">
+  <!-- Montos por sector -->
+  <section class="px-4 py-16 sm:px-6 sm:py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+        Montos defraudados por sector político
+      </h2>
+      <p class="mt-2 font-body text-sm text-secondary">
+        Suma de los montos atribuidos en cada caso, agrupados por afiliación política.
+      </p>
+      <div class="mt-8 space-y-5">
+        {sectorTableData
+          .filter((s) => s.monto > 0)
+          .map((s, i) => (
+            <div class="stat-card-animate">
+              <div class={`stagger-delay-${i + 1}`}>
+                <div class="flex items-center justify-between font-body text-sm text-secondary">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="size-2.5 shrink-0 rounded-full"
+                      style={`background-color: ${SECTOR_COLORS[s.key] || "#9ca3af"}`}
+                    ></span>
+                    <span>{s.label}</span>
+                  </div>
+                  <div class="flex items-baseline gap-4">
+                    <span class="font-mono text-primary tabular-nums">{formatCLPShort(s.monto)}</span>
+                    <span class="font-mono text-xs tabular-nums text-text-tertiary">{s.count} casos</span>
+                  </div>
+                </div>
+                <div class="mt-2 h-[3px] w-full bg-chart-track">
+                  <div
+                    class="bar-animate h-full bg-accent-highlight"
+                    style={`--target: ${thinBarWidth(s.monto, maxSectorMonto)}`}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Top 10 casos por monto -->
+  <section class="border-y border-border bg-surface-alt px-4 py-16 sm:px-6 sm:py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+        Top 10 casos por monto defraudado
+      </h2>
+      <p class="mt-2 font-body text-sm text-secondary">
+        Casos ordenados por el monto en pesos chilenos atribuido en la acusación o investigación.
+        Se presume la inocencia de todas las personas mencionadas mientras no exista sentencia firme.
+      </p>
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full border-collapse font-body text-sm">
+          <thead>
+            <tr class="border-b border-border-strong text-left">
+              <th class="pb-3 pr-4 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary w-8">#</th>
+              <th class="pb-3 pr-4 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary">Implicado</th>
+              <th class="pb-3 pr-4 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary hidden sm:table-cell">Cargo</th>
+              <th class="pb-3 pr-4 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary hidden md:table-cell">Partido</th>
+              <th class="pb-3 font-mono text-[0.65rem] uppercase tracking-wider text-text-tertiary text-right">Monto</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            {topMontos.map((c, i) => (
+              <tr class="table-row-animate group hover:bg-surface">
+                <td class="py-3 pr-4 font-mono text-xs text-text-tertiary tabular-nums" style={`animation-delay: ${i * 60 + 100}ms`}>
+                  {i + 1}
+                </td>
+                <td class="py-3 pr-4 font-body text-sm text-primary">
+                  <a href={`/casos/${c.id}`} class="no-underline group-hover:text-accent transition-colors">
+                    {c.data.implicado}
+                  </a>
+                </td>
+                <td class="py-3 pr-4 text-xs text-secondary hidden sm:table-cell max-w-[200px] truncate">
+                  {c.data.cargo}
+                </td>
+                <td class="py-3 pr-4 font-mono text-xs text-text-tertiary hidden md:table-cell">
+                  {c.data.partido || "—"}
+                </td>
+                <td class="py-3 font-mono text-sm tabular-nums text-primary text-right whitespace-nowrap">
+                  {formatCLP(c.data.monto_clp ?? 0)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evolución temporal -->
+  <section class="px-4 py-16 sm:px-6 sm:py-20">
+    <div class="mx-auto max-w-[1280px]">
+      <h2 class="font-display text-h2 tracking-[-0.02em] text-primary">
+        Evolución temporal
+      </h2>
+      <p class="mt-2 font-body text-sm text-secondary">
+        Casos registrados por año de inicio de la causa.
+      </p>
+      <div class="mt-8 space-y-4">
+        {yearData.map(([year, value], i) => (
+          <div class="stat-card-animate">
+            <div class={`stagger-delay-${(i % 10) + 1}`}>
+              <div class="flex items-center justify-between font-body text-sm text-secondary">
+                <span class="font-mono text-primary">{year}</span>
+                <span class="font-mono text-primary tabular-nums">{value} {value === 1 ? "caso" : "casos"}</span>
+              </div>
+              <div class="mt-2 h-[4px] w-full bg-chart-track">
+                <div
+                  class="bar-animate h-full bg-accent"
+                  style={`--target: ${thinBarWidth(value, maxYear)}`}
+                ></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos abiertos CTA -->
+  <section class="border-t border-border bg-surface-alt px-4 py-16 sm:px-6">
     <div class="mx-auto max-w-[1280px] text-center">
-      <h2 class="font-display text-h1 tracking-[-0.035em] text-balance text-primary">
+      <h2 class="font-display text-h2 tracking-[-0.02em] text-balance text-primary">
         Datos abiertos
       </h2>
       <p class="mx-auto mt-6 max-w-prose text-body text-secondary">
