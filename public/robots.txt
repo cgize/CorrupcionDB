@@ -3,6 +3,7 @@ Allow: /
 
 # Recursos internos no destinados a indexación
 Disallow: /cases-index.json
+Disallow: /cases-index-v1.json
 Disallow: /api
 
-Sitemap: https://corrupciondb.cl/sitemap-index.xml
+Sitemap: https://www.corrupciondb.cl/sitemap-index.xml

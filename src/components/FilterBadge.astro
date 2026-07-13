@@ -40,6 +40,7 @@ const clearHref = buildHref({ [paramKey]: "" });
 const activeOption = options.find((o) => o.value === currentValue);
 const isActive = !!currentValue;
 const id = `fb-${paramKey}`;
+const serializedOptions = JSON.stringify(options).replace(/</g, "\\u003c");
 ---
 
 <details
@@ -109,47 +110,16 @@ const id = `fb-${paramKey}`;
     </div>
 
     <div class="max-h-64 overflow-y-auto pr-0.5">
-      <ul class="flex flex-col gap-0.5">
-        {
-          options.map((o) => {
-            const sel = o.value === currentValue;
-            return (
-              <li>
-                <a
-                  data-filter-option
-                  data-value={o.value}
-                  data-label={o.label}
-                  data-dot={o.dot || ""}
-                  href={buildHref({ [paramKey]: o.value })}
-                  class:list={[
-                    "flex items-center gap-2.5 px-2.5 py-1.5 font-body text-xs transition-colors no-underline",
-                    sel
-                      ? "bg-accent-primary/10 font-semibold text-accent-primary"
-                      : "text-text-secondary hover:bg-surface-alt hover:text-text-primary",
-                  ]}
-                >
-                  {o.dot && <span class:list={["size-2 shrink-0 rounded-full", o.dot]}></span>}
-                  <span class="flex-1 truncate">{o.label}</span>
-                  {typeof o.count === "number" && (
-                    <span class:list={["font-mono text-[0.65rem] tabular-nums", sel ? "text-accent-primary/70" : "text-text-tertiary"]}>
-                      {o.count}
-                    </span>
-                  )}
-                  <svg data-selected-icon class:list={["size-3.5 shrink-0", !sel && "hidden"]} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
+      <ul class="flex flex-col gap-0.5" data-options-list></ul>
     </div>
   </div>
+
+  <script is:inline type="application/json" data-options set:html={serializedOptions} />
 </details>
 
 <style>
   .filter-badge summary::-webkit-details-marker { display: none; }
   .filter-badge summary { list-style: none; }
   .filter-badge:not([open]) [data-filter-badge-panel] { display: none; }
+  .filter-badge script { display: none; }
 </style>

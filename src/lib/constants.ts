@@ -2,7 +2,7 @@ export const SITE = {
   name: "CorrupcionDB",
   description:
     "Plataforma ciudadana y base de datos de código abierto que centraliza, estructura y hace accesible la información sobre casos de corrupción, faltas a la probidad y delitos contra el patrimonio público que involucran a figuras políticas en Chile.",
-  url: "https://corrupciondb.cl",
+  url: "https://www.corrupciondb.cl",
   repo: "https://github.com/cgize/CorrupcionDB",
 };
 

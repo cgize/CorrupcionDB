@@ -170,6 +170,13 @@ const buildSearchHref = (q: string) => {
           {filteredCases.length === 1 ? "caso" : "casos"}
           {hasFilters && <span class="text-text-tertiary"> de {allCases.length}</span>}
         </span>
+        <span id="index-loading" role="status" aria-live="polite" class="hidden items-center gap-1.5 font-body text-xs text-text-tertiary">
+          <svg class="size-3 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+          Actualizando…
+        </span>
+        <span id="index-error" role="alert" class="hidden font-body text-xs text-accent-contrast">
+          No se pudo cargar el índice. Reintenta.
+        </span>
       </div>
       <SortControl currentSort={sort} />
     </div>
@@ -236,7 +243,7 @@ const buildSearchHref = (q: string) => {
     <div id="results-list" class="space-y-3">
       {
         initialCases.map((c) => (
-          <div class="case-list-row">
+          <div class="case-list-row" data-case-id={c.id} data-ssr-row>
             <CaseListItem caso={c} />
           </div>
         ))
@@ -327,34 +334,85 @@ const buildSearchHref = (q: string) => {
 </BaseLayout>
 
 <script>
+  import { CASES_INDEX_PATH } from "@/lib/cases-index";
+
   type CaseIndexItem = {
     id: string;
-    href: string;
-    implicado: string;
-    cargo: string;
-    estado: string;
-    estadoLabel: string;
-    estadoAbbr: string;
-    estadoShortAbbr: string;
-    estadoColor: string;
-    region: string;
-    delito: string;
-    delitoLabel: string;
-    fuente: string;
-    fuenteLabel: string;
-    fuenteAbbr: string;
-    fuenteColor: string;
-    puesto: string;
-    cargoEstado: string;
-    sector: string;
-    partido: string;
-    caso: string;
-    monto: number;
-    fecha: string;
-    fechaTs: number;
-    fechaLabel: string;
-    sortName: string;
-    searchText: string;
+    i: string;
+    c: string;
+    e: string;
+    r: string;
+    d: string;
+    f: string;
+    p: string;
+    ce: string;
+    s: string;
+    pa: string;
+    ca: string;
+    m: number;
+    t: number;
+    q: string;
+  };
+
+  const ESTADO_LABELS: Record<string, string> = {
+    active: "Activo",
+    investigation: "En investigación",
+    pending: "Pendiente",
+    resolved: "Resuelto",
+    archived: "Archivado",
+  };
+  const ESTADO_ABBR: Record<string, string> = {
+    active: "Activo",
+    investigation: "Invest.",
+    pending: "Pend.",
+    resolved: "Resuelto",
+    archived: "Archiv.",
+  };
+  const ESTADO_SHORT_ABBR: Record<string, string> = {
+    active: "Act.",
+    investigation: "Inv.",
+    pending: "Pen.",
+    resolved: "Res.",
+    archived: "Arc.",
+  };
+  const ESTADO_COLORS: Record<string, string> = {
+    active: "bg-status-active",
+    investigation: "bg-status-investigation",
+    pending: "bg-status-pending",
+    resolved: "bg-status-resolved",
+    archived: "bg-status-archived",
+  };
+  const DELITO_LABELS: Record<string, string> = {
+    fraude_al_fisco: "Fraude al Fisco",
+    malversacion: "Malversación de caudales públicos",
+    cohecho: "Cohecho",
+    trafico_influencias: "Tráfico de influencias",
+    negociacion_incompatible: "Negociación incompatible",
+    "asociacion_ilícita": "Asociación ilícita",
+    lavado_activos: "Lavado de activos",
+    apropiacion_indebida: "Apropiación indebida",
+    estafa: "Estafa",
+    prevaricacion: "Prevaricación",
+    espionaje_ilegal: "Espionaje ilegal",
+    enriquecimiento_ilicito: "Enriquecimiento ilícito",
+    soborno: "Soborno",
+    financiamiento_ilegal: "Financiamiento ilegal de la política",
+    otro: "Otro",
+  };
+  const FUENTE_LABELS: Record<string, string> = {
+    oficial: "Fuente oficial",
+    prensa: "Prensa",
+    investigacion: "Periodismo de investigación",
+  };
+  const FUENTE_ABBR: Record<string, string> = {
+    oficial: "Oficial",
+    prensa: "Prensa",
+    investigacion: "Inv.",
+  };
+  const FUENTE_COLORS: Record<string, string> = {
+    oficial: "bg-status-investigation",
+    prensa: "bg-status-pending",
+    investigacion: "bg-status-active",
   };
 
   function debounce(fn: (...args: any[]) => void, delay: number) {
@@ -379,24 +437,27 @@ const buildSearchHref = (q: string) => {
       "caso",
     ];
 
-    const DATA_KEY: Record<string, string> = {
-      estado: "estado",
-      region: "region",
-      delito: "delito",
-      fuente: "fuente",
-      puesto: "puesto",
-      cargo_estado: "cargoEstado",
-      sector: "sector",
-      partido: "partido",
-      caso: "caso",
+    const DATA_KEY: Record<string, keyof CaseIndexItem> = {
+      estado: "e",
+      region: "r",
+      delito: "d",
+      fuente: "f",
+      puesto: "p",
+      cargo_estado: "ce",
+      sector: "s",
+      partido: "pa",
+      caso: "ca",
     };
 
     let casesIndex: CaseIndexItem[] | null = null;
+    let indexPromise: Promise<void> | null = null;
     let activeResults: CaseIndexItem[] = [];
     let visibleLimit = PAGE_SIZE;
     let lastRenderedKey = "";
     let lastFilterSignature = "";
     let lastFilterLinkSignature = "";
+    let ssrIds: string[] = [];
+    let ssrSeeded = false;
 
     const SUMMARY_INACTIVE =
       "border-border bg-surface-card text-text-secondary hover:border-accent-primary/40 hover:text-text-primary";
@@ -426,6 +487,120 @@ const buildSearchHref = (q: string) => {
     const loadMoreWrapper = document.getElementById("load-more-wrapper");
     const loadMoreButton = document.getElementById("load-more");
     const rowTemplate = document.getElementById("case-row-template") as HTMLTemplateElement | null;
+    const loadingEl = document.getElementById("index-loading");
+    const errorEl = document.getElementById("index-error");
+
+    const ssrRows = resultsList ? Array.from(resultsList.querySelectorAll<HTMLElement>("[data-ssr-row]")) : [];
+    ssrIds = ssrRows.map((r) => r.dataset.caseId || "").filter(Boolean);
+    if (ssrIds.length === PAGE_SIZE) {
+      lastRenderedKey = ssrIds.join("|");
+      ssrSeeded = true;
+    }
+
+    function ensureIndex(): Promise<void> {
+      if (casesIndex) return Promise.resolve();
+      if (indexPromise) return indexPromise;
+      errorEl?.classList.add("hidden");
+      loadingEl?.classList.remove("hidden");
+      loadingEl?.classList.add("inline-flex");
+      indexPromise = fetch(CASES_INDEX_PATH)
+        .then((response) => {
+          if (!response.ok) throw new Error("No se pudo cargar el índice de casos");
+          return response.json();
+        })
+        .then((data: CaseIndexItem[]) => {
+          casesIndex = data;
+          total = data.length;
+        })
+        .catch((error) => {
+          console.error(error);
+          indexPromise = null;
+          errorEl?.classList.remove("hidden");
+          throw error;
+        })
+        .finally(() => {
+          loadingEl?.classList.add("hidden");
+          loadingEl?.classList.remove("inline-flex");
+        });
+      return indexPromise;
+    }
+
+    function urlHasParams(url: URL) {
+      return (
+        hasFilterParams(url.searchParams) ||
+        !!url.searchParams.get("q") ||
+        (!!url.searchParams.get("sort") && url.searchParams.get("sort") !== "recientes")
+      );
+    }
+
+    type BadgeOption = { value: string; label: string; count?: number; dot?: string };
+    const optionsCache: Record<string, BadgeOption[]> = {};
+    const optionsRendered: Record<string, boolean> = {};
+
+    function readBadgeOptions(badge: HTMLElement): BadgeOption[] {
+      const key = badge.dataset.paramKey || "";
+      if (optionsCache[key]) return optionsCache[key];
+      const script = badge.querySelector<HTMLScriptElement>("[data-options]");
+      let opts: BadgeOption[] = [];
+      if (script && script.textContent) {
+        try {
+          opts = JSON.parse(script.textContent) as BadgeOption[];
+        } catch (e) {
+          opts = [];
+        }
+      }
+      optionsCache[key] = opts;
+      return opts;
+    }
+
+    const SELECTED_ICON_SVG =
+      '<svg data-selected-icon class="size-3.5 shrink-0 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+    function renderBadgeOptions(badge: HTMLElement) {
+      const key = badge.dataset.paramKey || "";
+      if (optionsRendered[key]) return;
+      const list = badge.querySelector<HTMLElement>("[data-options-list]");
+      if (!list) return;
+      const opts = readBadgeOptions(badge);
+      const frag = document.createDocumentFragment();
+      for (const o of opts) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.setAttribute("data-filter-option", "");
+        a.dataset.value = o.value;
+        a.dataset.label = o.label;
+        a.dataset.dot = o.dot || "";
+        a.className =
+          "flex items-center gap-2.5 px-2.5 py-1.5 font-body text-xs transition-colors no-underline text-text-secondary hover:bg-surface-alt hover:text-text-primary";
+        if (o.dot) {
+          const dotSpan = document.createElement("span");
+          dotSpan.className = `size-2 shrink-0 rounded-full ${o.dot}`;
+          a.appendChild(dotSpan);
+        }
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "flex-1 truncate";
+        labelSpan.textContent = o.label;
+        a.appendChild(labelSpan);
+        if (typeof o.count === "number") {
+          const countSpan = document.createElement("span");
+          countSpan.className = "font-mono text-[0.65rem] tabular-nums text-text-tertiary";
+          countSpan.textContent = String(o.count);
+          a.appendChild(countSpan);
+        }
+        a.insertAdjacentHTML("beforeend", SELECTED_ICON_SVG);
+        li.appendChild(a);
+        frag.appendChild(li);
+      }
+      list.replaceChildren(frag);
+      optionsRendered[key] = true;
+    }
+
+    function ensureBadgeOptionsOpen(badge: HTMLElement) {
+      renderBadgeOptions(badge);
+      const currentUrl = new URL(window.location.href);
+      updateFilterLinks(currentUrl);
+      updateBadges(currentUrl.searchParams);
+    }
 
     function splitClasses(value: string) {
       return value.split(" ").filter(Boolean);
@@ -519,9 +694,10 @@ const buildSearchHref = (q: string) => {
         swapClasses(summary, `${SUMMARY_INACTIVE} ${allActiveClasses}`, value ? activeClass : SUMMARY_INACTIVE);
 
         const options = Array.from(badge.querySelectorAll<HTMLAnchorElement>("[data-filter-option]"));
-        const activeOption = options.find((option) => option.dataset.value === value);
-        const activeLabel = activeOption?.dataset.label || value;
-        const activeDot = activeOption?.dataset.dot || "";
+        const cached = readBadgeOptions(badge);
+        const activeOpt = cached.find((o) => o.value === value);
+        const activeLabel = activeOpt?.label || value;
+        const activeDot = activeOpt?.dot || "";
 
         badge.querySelector("[data-active-chip]")?.classList.toggle("hidden", !value);
         const label = badge.querySelector<HTMLElement>("[data-active-label]");
@@ -552,24 +728,24 @@ const buildSearchHref = (q: string) => {
     function itemMatchesIndex(item: CaseIndexItem, params: URLSearchParams, q: string) {
       for (const key of FILTER_KEYS) {
         const value = params.get(key);
-        const dataKey = DATA_KEY[key] as keyof CaseIndexItem;
+        const dataKey = DATA_KEY[key];
         if (value && item[dataKey] !== value) return false;
       }
-      return !q || item.searchText.includes(q);
+      return !q || item.q.includes(q);
     }
 
     function sortItems(items: CaseIndexItem[], sort: string) {
       return [...items].sort((a, b) => {
         switch (sort) {
           case "antiguos":
-            return a.fechaTs - b.fechaTs;
+            return a.t - b.t;
           case "az":
-            return a.sortName.localeCompare(b.sortName, "es");
+            return normalizeText(a.i).localeCompare(normalizeText(b.i), "es");
           case "monto_desc":
-            return b.monto - a.monto;
+            return b.m - a.m;
           case "recientes":
           default:
-            return b.fechaTs - a.fechaTs;
+            return b.t - a.t;
         }
       });
     }
@@ -585,41 +761,52 @@ const buildSearchHref = (q: string) => {
       if (!row) return document.createTextNode("");
 
       const link = row.querySelector<HTMLAnchorElement>("[data-row-link]");
-      if (link) link.href = item.href;
+      if (link) link.href = `/casos/${item.id}`;
 
-      setText(row, "[data-estado-mobile]", item.estadoShortAbbr || item.estadoAbbr);
-      setText(row, "[data-estado-desktop]", item.estadoAbbr);
+      const estadoAbbr = ESTADO_ABBR[item.e] || ESTADO_LABELS[item.e] || item.e;
+      setText(row, "[data-estado-mobile]", ESTADO_SHORT_ABBR[item.e] || estadoAbbr);
+      setText(row, "[data-estado-desktop]", estadoAbbr);
       const estado = row.querySelector<HTMLElement>("[data-estado]");
       if (estado) {
-        estado.classList.add(item.estadoColor);
-        estado.title = item.estadoLabel;
+        estado.classList.add(ESTADO_COLORS[item.e] || "bg-status-archived");
+        estado.title = ESTADO_LABELS[item.e] || item.e;
       }
 
-      const implicado = setText(row, "[data-implicado]", item.implicado);
-      if (implicado) implicado.title = item.implicado;
+      const implicado = setText(row, "[data-implicado]", item.i);
+      if (implicado) implicado.title = item.i;
 
       const recent = row.querySelector<HTMLElement>("[data-recent]");
-      recent?.classList.toggle("hidden", Date.now() - item.fechaTs >= 1000 * 60 * 60 * 24 * 7);
+      recent?.classList.toggle("hidden", Date.now() - item.t >= 1000 * 60 * 60 * 24 * 7);
 
-      const cargo = setText(row, "[data-cargo]", item.cargo);
-      if (cargo) cargo.title = item.cargo;
+      const cargo = setText(row, "[data-cargo]", item.c);
+      if (cargo) cargo.title = item.c;
 
       const regionBadge = row.querySelector<HTMLElement>("[data-region-badge]");
-      regionBadge?.classList.toggle("hidden", !item.region);
-      regionBadge?.classList.toggle("inline-flex", !!item.region);
-      if (regionBadge) regionBadge.title = item.region ? `Región: ${item.region}` : "";
-      setText(row, "[data-region]", item.region);
+      regionBadge?.classList.toggle("hidden", !item.r);
+      regionBadge?.classList.toggle("inline-flex", !!item.r);
+      if (regionBadge) regionBadge.title = item.r ? `Región: ${item.r}` : "";
+      setText(row, "[data-region]", item.r);
 
-      const delito = setText(row, "[data-delito]", item.delitoLabel);
-      if (delito) delito.title = item.delitoLabel;
+      const delitoLabel = DELITO_LABELS[item.d] || item.d;
+      const delito = setText(row, "[data-delito]", delitoLabel);
+      if (delito) delito.title = delitoLabel;
 
-      const fuente = setText(row, "[data-fuente]", item.fuenteAbbr);
+      const fuenteLabel = FUENTE_LABELS[item.f] || item.f;
+      const fuente = setText(row, "[data-fuente]", FUENTE_ABBR[item.f] || fuenteLabel);
       if (fuente) {
-        fuente.classList.add(item.fuenteColor);
-        fuente.title = item.fuenteLabel;
+        fuente.classList.add(FUENTE_COLORS[item.f] || "bg-status-investigation");
+        fuente.title = fuenteLabel;
       }
 
-      setText(row, "[data-fecha]", item.fechaLabel);
+      setText(
+        row,
+        "[data-fecha]",
+        new Date(item.t).toLocaleDateString("es-CL", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      );
       return row;
     }
 
@@ -628,11 +815,27 @@ const buildSearchHref = (q: string) => {
 
       const visible = activeResults.slice(0, visibleLimit);
       const renderKey = visible.map((item) => item.id).join("|");
-      if (renderKey !== lastRenderedKey || resultsList.childElementCount !== visible.length) {
+
+      const keepSsr =
+        ssrSeeded &&
+        visible.length >= ssrIds.length &&
+        visible.slice(0, ssrIds.length).every((it, i) => it.id === ssrIds[i]);
+
+      if (keepSsr && resultsList.childElementCount === ssrIds.length) {
+        const extras = visible.slice(ssrIds.length);
+        if (extras.length) {
+          const frag = document.createDocumentFragment();
+          frag.append(...extras.map(createCaseElement));
+          resultsList.appendChild(frag);
+        }
+        lastRenderedKey = renderKey;
+        ssrSeeded = false;
+      } else if (renderKey !== lastRenderedKey || resultsList.childElementCount !== visible.length) {
         const fragment = document.createDocumentFragment();
         fragment.append(...visible.map(createCaseElement));
         resultsList.replaceChildren(fragment);
         lastRenderedKey = renderKey;
+        ssrSeeded = false;
       }
 
       loadMoreWrapper?.classList.toggle("hidden", visible.length >= activeResults.length);
@@ -696,6 +899,7 @@ const buildSearchHref = (q: string) => {
             b.removeAttribute("open");
           });
           details.setAttribute("open", "");
+          ensureBadgeOptionsOpen(details as HTMLElement);
         }
       } else {
         const insideOpen = target.closest("details.filter-badge[open]");
@@ -712,10 +916,12 @@ const buildSearchHref = (q: string) => {
     });
 
     const debouncedSearch = debounce(function (value: string) {
-      const url = new URL(window.location.href);
-      if (value) url.searchParams.set("q", value);
-      else url.searchParams.delete("q");
-      applyUrl(url, "replace");
+      ensureIndex().then(() => {
+        const url = new URL(window.location.href);
+        if (value) url.searchParams.set("q", value);
+        else url.searchParams.delete("q");
+        applyUrl(url, "replace");
+      }).catch(() => {});
     }, 300);
 
     document.addEventListener("click", function (e) {
@@ -723,32 +929,34 @@ const buildSearchHref = (q: string) => {
 
       const filterLink = target.closest<HTMLAnchorElement>("#filter-bar a");
       if (filterLink) {
-        if (!casesIndex) return;
         e.preventDefault();
-        const url = new URL(window.location.href);
-        const badge = filterLink.closest<HTMLElement>("[data-filter-badge]");
-        const key = badge?.dataset.paramKey;
+        ensureIndex().then(() => {
+          const url = new URL(window.location.href);
+          const badge = filterLink.closest<HTMLElement>("[data-filter-badge]");
+          const key = badge?.dataset.paramKey;
 
-        if (filterLink.matches("[data-reset-filters]")) {
-          resetFilterParams(url);
-        } else if (key && filterLink.matches("[data-filter-option]")) {
-          url.searchParams.set(key, filterLink.dataset.value || "");
-        } else if (key && filterLink.matches("[data-filter-clear], [data-panel-clear]")) {
-          url.searchParams.delete(key);
-        }
+          if (filterLink.matches("[data-reset-filters]")) {
+            resetFilterParams(url);
+          } else if (key && filterLink.matches("[data-filter-option]")) {
+            url.searchParams.set(key, filterLink.dataset.value || "");
+          } else if (key && filterLink.matches("[data-filter-clear], [data-panel-clear]")) {
+            url.searchParams.delete(key);
+          }
 
-        filterLink.closest("details.filter-badge")?.removeAttribute("open");
-        applyUrl(url);
+          filterLink.closest("details.filter-badge")?.removeAttribute("open");
+          applyUrl(url);
+        }).catch(() => {});
         return;
       }
 
       const clearLink = target.closest("#clear-search-link");
       if (clearLink) {
-        if (!casesIndex) return;
         e.preventDefault();
-        const url = new URL(window.location.href);
-        url.searchParams.delete("q");
-        applyUrl(url);
+        ensureIndex().then(() => {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("q");
+          applyUrl(url);
+        }).catch(() => {});
         return;
       }
     });
@@ -756,11 +964,12 @@ const buildSearchHref = (q: string) => {
     document.addEventListener("change", function (e) {
       const target = e.target as HTMLElement;
       if (target.id === "sort-select" && target instanceof HTMLSelectElement) {
-        if (!casesIndex) return;
-        const url = new URL(window.location.href);
-        if (target.value && target.value !== "recientes") url.searchParams.set("sort", target.value);
-        else url.searchParams.delete("sort");
-        applyUrl(url);
+        ensureIndex().then(() => {
+          const url = new URL(window.location.href);
+          if (target.value && target.value !== "recientes") url.searchParams.set("sort", target.value);
+          else url.searchParams.delete("sort");
+          applyUrl(url);
+        }).catch(() => {});
       }
     });
 
@@ -774,39 +983,47 @@ const buildSearchHref = (q: string) => {
     document.addEventListener("submit", function (e) {
       const form = e.target as HTMLElement;
       if (form.id === "search-form" || form.closest("#search-form")) {
-        if (!casesIndex) return;
         e.preventDefault();
-        if (searchInput) {
-          const url = new URL(window.location.href);
-          if (searchInput.value) url.searchParams.set("q", searchInput.value);
-          else url.searchParams.delete("q");
-          applyUrl(url);
-        }
+        ensureIndex().then(() => {
+          if (searchInput) {
+            const url = new URL(window.location.href);
+            if (searchInput.value) url.searchParams.set("q", searchInput.value);
+            else url.searchParams.delete("q");
+            applyUrl(url);
+          }
+        }).catch(() => {});
       }
     });
 
     document.getElementById("load-more")?.addEventListener("click", function () {
-      if (!casesIndex) return;
+      if (!casesIndex) {
+        ensureIndex().then(() => {
+          visibleLimit += PAGE_SIZE;
+          applyUrl(new URL(window.location.href), "none", false);
+        }).catch(() => {});
+        return;
+      }
       visibleLimit += PAGE_SIZE;
       renderResults();
     });
 
     window.addEventListener("popstate", function () {
-      applyUrl(new URL(window.location.href), "none");
+      const url = new URL(window.location.href);
+      if (!casesIndex) {
+        if (urlHasParams(url)) {
+          ensureIndex().then(() => applyUrl(url, "none")).catch(() => {});
+        }
+        return;
+      }
+      applyUrl(url, "none");
     });
 
-    fetch("/cases-index.json")
-      .then((response) => {
-        if (!response.ok) throw new Error("No se pudo cargar cases-index.json");
-        return response.json();
-      })
-      .then((data: CaseIndexItem[]) => {
-        casesIndex = data;
-        total = data.length;
-        applyUrl(new URL(window.location.href), "replace");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const initialUrl = new URL(window.location.href);
+    document.querySelectorAll<HTMLElement>("details.filter-badge[open]").forEach((b) => {
+      ensureBadgeOptionsOpen(b);
+    });
+    if (urlHasParams(initialUrl)) {
+      ensureIndex().then(() => applyUrl(initialUrl, "replace")).catch(() => {});
+    }
   })();
 </script>

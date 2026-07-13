@@ -6,6 +6,7 @@ import Timeline from "@/components/Timeline.astro";
 import StatBadge from "@/components/StatBadge.astro";
 import RelatedCases from "@/components/RelatedCases.astro";
 import {
+  SITE,
   STATUS_LABELS,
   DELITO_LABELS,
   TIPO_PROCESO_LABELS,
@@ -78,8 +79,9 @@ const formatDate = (dt: Date) =>
 
 const description = d.resumen_corto || d.extracto || `${d.implicado} - ${d.cargo}`;
 
-const canonicalUrl = new URL(`/casos/${caso.id}`, "https://corrupciondb.cl").href;
-const imageUrl = "https://corrupciondb.cl/og-default.svg";
+const siteUrl = SITE.url.replace(/\/$/, "");
+const canonicalUrl = new URL(`/casos/${caso.id}`, siteUrl).href;
+const imageUrl = `${siteUrl}/og-default.svg`;
 const datePublished = d.fecha_publicacion
   ? new Date(d.fecha_publicacion).toISOString()
   : new Date(d.fecha_inicio).toISOString();
@@ -96,14 +98,14 @@ const jsonLd = {
   inLanguage: "es-CL",
   author: d.periodistas && d.periodistas.length > 0
     ? d.periodistas.map((p) => ({ "@type": "Person", name: p }))
-    : { "@type": "Organization", name: "CorrupcionDB", url: "https://corrupciondb.cl" },
+    : { "@type": "Organization", name: "CorrupcionDB", url: siteUrl },
   publisher: {
     "@type": "Organization",
     name: "CorrupcionDB",
-    url: "https://corrupciondb.cl",
+    url: siteUrl,
     logo: {
       "@type": "ImageObject",
-      url: "https://corrupciondb.cl/favicon.svg",
+      url: `${siteUrl}/favicon.svg`,
     },
   },
   mainEntityOfPage: {
