@@ -1,0 +1,55 @@
+topic: "Casos de evasión/fraude tributario de políticos y autoridades no presentes en la DB (2010-2026)"
+items:
+
+  - name: "Carlos Cruz Lorenzen - MOP-Gate"
+    category: "Gobierno"
+    description: "Ex Ministro de Obras Públicas (gobierno de Ricardo Lagos, 2000-2002). Condenado en 2014 en el caso MOP-Gate por fraude al Fisco por sobrevaloración de contratos y pago de sobresueldos vía empresa GATE. Multa de $799.142.217."
+    implicados: ["Carlos Cruz Lorenzen"]
+    caso_id: "mop-gate"
+
+  - name: "Sergio Cortés Castro - MOP-Gate"
+    category: "Gobierno"
+    description: "Ex jefe de Finanzas del Ministerio de Obras Públicas. Condenado en 2014 en el caso MOP-Gate por fraude al Fisco como autor, 5 años de libertad vigilada y multa de $777.842.217."
+    implicados: ["Sergio Cortés Castro"]
+    caso_id: "mop-gate"
+
+  - name: "Pablo Zalaquett - Caso Penta"
+    category: "Municipalidades"
+    description: "Ex alcalde de Santiago (UDI). Formalizado el 22 de junio de 2015 en el Caso Penta por delitos tributarios ligados a boletas ideológicamente falsas para financiamiento de campañas."
+    implicados: ["Pablo Zalaquett"]
+    caso_id: "penta"
+
+  - name: "Ena Von Baer - Caso Penta"
+    category: "Gobierno"
+    description: "Senadora UDI. Recibió aportes irregulares del Grupo Penta por $22,5 millones vía facturas y boletas de honorarios ideológicamente falsas (Teresa Riera, Carlos Lira, Ignacio Ternicier, Inversiones y Mandatos de Jovino Novoa) en 2013."
+    implicados: ["Ena Von Baer"]
+    caso_id: "penta"
+
+  - name: "Ignacio Ternicier Seda - Caso Penta"
+    category: "Otros"
+    description: "Periodista. Formalizado el 6 de abril de 2016 en el Caso Penta como autor de evasión de impuestos por facilitar boletas de honorarios ideológicamente falsas al Grupo Penta."
+    implicados: ["Ignacio Ternicier Seda"]
+    caso_id: "penta"
+
+  - name: "Teresa Riera Rawlins - Caso Penta"
+    category: "Otros"
+    description: "Emisora de boletas de honorarios ideológicamente falsas usadas por la sociedad Inversiones y Mandatos de Jovino Novoa y por el Grupo Penta. Involucrada en la condena de Jovino Novoa (Caso Penta) por delitos tributarios."
+    implicados: ["Teresa Riera Rawlins"]
+    caso_id: "penta"
+
+  - name: "Alberto Cardemil - Caso Penta"
+    category: "Gobierno"
+    description: "Ex diputado UDI. Formalizado el 22 de junio de 2015 en el Caso Penta por delitos tributarios ligados a boletas ideológicamente falsas para financiamiento de campañas."
+    implicados: ["Alberto Cardemil"]
+    caso_id: "penta"
+
+  - name: "Felipe de Mussy - Caso Penta"
+    category: "Gobierno"
+    description: "Ex diputado UDI. Formalizado el 22 de junio de 2015 en el Caso Penta por delitos tributarios ligados a boletas ideológicamente falsas para financiamiento de campañas."
+    implicados: ["Felipe de Mussy"]
+    caso_id: "penta"
+
+execution:
+  batch_size: 4
+  items_per_agent: 1
+  output_dir: "./results"
